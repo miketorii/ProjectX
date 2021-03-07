@@ -1,0 +1,8 @@
+* virtualenv
+
+virtualenv環境の作成
+$virtualenv —python=/usr/local/bin/python3 testing
+
+$source testenv/bin/activate
+(testenv)$ python —version
+(testing)$ deactivate
