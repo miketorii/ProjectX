@@ -9,6 +9,7 @@ data = {
     "duration": [50, 40, 45]
 }
 
+# test dataframe of pandas
 df = pd.DataFrame(data)
 
 print(df)
