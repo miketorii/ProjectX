@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# print version
 print(pd.__version__)
 
 data = {
@@ -8,6 +9,7 @@ data = {
     "duration": [50, 40, 45]
 }
 
+# test dataframe of pandas
 df = pd.DataFrame(data)
 
 print(df)
