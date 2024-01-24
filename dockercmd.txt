@@ -1,0 +1,15 @@
+#create docker image
+docker image build -t webrick:latest .
+
+#run container
+docker container run -p 8000:8000 --name mywebrick webrick:latest
+
+#stop container
+docker container stop mywebrick
+
+#show log
+docker logs mywebrick
+
+#
+docker container ls
+docker image ls
