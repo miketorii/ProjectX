@@ -1,5 +1,20 @@
+import os
 import numpy as np
 import matplotlib.pyplot as plt
+
+def load_data():
+    path = os.path.join(os.path.dirname(__file__), 'height_weight.txt')
+    xs = np.loadtxt(path)
+
+    print(xs.shape)
+
+    return xs
+
+def draw_scatter(small_xs):
+    plt.scatter(small_xs[:,0], small_xs[:,1])
+    plt.xlabel("Height(cm)")
+    plt.ylabel("Weight(kg)")
+    plt.show()
 
 def multivariate_normal(x, mu, cov):
     det = np.linalg.det(cov)
@@ -9,19 +24,10 @@ def multivariate_normal(x, mu, cov):
     y = z * np.exp( (x-mu).T @ inv @ (x-mu) / -2.0 )
     return y
 
-def create_values():
-    ### 
-    mu = np.array([0.5, -0.2])
-    cov = np.array([ [2.0, 0.3],
-                    [0.3, 0.5]])
-    print(mu)
-    print(cov)
-
-    xs = ys = np.arange(-5, 5, 0.1)
-    X, Y = np.meshgrid(xs, ys)
+def create_data(mu, cov):   
+    X, Y = np.meshgrid( np.arange(150, 195, 0.5),
+                        np.arange(45, 75, 0.5) )
     Z = np.zeros_like(X)
-
-    print("X0=", X.shape[0],"X1=", X.shape[1])
 
     for i in range(X.shape[0]):
         for j in range(X.shape[1]):
@@ -49,9 +55,21 @@ def draw(X,Y,Z):
     plt.show()
 
 
-if __name__=="__main__":
-    X,Y,Z = create_values()
-    draw(X,Y,Z)
+if __name__ == "__main__":
+    xs = load_data()
+
+    small_xs = xs[:500]
+    draw_scatter(small_xs)
+
+    mu = np.mean(xs, axis=0)
+    cov = np.cov(xs, rowvar=False)
+
+    print(mu, cov)
+
+    X, Y, Z = create_data(mu, cov)
+
+    draw(X, Y, Z)
 
 
- 
+
+
