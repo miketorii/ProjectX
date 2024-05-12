@@ -57,7 +57,7 @@ if __name__ == "__main__":
     print(xs.shape)
 
     phis = np.array([0.5,0.5])
-    mus = np.array([[0.0, 500],[00, 100.0]])
+    mus = np.array([[0.0, 50],[0.0, 100.0]])
     covs = np.array([np.eye(2), np.eye(2)])
 
     K = len(phis)
@@ -69,6 +69,16 @@ if __name__ == "__main__":
 
     current_likelihood = likelihood(xs, phis, mus, covs)
     print(current_likelihood)
+
+    for iter in range(MAX_ITERS):
+        #E step
+        qs = np.zeros((N,K))
+        for n in range(N):
+            x = xs[n]
+            for k in range(K):
+                phi, mu, cov = phis[k], mus[k], covs[k]
+                qs[n, k] = phi * multivariate_normal(x, mu, cov)
+            qs[n] /= gmm(x, phis, mus, covs)
 
     draw(xs, phis, mus, covs)
 
