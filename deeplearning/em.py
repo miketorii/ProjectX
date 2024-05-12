@@ -63,7 +63,7 @@ if __name__ == "__main__":
     K = len(phis)
     N = len(xs)
     MAX_ITERS = 100
-    THESHOLD = 1e-4
+    THRESHOLD = 1e-4
 
     print(K, N)
 
@@ -71,7 +71,8 @@ if __name__ == "__main__":
     print(current_likelihood)
 
     for iter in range(MAX_ITERS):
-        #E step
+        print("iteration", iter)
+        # E step
         qs = np.zeros((N,K))
         for n in range(N):
             x = xs[n]
@@ -79,6 +80,41 @@ if __name__ == "__main__":
                 phi, mu, cov = phis[k], mus[k], covs[k]
                 qs[n, k] = phi * multivariate_normal(x, mu, cov)
             qs[n] /= gmm(x, phis, mus, covs)
+
+        # M step
+        qs_sum = qs.sum(axis=0)
+        print(qs_sum)
+        for k in range(K):
+            # calc phis
+            phis[k] = qs_sum[k] / N
+            print("phis[",k,"]", phis[k])
+
+            # calc mus
+            c = 0
+            for n in range(N):
+                c += qs[n, k] * xs[n]
+            mus[k] = c / qs_sum[k]
+            print("mus[",k,"]", mus[k])
+
+            # calc covs
+            c = 0
+            for n in range(N):
+                z = xs[n] - mus[k]
+                z = z[:, np.newaxis]
+                c += qs[n, k] * z @ z.T
+            covs[k] = c / qs_sum[k]
+            print("covs[",k,"]", covs[k])
+
+
+        #check threshold
+        print(f'{current_likelihood:.3f}')
+
+        next_likelihood = likelihood(xs, phis, mus, covs)
+        diff = np.abs(next_likelihood-current_likelihood)
+        if diff < THRESHOLD:
+            print("--break--",diff)
+            break
+        current_likelihood = next_likelihood
 
     draw(xs, phis, mus, covs)
 
