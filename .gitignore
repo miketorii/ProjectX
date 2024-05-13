@@ -2,4 +2,5 @@
 *~
 height*.txt
 old_faithful.txt
-./deeplearning/data/
+./deeplearning/data/*
+
