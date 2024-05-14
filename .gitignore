@@ -2,5 +2,8 @@
 *~
 height*.txt
 old_faithful.txt
+*.gz
+t10k-*
+train-*
 deeplearning/data/*
 
