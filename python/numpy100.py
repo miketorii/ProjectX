@@ -119,3 +119,9 @@ Zmin = Z.min()
 print(Zmin)
 Z = (Z - Zmin) / (Zmax - Zmin)
 print(Z)
+
+ar = np.dtype([
+("r", np.ubyte),("g", np.ubyte),("b", np.ubyte)
+])
+print(ar)
+print(ar["r"])
