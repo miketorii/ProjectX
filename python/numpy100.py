@@ -110,3 +110,12 @@ norms = np.linalg.norm(ar, axis=1,keepdims=True)
 print("norms=", norms)
 ar = ar / norms
 print(ar)
+
+Z = np.random.rand(5,5)
+print(Z)
+Zmax = Z.max()
+print(Zmax)
+Zmin = Z.min()
+print(Zmin)
+Z = (Z - Zmin) / (Zmax - Zmin)
+print(Z)
