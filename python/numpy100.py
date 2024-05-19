@@ -125,3 +125,8 @@ ar = np.dtype([
 ])
 print(ar)
 print(ar["r"])
+
+A = np.arange(15).reshape(5,3)
+B = np.arange(6).reshape(3,2)
+C = A.dot(B)
+print(C)
