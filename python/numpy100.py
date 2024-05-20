@@ -130,3 +130,52 @@ A = np.arange(15).reshape(5,3)
 B = np.arange(6).reshape(3,2)
 C = A.dot(B)
 print(C)
+
+###################################
+#
+print(range(5))
+print(sum(range(5),-1))
+from numpy import *
+print(range(5))
+print(sum(range(5),-1))
+
+ar = np.arange(5)
+print(2 << ar >>  2)
+
+ar = np.arange(0)
+print(ar/ar)
+print(ar//ar)
+#ar = np.arange(np.nan)
+#print("astype ", ar.astype(int).astype(float))
+
+#ar = np.arange(10, dtype= "float")
+ar = np.random.rand(10)
+print(ar)
+ar = np.floor(ar)
+print(ar)
+
+Z = np.random.uniform(-10, 10, 10)
+print(Z)
+X = np.trunc(Z + np.copysign(0.5, Z))
+print(X)
+
+ar1 = np.random.randint(0,10,10)
+ar2 = np.random.randint(0,10,10)
+print(ar1)
+print(ar2)
+ar3 = np.intersect1d(ar1, ar2)
+print(ar3)
+
+#print(np.emath.sqrt(-1)==np.sqrt(-1))
+
+today = np.datetime64("today", "D")
+print(today)
+y = today - np.timedelta64(1, "D")
+print(y)
+t = today + np.timedelta64(1, "D")
+print(t)
+
+dates = np.arange("2016-06","2016-07",dtype="datetime64[D]")
+print(dates)
+
+
