@@ -178,4 +178,26 @@ print(t)
 dates = np.arange("2016-06","2016-07",dtype="datetime64[D]")
 print(dates)
 
+#################################
+
+A = np.ones(5)
+B = np.ones(5) * 2
+print(A)
+print(B)
+B += A
+A *= -1
+B *= A
+B /= 2
+print(B)
+#C = (A+B) * -A / 2
+#print(C)
+A = np.ones(5)
+B = np.ones(5) * 2
+print(A)
+print(B)
+np.add(A, B, out=B)
+np.multiply(A, B, out=B)
+np.negative(B, out=B)
+np.divide(B, 2, out=B)
+print(B)
 
