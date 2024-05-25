@@ -2,6 +2,7 @@ import numpy as np
 
 print(np.__version__)
 
+'''
 Z = np.zeros(10)
 print(Z)
 
@@ -200,4 +201,46 @@ np.multiply(A, B, out=B)
 np.negative(B, out=B)
 np.divide(B, 2, out=B)
 print(B)
+
+'''
+
+################################
+#
+Z = np.random.uniform(0,10,10)
+print(Z)
+X = np.trunc(Z)
+print("trunc",X)
+X = np.floor(Z)
+print("floor", X)
+X = np.ceil(Z)
+print("ceil", X)
+X = np.fix(Z)
+print("fix", X)
+X = np.rint(Z)
+print("rint", X)
+X = Z.astype(int)
+print("Z.astype", X)
+
+ar = np.random.randint(0,5,25).reshape(5,5)
+print(ar)
+
+def create_int10():
+    ar = np.random.randint(0,10,10)
+    return ar
+Z = create_int10()
+print(Z)
+
+def generate_10integer():
+    for i in range(10):
+        yield i
+Z = np.fromiter(generate_10integer(), dtype="float")
+print("generate()", Z)
+
+ar = np.random.rand(10)
+print(ar)
+ar = np.linspace(0,1,12, endpoint=True)[1:-1]
+print(ar)
+
+
+
 
