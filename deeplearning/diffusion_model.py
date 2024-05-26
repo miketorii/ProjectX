@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 
+#########################################################
+#
 def _pos_encoding(t, output_dim, device="cpu"):
     D = output_dim
     v = torch.zeros(D, device=device)
@@ -21,6 +23,8 @@ def pos_encoding(ts, output_dim, device="cpu"):
  
     return v
 
+#########################################################
+#
 class ConvBlock(nn.Module):
     def __init__(self, in_ch, out_ch, time_embed_dim):
         super().__init__()
@@ -42,10 +46,11 @@ class ConvBlock(nn.Module):
         N, C, _, _ = x.shape
         v = self.mlp(v)
         v = v.view(N,C,1,1)
-        y = self.convs(x, v)
+        y = self.convs(x + v)
         return y
 
-
+#########################################################
+#
 class UNet(nn.Module):
     def __init__(self, in_ch=1, time_embed_dim=100):
         super().__init__()
@@ -64,8 +69,9 @@ class UNet(nn.Module):
     def forward(self, x, timesteps):
         v = pos_encoding(timesteps, self.time_embed_dim, x.device)
 
-        print("UNet in", x.shape)
+        print("UNet in", x.shape, v.shape)
         x1 = self.down1(x, v)
+        print("UNet down1 x1.shape", x1.shape)
         x = self.maxpool(x1)
         print("UNet down1", x.shape)
         x2 = self.down2(x, v)
@@ -88,6 +94,12 @@ class UNet(nn.Module):
 
         return x
 
+#########################################################
+#
+
+
+#########################################################
+#
 '''    
 if __name__ == "__main__":
     print("---start---")
@@ -95,6 +107,8 @@ if __name__ == "__main__":
     print(v.shape, "\n", v)
 '''
 
+#########################################################
+#
 if __name__ == "__main__":
     print("---start---")
 
@@ -103,6 +117,6 @@ if __name__ == "__main__":
 
     x = torch.randn(10, 1, 28, 28)
     timesteps = torch.tensor([0,1,2,3,4,5,6,7,8.9,10])
-    y = model(x, timesteps)
+    y = model(x, timesteps*10)
 
 #    print(y.shape)
