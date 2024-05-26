@@ -202,8 +202,6 @@ np.negative(B, out=B)
 np.divide(B, 2, out=B)
 print(B)
 
-'''
-
 ################################
 #
 Z = np.random.uniform(0,10,10)
@@ -236,6 +234,9 @@ def generate_10integer():
 Z = np.fromiter(generate_10integer(), dtype="float")
 print("generate()", Z)
 
+'''
+
+#39
 ar = np.random.rand(10)
 print(ar)
 ar = np.linspace(0,1,12, endpoint=True)[1:-1]

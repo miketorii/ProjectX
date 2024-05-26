@@ -2,6 +2,7 @@
 *~
 height*.txt
 old_faithful.txt
+flower.png
 *.gz
 t10k-*
 train-*
