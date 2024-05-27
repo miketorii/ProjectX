@@ -202,8 +202,8 @@ if __name__ == "__main__":
     img_size = 28
     batch_size = 128
     num_timesteps = 1000
-    #epochs = 10
-    epochs = 3
+    epochs = 10
+    #epochs = 3
     lr = 1e-3
     #device = "cuda" if torch.cuda.is_available() else "cpu"
     device = "mps" if torch.backends.mps.is_available() else "cpu"
