@@ -11,13 +11,13 @@ from tqdm import tqdm
 
 #########################################################
 #
-def _pos_encoding(t, output_dim, device="cpu"):
-    D = output_dim
+def _pos_encoding(time_idx, output_dim, device="cpu"):
+    t, D = time_idx, output_dim
     v = torch.zeros(D, device=device)
 
     i = torch.arange(0, D,device=device)
-    div_term = 10000 ** (i/D)
-
+    div_term = torch.exp(i / D*math.log(10000))
+    
     v[0::2] = torch.sin(t/div_term[0::2])
     v[1::2] = torch.cos(t/div_term[1::2])
 
@@ -121,10 +121,10 @@ class Diffuser:
         N = alpha_bar.size(0)
         alpha_bar = alpha_bar.view(N,1,1,1)
 
-        eps = torch.randn_like(x_0, device=self.device)
-        x_t = torch.sqrt(alpha_bar)*x_0 + torch.sqrt(1-alpha_bar)*eps
+        noise = torch.randn_like(x_0, device=self.device)
+        x_t = torch.sqrt(alpha_bar)*x_0 + torch.sqrt(1-alpha_bar)*noise
 
-        return x_t, eps
+        return x_t, noise
 
     def denoise(self, model, x, t):
         T = self.num_timesteps
@@ -145,13 +145,14 @@ class Diffuser:
             eps = model(x, t)
         model.train()
 
-        noise = torch.rand_like(x, device=self.device)
+        noise = torch.randn_like(x, device=self.device)
         noise[t==1] = 0
 
         mu = (x - ( (1-alpha)/torch.sqrt(1-alpha_bar) )*eps ) / torch.sqrt(alpha)
         std = torch.sqrt( (1-alpha) * (1-alpha_bar_prev)/(1-alpha_bar) )
+
         return mu + noise * std
-    
+
     def reverse_to_img(self, x):
         x = x*255
         x = x.clamp(0,255)
@@ -169,6 +170,7 @@ class Diffuser:
             x = self.denoise(model, x, t)
 
         images = [self.reverse_to_img(x[i]) for i in range(batch_size)]
+        
         return images
 
 #########################################################
@@ -186,6 +188,12 @@ def show_images(images, rows=2, cols=10):
 
     plt.show()
 
+def show_losses(losses):
+    plt.plot(losses)
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.show()
+
 #########################################################
 #
 if __name__ == "__main__":
@@ -194,13 +202,15 @@ if __name__ == "__main__":
     img_size = 28
     batch_size = 128
     num_timesteps = 1000
-    epochs = 10
+    #epochs = 10
+    epochs = 3
     lr = 1e-3
-    device = "cuda" if torch.cuda.is_available() else "cpu"
+    #device = "cuda" if torch.cuda.is_available() else "cpu"
+    device = "mps" if torch.backends.mps.is_available() else "cpu"
 
     preprocess = transforms.ToTensor()
     dataset = torchvision.datasets.MNIST(root="./data", download=True, transform=preprocess)
-    dataloader = DataLoader(dataset, batch_size=batch_size)
+    dataloader = DataLoader(dataset, batch_size=batch_size, shuffle=True)
 
     diffuser = Diffuser(num_timesteps, device=device)
     model = UNet()
@@ -211,6 +221,9 @@ if __name__ == "__main__":
     for epoch in range(epochs):
         loss_sum = 0.0
         cnt = 0
+
+        #images = diffuser.sample(model)
+        #show_images(images)
 
         for images, labels in tqdm(dataloader):
             optimizer.zero_grad()
@@ -231,10 +244,8 @@ if __name__ == "__main__":
         losses.append(loss_avg)
         print(f"Epoch {epoch} | Loss: {loss_avg}")
     
-    plt.plot(losses)
-    plt.xlabel("Epoch")
-    plt.ylabel("Loss")
-    plt.show()
+    if(epochs==10):
+        show_losses(losses)
 
     images = diffuser.sample(model)
     show_images(images)
