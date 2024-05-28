@@ -234,7 +234,6 @@ def generate_10integer():
 Z = np.fromiter(generate_10integer(), dtype="float")
 print("generate()", Z)
 
-'''
 
 #39
 ar = np.random.rand(10)
@@ -242,6 +241,63 @@ print(ar)
 ar = np.linspace(0,1,12, endpoint=True)[1:-1]
 print(ar)
 
+'''
 
+##############################################################
+#
+
+#40
+Z = np.random.random(10)
+Z.sort()
+print("40 sort\n", Z)
+
+#41
+Z = np.arange(10)
+print(Z)
+ret = np.add.reduce(Z)
+print("41 faster add=", ret)
+
+#42
+#ar1 = np.array([1,2,3,4])
+#ar2 = np.array([1,2,3,4])
+ar1 = np.random.randint(0,2,3)
+ar2 = np.random.randint(0,2,3)
+print(ar1)
+print(ar2)
+ret = np.array_equal(ar1, ar2)
+print("42 two arrays = ", ret)
+
+#43
+ar = np.array([1,2,3,4])
+ar.flags.writeable = False
+print("43 read-only ", ar)
+#ar[0] = 10
+
+#44
+Z = np.random.random((10,2))
+print(Z)
+x, y = Z[:,0], Z[:,1]
+r = np.sqrt(x**2+y**2)
+t = np.arctan2(y, x)
+print("=== 44 ===")
+print("r=", r)
+print("t=", t)
+
+#45
+print("=== 45 ===")
+ar = np.random.random(10)
+print(ar)
+idx = np.argmax(ar)
+print(idx)
+ar[idx]=0
+print("max 0 = ", ar)
+
+#46
+print("=== 46 ===")
+Z = np.zeros((5,5), [("i",float),("j",float)])
+xv = np.linspace(0, 1, 5)
+yv = np.linspace(0, 1, 5)
+Z["i"], Z["j"] = np.meshgrid(xv, yv)
+print(Z)
 
 
