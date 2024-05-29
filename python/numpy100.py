@@ -300,4 +300,48 @@ yv = np.linspace(0, 1, 5)
 Z["i"], Z["j"] = np.meshgrid(xv, yv)
 print(Z)
 
+#47
+#x = np.random.randint(0,5,3)
+#y = np.random.randint(0,5,3)
+#x = np.arange(3)
+#y = np.arange(3)
+x = np.array([5,6,7])
+y = np.array([1,2,3])
+print(x)
+print(y)
+Z = np.subtract.outer(x, y)
+print(Z)
+C = 1/Z
+print(C)
+
+#48
+max = np.iinfo(np.int64).max
+min = np.iinfo(np.int64).min
+print(max, min)
+max = np.finfo(np.float64).max
+min = np.finfo(np.float64).min
+print(max, min)
+
+#49
+print("===49===")
+#np.set_printoptions(threshold=5)
+#Z = np.arange(1000)
+#print(Z)
+np.set_printoptions(threshold=float("inf"))
+Z = np.arange(1000)
+print(Z)
+
+#50
+print("===50===")
+ar = np.arange(100)
+v = np.random.uniform(0,100)
+print(ar)
+print(v)
+sub = np.abs(ar-v)
+index = sub.argmin()
+print(index)
+print(ar[index])
+
+
+
 
