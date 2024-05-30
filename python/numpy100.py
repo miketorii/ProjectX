@@ -241,8 +241,6 @@ print(ar)
 ar = np.linspace(0,1,12, endpoint=True)[1:-1]
 print(ar)
 
-'''
-
 ##############################################################
 #
 
@@ -342,6 +340,35 @@ index = sub.argmin()
 print(index)
 print(ar[index])
 
+'''
 
+#51
+Z = np.zeros(10, [ ("position", [("x",float, 1), ("y",float,1)]),
+                   ("color", [("r",float, 1), ("g",float,1), ("b",float,1)] )
+                  ])
+print(Z)
+
+#52
+Z = np.random.randint(0,3,20).reshape(10,2)
+print(Z)
+X, Y = np.atleast_2d(Z[:,0], Z[:,1])
+print(X)
+print(Y)
+D = np.sqrt( (X-X.T)**2 + (Y-Y.T)**2)
+print(D)
+
+#53
+#X = np.arange(0, 10, 1, dtype=np.float32)
+X = 100*np.random.rand(10).astype(np.float32)
+print(X)
+Y = X.astype(np.int32)
+print(Y)
+
+#54
+Z = np.genfromtxt("csvdata.txt",
+                    skip_header=1, usecols=[1, 2],
+                    missing_values="NA",
+                    delimiter=",")
+print(Z)
 
 
