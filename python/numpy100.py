@@ -340,7 +340,6 @@ index = sub.argmin()
 print(index)
 print(ar[index])
 
-'''
 
 #51
 Z = np.zeros(10, [ ("position", [("x",float, 1), ("y",float,1)]),
@@ -371,4 +370,61 @@ Z = np.genfromtxt("csvdata.txt",
                     delimiter=",")
 print(Z)
 
+'''
 
+#############################################################
+#
+
+#55
+Z = np.arange(9).reshape(3,3)
+print(Z)
+for position, val in np.ndenumerate(Z):
+  print(position, val)
+
+#56
+def normal(x, mu, sigma):
+      ret = np.exp( - ((x - mu)**2) / (2 * (sigma**2)) ) / np.sqrt(2 * np.pi * (sigma**2) )
+      return ret
+    
+X = np.linspace(-5,5,100)
+mu = 0
+sigma = 1
+Y = normal(X, mu, sigma)
+
+print(Y)
+
+'''
+import matplotlib.pyplot as plt
+
+fig = plt.figure(figsize=(5,5))
+ax = fig.add_subplot(1,1,1)
+ax.plot(X, Y)
+plt.show()
+'''
+#57
+Z = np.zeros(100)
+print(Z)
+
+p = 3
+idx = np.random.choice(100, p, replace=False)
+print(idx)
+
+#np.put(Z, [1,2,3], 99)
+np.put(Z, idx, 99)
+print(Z)
+
+#58
+row = 3
+Z = np.arange(9).reshape(row,3)
+print(Z)
+'''
+for i in range(row):
+      print(Z[i, :])
+      mu = np.mean(Z[i, :])
+      print("mean=", mu)
+X = Z.mean(axis=1, keepdims=True)
+print(X)
+'''
+Y = Z - Z.mean(axis=1, keepdims=True)
+print(Y)
+      
