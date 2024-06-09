@@ -370,7 +370,6 @@ Z = np.genfromtxt("csvdata.txt",
                     delimiter=",")
 print(Z)
 
-'''
 
 #############################################################
 #
@@ -394,12 +393,14 @@ Y = normal(X, mu, sigma)
 print(Y)
 
 '''
+'''
 import matplotlib.pyplot as plt
 
 fig = plt.figure(figsize=(5,5))
 ax = fig.add_subplot(1,1,1)
 ax.plot(X, Y)
 plt.show()
+'''
 '''
 #57
 Z = np.zeros(100)
@@ -418,6 +419,7 @@ row = 3
 Z = np.arange(9).reshape(row,3)
 print(Z)
 '''
+'''
 for i in range(row):
       print(Z[i, :])
       mu = np.mean(Z[i, :])
@@ -425,6 +427,17 @@ for i in range(row):
 X = Z.mean(axis=1, keepdims=True)
 print(X)
 '''
+'''
 Y = Z - Z.mean(axis=1, keepdims=True)
+print(Y)      
+'''
+#59
+Z = np.random.randint(0,10,(3,3))
+print(Z)
+X = np.sort(Z, axis=0)
+print(X)
+Y = np.sort(Z, axis=1)
 print(Y)
-      
+print(Z[Z[:,1].argsort()])
+
+
