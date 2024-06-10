@@ -440,4 +440,21 @@ Y = np.sort(Z, axis=1)
 print(Y)
 print(Z[Z[:,1].argsort()])
 
+#60
+Z = np.random.randint(0,3,(3,3))
+print(Z)
+a = ~Z.any(axis=0)
+print(a)
+b = a.any()
+print(b)
+print((~Z.any(axis=0)).any())
+
+Z = np.array([
+    [1,2,np.nan],
+    [2,3,np.nan],
+    [4,5,np.nan]
+])
+print(Z)
+ret = np.isnan(Z).all(axis=0)
+print(ret)
 
