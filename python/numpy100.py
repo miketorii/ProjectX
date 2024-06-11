@@ -458,3 +458,24 @@ print(Z)
 ret = np.isnan(Z).all(axis=0)
 print(ret)
 
+#61
+Z = np.random.randint(0,100,10)
+print(Z)
+val = 51
+diff=100000
+nearval = 0
+nd = np.nditer(Z, flags=['c_index'])
+while not nd.finished:
+    print(Z[nd.index])
+    tmpdiff = abs(Z[nd.index]-val)
+    if diff > tmpdiff:
+        nearval = Z[nd.index]
+        diff = tmpdiff
+    nd.iternext()
+print("nearest val=", nearval)
+
+val=51
+nearval = Z.flat[ np.abs(Z-val).argmin() ]
+print("nearest val=", nearval)
+
+
