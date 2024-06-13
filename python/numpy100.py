@@ -430,7 +430,7 @@ print(X)
 '''
 Y = Z - Z.mean(axis=1, keepdims=True)
 print(Y)      
-'''
+
 #59
 Z = np.random.randint(0,10,(3,3))
 print(Z)
@@ -477,5 +477,29 @@ print("nearest val=", nearval)
 val=51
 nearval = Z.flat[ np.abs(Z-val).argmin() ]
 print("nearest val=", nearval)
+'''
 
+#62
+A = np.random.randint(0,3,(3,1))
+B = np.random.randint(0,3,(1,3))
+print(A)
+print(B)
+
+'''
+na = np.nditer(A, flags=['c_index'])
+val = 0
+z = np.zeros((3,3),dtype=np.uint)
+while not na.finished:
+    nb = np.nditer(B, flags=['c_index'])
+    while not nb.finished:
+        z[na.index][nb.index] = A[na.index] + B[0][nb.index]
+        nb.iternext()
+    na.iternext()
+print("use iter\n", z)
+'''
+
+it = np.nditer([A,B,None])
+for x,y,z in it: 
+    z[...] = x + y
+print(it.operands[2])
 
