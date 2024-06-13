@@ -478,7 +478,6 @@ val=51
 nearval = Z.flat[ np.abs(Z-val).argmin() ]
 print("nearest val=", nearval)
 '''
-
 #62
 A = np.random.randint(0,3,(3,1))
 B = np.random.randint(0,3,(1,3))
