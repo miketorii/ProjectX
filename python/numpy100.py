@@ -1,4 +1,5 @@
 import numpy as np
+from numpy._typing import NDArray
 
 print(np.__version__)
 
@@ -478,12 +479,14 @@ val=51
 nearval = Z.flat[ np.abs(Z-val).argmin() ]
 print("nearest val=", nearval)
 '''
+'''
 #62
 A = np.random.randint(0,3,(3,1))
 B = np.random.randint(0,3,(1,3))
 print(A)
 print(B)
 
+'''
 '''
 na = np.nditer(A, flags=['c_index'])
 val = 0
@@ -496,9 +499,34 @@ while not na.finished:
     na.iternext()
 print("use iter\n", z)
 '''
-
+'''
 it = np.nditer([A,B,None])
 for x,y,z in it: 
     z[...] = x + y
 print(it.operands[2])
+'''
 
+#63
+class MyArray():
+    def __init__(self, argarray, argname="nothing"):
+        self.inarray = argarray
+        self.name = argname
+        print(self.inarray)
+
+    def getName(self):
+        return self.name
+
+ar = np.random.randint(0,10,10)
+myarray = MyArray(ar, "mikearray")
+print("attr in MyArray = ", myarray.getName())
+
+class NamedArray(np.ndarray):
+    def __new__(cls, array, name="nothing"):
+        obj = np.asarray(array).view(cls)
+        obj.name = name
+        return obj
+    def __array_finalize__(self, obj):
+        if obj is None: return
+        self.name = getattr(obj, 'name', "nothing")
+Z = NamedArray(np.arange(10), "range_10")
+print(Z.name)
