@@ -504,7 +504,6 @@ it = np.nditer([A,B,None])
 for x,y,z in it: 
     z[...] = x + y
 print(it.operands[2])
-'''
 
 #63
 class MyArray():
@@ -530,3 +529,14 @@ class NamedArray(np.ndarray):
         self.name = getattr(obj, 'name', "nothing")
 Z = NamedArray(np.arange(10), "range_10")
 print(Z.name)
+'''
+
+#64
+ar = np.arange(10)
+br = np.array([1,3,5])
+print(ar)
+print(br)
+np.add.at(ar,br,1)
+print(ar)
+
+#65
