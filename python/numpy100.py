@@ -540,3 +540,14 @@ np.add.at(ar,br,1)
 print(ar)
 
 #65
+I = np.array([1,3,0,3,4,1])
+X = np.array([1,2,3,4,5,6])
+F = np.zeros(6)
+for i in I:
+    F[i] += X[i]
+print(F)
+
+X = [1,2,3,4,5,6]
+I = [1,3,9,3,4,1]
+F = np.bincount(I,X)
+print(F)
