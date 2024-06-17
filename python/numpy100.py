@@ -529,7 +529,6 @@ class NamedArray(np.ndarray):
         self.name = getattr(obj, 'name', "nothing")
 Z = NamedArray(np.arange(10), "range_10")
 print(Z.name)
-'''
 
 #64
 ar = np.arange(10)
@@ -551,5 +550,13 @@ X = [1,2,3,4,5,6]
 I = [1,3,9,3,4,1]
 F = np.bincount(I,X)
 print(F)
+'''
 
 #66
+w, h = 2, 2#10, 10 # 256, 256
+I = np.random.randint(0,3,(w,h,3)).astype(np.ubyte)
+print(I)
+c = np.unique(I.reshape(-1,3), axis=0)
+print(c)
+n = len(c)
+print(n)
