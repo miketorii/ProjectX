@@ -550,7 +550,7 @@ X = [1,2,3,4,5,6]
 I = [1,3,9,3,4,1]
 F = np.bincount(I,X)
 print(F)
-'''
+
 
 #66
 w, h = 2, 2#10, 10 # 256, 256
@@ -560,3 +560,18 @@ c = np.unique(I.reshape(-1,3), axis=0)
 print(c)
 n = len(c)
 print(n)
+
+'''
+
+#67
+Z = np.random.randint(0,10,(3,4,3,4))
+print(Z)
+sum = Z.sum(axis=(-2,-1))
+print(sum)
+
+s = np.sum([[0,1],[5,6]], axis=0)
+print(s)
+s = np.sum([[0,1],[5,6]], axis=1)
+print(s)
+
+
