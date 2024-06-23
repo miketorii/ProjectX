@@ -561,8 +561,6 @@ print(c)
 n = len(c)
 print(n)
 
-'''
-
 #67
 Z = np.random.randint(0,10,(3,4,3,4))
 print(Z)
@@ -573,5 +571,28 @@ s = np.sum([[0,1],[5,6]], axis=0)
 print(s)
 s = np.sum([[0,1],[5,6]], axis=1)
 print(s)
+
+'''
+
+#68
+D = np.random.randint(0,100,10)
+#D = np.random.uniform(0,1,10)
+S = np.random.randint(0,10,10)
+print(D)
+print(S)
+D_sums = np.bincount(S, weights=D)
+print(D_sums)
+D_counts = np.bincount(S)
+print(D_counts)
+D_means = D_sums / D_counts
+print(D_means)
+
+D = np.random.uniform(0,1,100)
+S = np.random.randint(0,10,100)
+D_sums = np.bincount(S, weights=D)
+D_counts = np.bincount(S)
+D_means = D_sums / D_counts
+print(D_means)
+
 
 
