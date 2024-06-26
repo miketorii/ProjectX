@@ -572,8 +572,6 @@ print(s)
 s = np.sum([[0,1],[5,6]], axis=1)
 print(s)
 
-'''
-
 #68
 D = np.random.randint(0,100,10)
 #D = np.random.uniform(0,1,10)
@@ -594,5 +592,17 @@ D_counts = np.bincount(S)
 D_means = D_sums / D_counts
 print(D_means)
 
+'''
 
+#69
+#### 69. How to get the diagonal of a dot product? (★★★)
+#hint: np.diag`
 
+A = np.random.randint(0,3,(2,2))
+print(A)
+B = np.random.randint(0,3,(2,2))
+print(B)
+Z = np.dot(A, B)
+print(Z)
+d = np.diag(Z)
+print(d)
