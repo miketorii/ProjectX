@@ -595,9 +595,6 @@ print(D_means)
 '''
 
 #69
-#### 69. How to get the diagonal of a dot product? (★★★)
-#hint: np.diag`
-
 A = np.random.randint(0,3,(2,2))
 print(A)
 B = np.random.randint(0,3,(2,2))
