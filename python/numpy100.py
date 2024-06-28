@@ -592,8 +592,6 @@ D_counts = np.bincount(S)
 D_means = D_sums / D_counts
 print(D_means)
 
-'''
-
 #69
 A = np.random.randint(0,3,(2,2))
 print(A)
@@ -603,3 +601,16 @@ Z = np.dot(A, B)
 print(Z)
 d = np.diag(Z)
 print(d)
+
+'''
+
+#70
+X = np.array([1,2,3,4,5])
+print(X)
+length = len(X)
+Y = np.zeros(length+3*(length-1))
+Y[::4] = X
+print(Y)
+
+
+
