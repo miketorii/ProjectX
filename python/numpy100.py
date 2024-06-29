@@ -610,10 +610,7 @@ Y = np.zeros(length+3*(length-1))
 Y[::4] = X
 print(Y)
 
-'''
 #71
-#### 71. Consider an array of dimension (5,5,3), how to mulitply it by an array with dimensions (5,5)? (★★★)
-#`hint: array[:, :, None]`
 A = np.random.randint(0,10,(5,5,3))
 B = np.random.randint(0,10,(5,5))
 print(A)
@@ -629,6 +626,16 @@ C = B[:,:, None]
 D = A*C
 print(D)
 
+'''
+# 72
+A = np.random.randint(0,10,(3,3))
+print(A)
+A[[0,1]] = A[[1,0]]
+print(A)
 
+A = np.arange(25).reshape(5,5)
+print(A)
+A[[0,1]] = A[[1,0]]
+print(A)
 
 
