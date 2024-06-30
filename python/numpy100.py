@@ -626,7 +626,6 @@ C = B[:,:, None]
 D = A*C
 print(D)
 
-'''
 # 72
 A = np.random.randint(0,10,(3,3))
 print(A)
@@ -637,5 +636,34 @@ A = np.arange(25).reshape(5,5)
 print(A)
 A[[0,1]] = A[[1,0]]
 print(A)
+'''
 
+#73
+T1 = np.array([0,1,1,5,10,10,20,30,30])
+print(T1)
+T2 = np.unique(T1)
+print(T2)
+T3 = np.roll(T2,3)
+print(T3)
+
+A = np.random.randint(0,10,(10,3))
+print(A)
+
+B=A.repeat(2,axis=1)
+print(B)
+
+C = np.roll(B, -1, axis=1)
+print(C)
+
+D = C.reshape(len(C)*3,2)
+print(D)
+
+F = np.sort(D,axis=1)
+print(F)
+
+G = F.view( dtype=[('p0',F.dtype),('p1',F.dtype)] )
+print(G)
+
+H = np.unique(G)
+print(H)
 
