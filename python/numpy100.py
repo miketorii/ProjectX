@@ -636,7 +636,6 @@ A = np.arange(25).reshape(5,5)
 print(A)
 A[[0,1]] = A[[1,0]]
 print(A)
-'''
 
 #73
 T1 = np.array([0,1,1,5,10,10,20,30,30])
@@ -666,4 +665,18 @@ print(G)
 
 H = np.unique(G)
 print(H)
+
+'''
+# 74
+A = np.array([1,1,2,3,4,4,6])
+print(A)
+
+C = np.bincount(A)
+print(C)
+
+D = np.arange(len(C))
+print(D)
+
+F = np.repeat(D, C)
+print(F)
 
