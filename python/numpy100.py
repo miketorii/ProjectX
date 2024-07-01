@@ -666,7 +666,6 @@ print(G)
 H = np.unique(G)
 print(H)
 
-'''
 # 74
 A = np.array([1,1,2,3,4,4,6])
 print(A)
@@ -679,4 +678,25 @@ print(D)
 
 F = np.repeat(D, C)
 print(F)
+
+'''
+#### 75. How to compute averages using a sliding window over an array? (★★★)
+#`hint: np.cumsum, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
+
+#75
+#a = np.array([[1,2,3],[4,5,6]])
+n = 3
+a = np.array([1,2,3,4,5,6,7,8,9,10])
+A = np.cumsum(a)
+print(A)
+#A[n:] = A[n:] - A[:-n]
+print(A[n:])
+print(A[:-n])
+A[n:] = A[n:] - A[:-n]
+print(A)
+C = A[n-1:] / n
+print(C)
+
+
+
 
