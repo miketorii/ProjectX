@@ -679,10 +679,6 @@ print(D)
 F = np.repeat(D, C)
 print(F)
 
-'''
-#### 75. How to compute averages using a sliding window over an array? (★★★)
-#`hint: np.cumsum, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
-
 #75
 #a = np.array([[1,2,3],[4,5,6]])
 n = 3
@@ -697,6 +693,12 @@ print(A)
 C = A[n-1:] / n
 print(C)
 
+'''
 
+#76
+from numpy.lib.stride_tricks import sliding_window_view
 
+Z = np.arange(10)
+X = sliding_window_view(Z, window_shape=3)
+print(X)
 
