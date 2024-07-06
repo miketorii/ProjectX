@@ -693,12 +693,30 @@ print(A)
 C = A[n-1:] / n
 print(C)
 
-'''
-
 #76
 from numpy.lib.stride_tricks import sliding_window_view
 
 Z = np.arange(10)
 X = sliding_window_view(Z, window_shape=3)
 print(X)
+
+'''
+
+#77
+#### 77. How to negate a boolean, or to change the sign of a float inplace? (★★★)
+#`hint: np.logical_not, np.negative`
+
+t = np.logical_not([True, False, 0, 1])
+print(t)
+t2 = np.negative([1,-1])
+print(t2)
+
+Z = np.random.rand(5)
+X = np.negative(Z)
+print(X)
+
+Z = np.logical_not([True, False])
+print(Z)
+
+
 
