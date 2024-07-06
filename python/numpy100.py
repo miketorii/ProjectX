@@ -700,12 +700,8 @@ Z = np.arange(10)
 X = sliding_window_view(Z, window_shape=3)
 print(X)
 
-'''
 
 #77
-#### 77. How to negate a boolean, or to change the sign of a float inplace? (★★★)
-#`hint: np.logical_not, np.negative`
-
 t = np.logical_not([True, False, 0, 1])
 print(t)
 t2 = np.negative([1,-1])
@@ -718,5 +714,37 @@ print(X)
 Z = np.logical_not([True, False])
 print(Z)
 
+'''
+
+#78
+#### 78. Consider 2 sets of points P0,P1 describing lines (2d) and a point p, 
+# how to compute distance from p to each line i (P0[i],P1[i])? (★★★)
+#`No hints provided...`
+
+def calc_distance(p0, p1, p):
+    mid = np.array([ (p1[0]-p0[0])/2, (p1[1]-p0[1])/2 ] )
+    d = np.sqrt( (mid[0]-p[0])**2 + (mid[1]-p[1])**2 )
+    return d 
+
+P0 = np.array([1,2])
+P1 = np.array([3,4])
+p = np.array([1,0])
+dis = calc_distance(P0,P1,p)
+print(dis)
+
+def calc_distance_array(P0,P1,p):
+    dis = []
+    for i in range(len(P0)):
+        d = calc_distance(P0[i],P1[i],p)
+        dis = np.append(dis,d)
+    return dis
+
+P0 = np.random.randint(0,3,(3,2))
+P1 = np.random.randint(0,3,(3,2))
+p = np.array([0,0])
+print(P0)
+print(P1)
+d = calc_distance_array(P0,P1,p)
+print(d)
 
 
