@@ -741,7 +741,6 @@ print(P1)
 d = calc_distance_array(P0,P1,p)
 print(d)
 
-'''
 #79
 
 def calc_distance2(p0, p1, p):
@@ -762,13 +761,25 @@ PX = np.random.randint(0,3,(3,2))
 d = calc_distance_array2(P0,P1,PX)
 print(d)
 
+'''
+#80
+
+Z = np.random.randint(0,10,(10,10))
+shape = (5,5)
+fill  = 0
+position = (2,2)
+print(Z)
+
+R = np.zeros(shape)
+for i in range(shape[0]):
+    for j in range(shape[1]):
+        R[i][j] = Z[i+position[0]][j+position[1]]
+
+print(R)
 
 
 
 
-
-#### 80. Consider an arbitrary array, write a function that extract a subpart with a fixed shape and centered on a given element (pad with a `fill` value when necessary) (★★★)
-#`hint: minimum maximum`
 #### 81. Consider an array Z = [1,2,3,4,5,6,7,8,9,10,11,12,13,14], how to generate an array R = [[1,2,3,4], [2,3,4,5], [3,4,5,6], ..., [11,12,13,14]]? (★★★)
 #`hint: stride_tricks.as_strided, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
 #### 82. Compute a matrix rank (★★★)
