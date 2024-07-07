@@ -777,11 +777,21 @@ for i in range(shape[0]):
 
 print(R)
 
-
-
-
-#### 81. Consider an array Z = [1,2,3,4,5,6,7,8,9,10,11,12,13,14], how to generate an array R = [[1,2,3,4], [2,3,4,5], [3,4,5,6], ..., [11,12,13,14]]? (★★★)
+#### 81. Consider an array Z = [1,2,3,4,5,6,7,8,9,10,11,12,13,14], 
+# how to generate an array R = [[1,2,3,4], [2,3,4,5], [3,4,5,6], ..., [11,12,13,14]]? (★★★)
 #`hint: stride_tricks.as_strided, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
+
+#81
+from numpy.lib.stride_tricks import sliding_window_view
+from numpy.lib.stride_tricks import as_strided
+
+Z = np.array([1,2,3,4,5,6,7,8,9,10,11,12,13,14])
+print(Z)
+
+R = as_strided(Z, shape=(11,4), strides=(8,8))
+print(R)
+
+
 #### 82. Compute a matrix rank (★★★)
 #`hint: np.linalg.svd, np.linalg.matrix_rank`
 #### 83. How to find the most frequent value in an array?
