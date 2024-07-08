@@ -761,7 +761,6 @@ PX = np.random.randint(0,3,(3,2))
 d = calc_distance_array2(P0,P1,PX)
 print(d)
 
-'''
 #80
 
 Z = np.random.randint(0,10,(10,10))
@@ -777,10 +776,6 @@ for i in range(shape[0]):
 
 print(R)
 
-#### 81. Consider an array Z = [1,2,3,4,5,6,7,8,9,10,11,12,13,14], 
-# how to generate an array R = [[1,2,3,4], [2,3,4,5], [3,4,5,6], ..., [11,12,13,14]]? (★★★)
-#`hint: stride_tricks.as_strided, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
-
 #81
 from numpy.lib.stride_tricks import sliding_window_view
 from numpy.lib.stride_tricks import as_strided
@@ -792,8 +787,23 @@ R = as_strided(Z, shape=(11,4), strides=(8,8))
 print(R)
 
 
+'''
+
 #### 82. Compute a matrix rank (★★★)
 #`hint: np.linalg.svd, np.linalg.matrix_rank`
+
+#82
+A = np.array([[1,1,4,0,1],
+              [0,3,1,3,2],
+              [1,3,0,0,1],
+              [2,4,3,1,1]
+              ])
+r = np.linalg.matrix_rank(A)
+print(r)
+
+
+
+
 #### 83. How to find the most frequent value in an array?
 #`hint: np.bincount, argmax`
 #### 84. Extract all the contiguous 3x3 blocks from a random 10x10 matrix (★★★)
