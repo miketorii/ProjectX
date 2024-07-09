@@ -788,10 +788,6 @@ print(R)
 
 
 '''
-
-#### 82. Compute a matrix rank (★★★)
-#`hint: np.linalg.svd, np.linalg.matrix_rank`
-
 #82
 A = np.array([[1,1,4,0,1],
               [0,3,1,3,2],
@@ -801,11 +797,25 @@ A = np.array([[1,1,4,0,1],
 r = np.linalg.matrix_rank(A)
 print(r)
 
+B = np.array([[1,2],[3,4]])
+print(B)
+U, s, V = np.linalg.svd(B, full_matrices=True)
+print(U)
+print(np.diag(s))
+print(V)
 
+BB = np.dot( np.dot(U, np.diag(s)) , V)
+print(BB)
 
+#83
+X = np.array([1,2,3,3,3,4,5,6])
+print(X)
+Y = np.bincount(X)
+print(Y)
+print("max=",Y.argmax())
+m = np.argmax(Y)
+print(m)
 
-#### 83. How to find the most frequent value in an array?
-#`hint: np.bincount, argmax`
 #### 84. Extract all the contiguous 3x3 blocks from a random 10x10 matrix (★★★)
 #`hint: stride_tricks.as_strided, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
 #### 85. Create a 2D array subclass such that Z[i,j] == Z[j,i] (★★★)
