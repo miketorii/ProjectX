@@ -787,7 +787,6 @@ R = as_strided(Z, shape=(11,4), strides=(8,8))
 print(R)
 
 
-'''
 #82
 A = np.array([[1,1,4,0,1],
               [0,3,1,3,2],
@@ -816,8 +815,17 @@ print("max=",Y.argmax())
 m = np.argmax(Y)
 print(m)
 
-#### 84. Extract all the contiguous 3x3 blocks from a random 10x10 matrix (★★★)
-#`hint: stride_tricks.as_strided, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
+'''
+
+#84
+from numpy.lib.stride_tricks import sliding_window_view
+
+X = np.random.randint(0,10,(10,10))
+print(X)
+Y = sliding_window_view(X, (3,3))
+print(Y)
+
+
 #### 85. Create a 2D array subclass such that Z[i,j] == Z[j,i] (★★★)
 #`hint: class method`
 #### 86. Consider a set of p matrices with shape (n,n) and a set of p vectors with shape (n,1). How to compute the sum of of the p matrix products at once? (result has shape (n,1)) (★★★)
