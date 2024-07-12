@@ -815,7 +815,6 @@ print("max=",Y.argmax())
 m = np.argmax(Y)
 print(m)
 
-'''
 
 #84
 from numpy.lib.stride_tricks import sliding_window_view
@@ -825,11 +824,48 @@ print(X)
 Y = sliding_window_view(X, (3,3))
 print(Y)
 
+'''
 
 #### 85. Create a 2D array subclass such that Z[i,j] == Z[j,i] (★★★)
 #`hint: class method`
-#### 86. Consider a set of p matrices with shape (n,n) and a set of p vectors with shape (n,1). How to compute the sum of of the p matrix products at once? (result has shape (n,1)) (★★★)
+
+#85
+
+class Array2D:
+    def __init__(self):
+        return
+    
+    def convert(self, Z):
+        shape = Z.shape
+        for i in range(shape[0]):
+            for j in range(shape[1]):
+                Z[j][i] = Z[i][j]
+        return Z
+    
+X = np.arange(9).reshape((3,3))
+print(X)
+ar = Array2D()
+Y = ar.convert(X)
+print(Y)
+
+
+#### 86. Consider a set of p matrices with shape (n,n) and a set of p vectors with shape (n,1). 
+# How to compute the sum of of the p matrix products at once? (result has shape (n,1)) (★★★)
 #`hint: np.tensordot`
+
+print("---------")
+n=3
+p=2
+X = np.ones((p,n,n))
+Y = np.ones((p,n,1))
+print(X)
+print(Y)
+Z = np.tensordot(X,Y,axes=[[0,2],[0,1]])
+print(Z)
+
+#P = np.random.randint(0,3,(n,n))
+#print(P)
+
 #### 87. Consider a 16x16 array, how to get the block-sum (block size is 4x4)? (★★★)
 #`hint: np.add.reduceat, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
 #### 88. How to implement the Game of Life using numpy arrays? (★★★)
