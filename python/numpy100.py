@@ -863,6 +863,15 @@ print(Y)
 Z = np.tensordot(X,Y,axes=[[0,2],[0,1]])
 print(Z)
 
+a = np.arange(1,9).reshape(2,2,2)
+print(a)
+A = np.array(['a','b','c','d'],dtype=object).reshape(2,2)
+print(A)
+Z = np.tensordot(a,A) #axes=2
+print(Z)
+X = np.tensordot(a,A,1) #axes=1
+print(X)
+
 #P = np.random.randint(0,3,(n,n))
 #print(P)
 
