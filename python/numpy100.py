@@ -853,6 +853,7 @@ print(Y)
 # How to compute the sum of of the p matrix products at once? (result has shape (n,1)) (★★★)
 #`hint: np.tensordot`
 
+#86
 print("---------")
 n=3
 p=2
@@ -861,19 +862,39 @@ Y = np.ones((p,n,1))
 print(X)
 print(Y)
 Z = np.tensordot(X,Y,axes=[[0,2],[0,1]])
+print("axes=02 01")
 print(Z)
 
+# axes=0: axb  tensor product
+# axes=1: a*b  dot product(naiseki)
+# axes=2: a:b  double contraction(2jyu syukuyaku) default
+print("---------")
 a = np.arange(1,9).reshape(2,2,2)
 print(a)
 A = np.array(['a','b','c','d'],dtype=object).reshape(2,2)
 print(A)
 Z = np.tensordot(a,A) #axes=2
+print("axes=2")
 print(Z)
 X = np.tensordot(a,A,1) #axes=1
+print("axes=1")
 print(X)
+Y = np.tensordot(a,A,0) #axes=0
+print("axes=0")
+print(Y)
+# a [0,2] -> aa
+# A [0,1] -> AA
+# XX = aa : AA
+XX = np.tensordot(a,A,axes=[[0,2],[0,1]])
+print("axes=02 01")
+print(XX)
 
-#P = np.random.randint(0,3,(n,n))
-#print(P)
+#0201
+#['abbcccccdddddd' 'aaabbbbcccccccdddddddd']
+#0101
+#['abbbcccccddddddd' 'aabbbbccccccdddddddd']
+#1001
+#['abbbbbcccddddddd' 'aabbbbbbccccdddddddd']
 
 #### 87. Consider a 16x16 array, how to get the block-sum (block size is 4x4)? (★★★)
 #`hint: np.add.reduceat, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
