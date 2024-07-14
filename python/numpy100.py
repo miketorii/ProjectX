@@ -824,8 +824,6 @@ print(X)
 Y = sliding_window_view(X, (3,3))
 print(Y)
 
-'''
-
 #85
 
 class Symetric():
@@ -838,12 +836,6 @@ print(A)
 print(np.diag(A.diagonal()))
 s = Symetric()
 s.symetric(A)
-
-
-'''
-#### 86. Consider a set of p matrices with shape (n,n) and a set of p vectors with shape (n,1). 
-# How to compute the sum of of the p matrix products at once? (result has shape (n,1)) (★★★)
-#`hint: np.tensordot`
 
 #86
 print("---------")
@@ -892,6 +884,26 @@ print(XX)
 
 #### 87. Consider a 16x16 array, how to get the block-sum (block size is 4x4)? (★★★)
 #`hint: np.add.reduceat, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
+
+#87
+print("---------87---------")
+
+from numpy.lib.stride_tricks import sliding_window_view
+
+#k = 2
+#n = 4
+k = 4
+n = 16
+A = np.arange(n*n).reshape((n,n))
+print(A)
+
+Y = sliding_window_view(A, (k,k))
+print(Y)
+print("block sum =")
+S = Y[::k, ::k, ...].sum(axis=(-2, -1))
+print(S)
+
+
 #### 88. How to implement the Game of Life using numpy arrays? (★★★)
 #`No hints provided...`
 #### 89. How to get the n largest values of an array (★★★)
