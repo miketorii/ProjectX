@@ -925,7 +925,6 @@ def iterate(Z):
 Z = np.random.randint(0,2,(50,50))
 for i in range(100): Z = iterate(Z)
 print(Z)
-'''
 
 #89
 n = 3
@@ -939,11 +938,43 @@ print(A)
 B = Z[A]
 print(B)
 
+'''
 
-
-
-#### 90. Given an arbitrary number of vectors, build the cartesian product (every combinations of every item) (★★★)
+#### 90. Given an arbitrary number of vectors, 
+# build the cartesian product (every combinations of every item) (★★★)
 #`hint: np.indices`
+
+#90
+X = np.arange(9).reshape(3,3)
+print(X)
+Z = np.indices(X.shape)
+print(Z)
+#print(Z[0])
+#print(Z[1])
+
+def cartesian(arrays):
+    arrays = [np.asarray(a) for a in arrays]
+    shape = (len(x) for x in arrays)
+    print(arrays)
+
+    ix = np.indices(shape, dtype=int)
+    print(ix)
+    ix = ix.reshape(len(arrays),-1).T
+    print(ix)
+
+    for n, arr in enumerate(arrays):
+        AR = arrays[n][ix[:,n]]
+        print("AR=",AR)
+        ix[:,n] = AR
+    
+    return ix
+ 
+#ret = cartesian(([1,2,3],[4,5],[6,7]))
+ret = cartesian(([1,2,3],[4,5,6]))
+print("---90---")
+print(ret)
+
+
 #### 91. How to create a record array from a regular array? (★★★)
 #`hint: np.core.records.fromarrays`
 #### 92. Consider a large vector Z, compute Z to the power of 3 using 3 different methods (★★★)
