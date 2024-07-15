@@ -880,14 +880,7 @@ print(XX)
 #1001
 #['abbbbbcccddddddd' 'aabbbbbbccccdddddddd']
 
-'''
-
-#### 87. Consider a 16x16 array, how to get the block-sum (block size is 4x4)? (★★★)
-#`hint: np.add.reduceat, from numpy.lib.stride_tricks import sliding_window_view (np>=1.20.0)`
-
 #87
-print("---------87---------")
-
 from numpy.lib.stride_tricks import sliding_window_view
 
 #k = 2
@@ -903,11 +896,52 @@ print("block sum =")
 S = Y[::k, ::k, ...].sum(axis=(-2, -1))
 print(S)
 
-
+'''
 #### 88. How to implement the Game of Life using numpy arrays? (★★★)
 #`No hints provided...`
-#### 89. How to get the n largest values of an array (★★★)
-#`hint: np.argsort | np.argpartition`
+
+#セルの生死:
+#セルは「生」（1）または「死」（0）の状態を持ちます。
+#セルの次の世代の状態は、周囲の8つのセルの現在の状態によって決まります。
+#ルール:
+#誕生: 死んでいるセルに隣接する生きたセルがちょうど3つあれば、次の世代が誕生します。
+#生存: 生きているセルに隣接する生きたセルが2つか3つならば、次の世代でも生存します。
+#過疎: 生きているセルに隣接する生きたセルが1つ以下ならば、過疎により死滅します。
+#過密: 生きているセルに隣接する生きたセルが4つ以上ならば、過密により死滅します。
+'''
+def iterate(Z):
+    # Count neighbours
+    N = (Z[0:-2,0:-2] + Z[0:-2,1:-1] + Z[0:-2,2:] +
+         Z[1:-1,0:-2]                + Z[1:-1,2:] +
+         Z[2:  ,0:-2] + Z[2:  ,1:-1] + Z[2:  ,2:])
+
+    # Apply rules
+    birth = (N==3) & (Z[1:-1,1:-1]==0)
+    survive = ((N==2) | (N==3)) & (Z[1:-1,1:-1]==1)
+    Z[...] = 0
+    Z[1:-1,1:-1][birth | survive] = 1
+    return Z
+
+Z = np.random.randint(0,2,(50,50))
+for i in range(100): Z = iterate(Z)
+print(Z)
+'''
+
+#89
+n = 3
+Z = np.array([2,3,5,1,0,9,4])
+print(Z)
+X = np.argsort(Z)
+print(X)
+print(Z[X])
+A = X[-n:]
+print(A)
+B = Z[A]
+print(B)
+
+
+
+
 #### 90. Given an arbitrary number of vectors, build the cartesian product (every combinations of every item) (★★★)
 #`hint: np.indices`
 #### 91. How to create a record array from a regular array? (★★★)
