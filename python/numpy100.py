@@ -938,12 +938,6 @@ print(A)
 B = Z[A]
 print(B)
 
-'''
-
-#### 90. Given an arbitrary number of vectors, 
-# build the cartesian product (every combinations of every item) (★★★)
-#`hint: np.indices`
-
 #90
 X = np.arange(9).reshape(3,3)
 print(X)
@@ -974,9 +968,15 @@ ret = cartesian(([1,2,3],[4,5,6]))
 print("---90---")
 print(ret)
 
+'''
 
-#### 91. How to create a record array from a regular array? (★★★)
-#`hint: np.core.records.fromarrays`
+#91
+x1 = np.array([1,2,3,4])
+x2 = np.array(["mike","torii","john","kerry"])
+x3 = np.array([4.0, 2.1, 2.3, 5.1])
+r = np.core.records.fromarrays([x1,x2,x3], dtype=np.dtype([("a", np.int32),("b", "S5"),("c", np.float32)]))
+print(r)
+
 #### 92. Consider a large vector Z, compute Z to the power of 3 using 3 different methods (★★★)
 #`hint: np.power, *, np.einsum`
 #### 93. Consider two arrays A and B of shape (8,3) and (2,2). How to find rows of A that contain elements of each row of B regardless of the order of the elements in B? (★★★)
