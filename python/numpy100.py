@@ -977,9 +977,7 @@ x3 = np.array([4.0, 2.1, 2.3, 5.1])
 r = np.core.records.fromarrays([x1,x2,x3], dtype=np.dtype([("a", np.int32),("b", "S5"),("c", np.float32)]))
 print(r)
 
-#### 92. Consider a large vector Z, compute Z to the power of 3 using 3 different methods (★★★)
-#`hint: np.power, *, np.einsum`
-
+#92
 Z = np.array([1,2,3,4])
 print(Z)
 m1 = np.power(Z,3)
