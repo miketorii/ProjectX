@@ -979,6 +979,16 @@ print(r)
 
 #### 92. Consider a large vector Z, compute Z to the power of 3 using 3 different methods (★★★)
 #`hint: np.power, *, np.einsum`
+
+Z = np.array([1,2,3,4])
+print(Z)
+m1 = np.power(Z,3)
+m2 = Z**3
+m3 = np.einsum("i,i,i->i",Z,Z,Z)
+print(m1)
+print(m2)
+print(m3)
+
 #### 93. Consider two arrays A and B of shape (8,3) and (2,2). How to find rows of A that contain elements of each row of B regardless of the order of the elements in B? (★★★)
 #`hint: np.where`
 #### 94. Considering a 10x3 matrix, extract rows with unequal values (e.g. [2,2,3]) (★★★)
