@@ -968,8 +968,6 @@ ret = cartesian(([1,2,3],[4,5,6]))
 print("---90---")
 print(ret)
 
-'''
-
 #91
 x1 = np.array([1,2,3,4])
 x2 = np.array(["mike","torii","john","kerry"])
@@ -987,8 +985,37 @@ print(m1)
 print(m2)
 print(m3)
 
-#### 93. Consider two arrays A and B of shape (8,3) and (2,2). How to find rows of A that contain elements of each row of B regardless of the order of the elements in B? (★★★)
+'''
+
+#### 93. Consider two arrays A and B of shape (8,3) and (2,2). 
+# How to find rows of A that contain elements of each row of B 
+# regardless of the order of the elements in B? (★★★)
 #`hint: np.where`
+
+A = np.random.randint(0,5,(8,3))
+print(A)
+B = np.random.randint(0,5,(2,2))
+print(B)
+
+AA = A[...,np.newaxis,np.newaxis]
+print(AA)
+C = (AA == B)
+print(C)
+CC = np.where(C.any((3,1)).all(1))[0]
+print(CC)
+
+
+'''
+AA = np.arange(10)
+BB = np.where(AA < 3)
+print(BB)
+
+CC = np.array([3,4])
+ret = np.isin(CC,AA)
+print(ret)
+'''
+
+
 #### 94. Considering a 10x3 matrix, extract rows with unequal values (e.g. [2,2,3]) (★★★)
 #`No hints provided...`
 #### 95. Convert a vector of ints into a matrix binary representation (★★★)
