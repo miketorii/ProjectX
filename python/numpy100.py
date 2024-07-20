@@ -985,13 +985,7 @@ print(m1)
 print(m2)
 print(m3)
 
-'''
-
-#### 93. Consider two arrays A and B of shape (8,3) and (2,2). 
-# How to find rows of A that contain elements of each row of B 
-# regardless of the order of the elements in B? (★★★)
-#`hint: np.where`
-
+#93
 A = np.random.randint(0,5,(8,3))
 print(A)
 B = np.random.randint(0,5,(2,2))
@@ -1001,16 +995,37 @@ AA = A[...,np.newaxis,np.newaxis]
 print(AA)
 C = (AA == B)
 print(C)
-CC = np.where(C.any((3,1)).all(1))[0]
-print(CC)
+D = C.any((3,1))
+print("----D---")
+print(D)
+E = D.all(1)
+print("----E---")
+print(E)
+F = E[0]
+print(F)
+
+#CC = np.where(C.any((3,1)).all(1))[0]
+#print(CC)
+
+print("-----------")
+C = np.array([[[[False,True],
+               [True, False]],
+              [[False, False],
+               [False, False]],
+              [[True,False],
+               [False,True]]]])
+print(C)
+D = C.any((3,1))
+print(D)
 
 print("-----------")
 A = np.array([[1,1,1],[1,1,0]])
 #B = np.all(A)
 B = A.all(1)
 print(B)
+C = A.any(1)
+print(C)
 
-'''
 AA = np.arange(10)
 BB = np.where(AA < 3)
 print(BB)
@@ -1018,11 +1033,17 @@ print(BB)
 CC = np.array([3,4])
 ret = np.isin(CC,AA)
 print(ret)
+
 '''
+#94
+X = np.random.randint(0,5,(10,3))
+print(X)
+#print(X[:,:-1])
+Y = np.all( X[:,1:] == X[:,:-1], axis=1)
+print(Y)
+U = X[~Y]
+print(U)
 
-
-#### 94. Considering a 10x3 matrix, extract rows with unequal values (e.g. [2,2,3]) (★★★)
-#`No hints provided...`
 #### 95. Convert a vector of ints into a matrix binary representation (★★★)
 #`hint: np.unpackbits`
 #### 96. Given a two dimensional array, how to extract unique rows? (★★★)
