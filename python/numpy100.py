@@ -1034,7 +1034,6 @@ CC = np.array([3,4])
 ret = np.isin(CC,AA)
 print(ret)
 
-'''
 #94
 X = np.random.randint(0,5,(10,3))
 print(X)
@@ -1044,8 +1043,21 @@ print(Y)
 U = X[~Y]
 print(U)
 
+'''
+
 #### 95. Convert a vector of ints into a matrix binary representation (★★★)
 #`hint: np.unpackbits`
+
+a = np.array([[2],[7],[10]], dtype=np.uint8)
+print(a)
+b = np.unpackbits(a, axis=1)
+print(b)
+
+I = np.array([0, 1, 2, 3, 15, 16, 32, 64, 128])
+print(I)
+B = ((I.reshape(-1,1) & (2**np.arange(8))) != 0).astype(int)
+print(B[:,::-1])
+
 #### 96. Given a two dimensional array, how to extract unique rows? (★★★)
 #`hint: np.ascontiguousarray | np.unique`
 #### 97. Considering 2 vectors A & B, write the einsum equivalent of inner, outer, sum, and mul function (★★★)
