@@ -1043,8 +1043,6 @@ print(Y)
 U = X[~Y]
 print(U)
 
-'''
-
 #95
 a = np.array([[2],[7],[10]], dtype=np.uint8)
 print(a)
@@ -1056,8 +1054,17 @@ print(I)
 B = ((I.reshape(-1,1) & (2**np.arange(8))) != 0).astype(int)
 print(B[:,::-1])
 
-#### 96. Given a two dimensional array, how to extract unique rows? (★★★)
-#`hint: np.ascontiguousarray | np.unique`
+'''
+
+#96
+X = np.array([[1,2,3,4],
+              [5,6,7,8],
+              [1,2,3,4]])
+#X = np.random.randint(0,2,(6,3))
+print(X)
+Y = np.unique(X, axis=0)
+print(Y)
+
 #### 97. Considering 2 vectors A & B, write the einsum equivalent of inner, outer, sum, and mul function (★★★)
 #`hint: np.einsum`
 #### 98. Considering a path described by two vectors (X,Y), how to sample it using equidistant samples (★★★)?
