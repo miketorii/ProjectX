@@ -1114,12 +1114,6 @@ xp = np.array([1,2,3])
 fp = np.array([2,4,6])
 z = np.interp(2.5,xp,fp)
 print(z)
-'''
-
-#### 99. Given an integer n and a 2D array X, 
-# select from X the rows which can be interpreted as draws from a multinomial distribution with n degrees, 
-# i.e., the rows which only contain integers and which sum to n. (★★★)
-#`hint: np.logical_and.reduce, np.mod`
 
 #99
 X = np.asarray([
@@ -1142,7 +1136,6 @@ M &= ZZ
 print(M)
 print(X[M])
 
-'''
 #a = np.logical_and([False,True],[False,False])
 a = np.logical_and([False,True],[False,True])
 print(a)
@@ -1153,7 +1146,23 @@ a = np.logical_and.reduce(X,0)
 print(a)
 '''
 
-#### 100. Compute bootstrapped 95% confidence intervals for the mean of a 1D array X 
-# (i.e., resample the elements of an array with replacement N times, 
-# compute the mean of each sample, and then compute percentiles over the means). (★★★)
-#`hint: np.percentile`
+#100
+
+X = np.array([10,20,30,40,50])
+#N = 5
+N=1000
+idx = np.random.randint(0,X.size,(N,X.size))
+#print(idx)
+#print(X[idx])
+means = X[idx].mean(axis=1)
+#print(means)
+
+#confint = np.percentile(means,[2.5,97.5])
+confint = np.percentile(means,50)
+print(confint)
+
+'''
+X = np.array([[10,7,4],[3,2,1]])
+Y = np.percentile(X,50,axis=0)
+print(Y)
+'''
