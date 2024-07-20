@@ -1080,8 +1080,6 @@ print(X)
 X = np.outer(A,B) 
 print(X)
 
-'''
-
 #98
 
 x1 = np.array([1,2,3,4,5])
@@ -1104,7 +1102,6 @@ y4 = np.interp(x2,r,y2)
 print(y3)
 print(y4)
 
-'''
 a = np.array([[1,2,3],[4,5,6]])
 b=np.cumsum(a)
 print(b)
@@ -1119,8 +1116,44 @@ z = np.interp(2.5,xp,fp)
 print(z)
 '''
 
-
-#### 99. Given an integer n and a 2D array X, select from X the rows which can be interpreted as draws from a multinomial distribution with n degrees, i.e., the rows which only contain integers and which sum to n. (★★★)
+#### 99. Given an integer n and a 2D array X, 
+# select from X the rows which can be interpreted as draws from a multinomial distribution with n degrees, 
+# i.e., the rows which only contain integers and which sum to n. (★★★)
 #`hint: np.logical_and.reduce, np.mod`
-#### 100. Compute bootstrapped 95% confidence intervals for the mean of a 1D array X (i.e., resample the elements of an array with replacement N times, compute the mean of each sample, and then compute percentiles over the means). (★★★)
+
+#99
+X = np.asarray([
+    [1.0, 0.0, 3.0, 8.0],
+    [2.0, 0.0, 1.0, 1.0],
+    [1.5, 2.5, 1.0, 0.0] ])
+n = 4
+Y = (np.mod(X,1)==0)
+print(Y)
+M = np.logical_and.reduce(np.mod(X,1)==0, axis=-1)
+print("--M--")
+print(M)
+
+Z = X.sum(axis=-1)
+print(Z)
+ZZ = (Z == n)
+print(ZZ)
+
+M &= ZZ
+print(M)
+print(X[M])
+
+'''
+#a = np.logical_and([False,True],[False,False])
+a = np.logical_and([False,True],[False,True])
+print(a)
+
+X = np.arange(8).reshape((2,2,2))
+print(X)
+a = np.logical_and.reduce(X,0)
+print(a)
+'''
+
+#### 100. Compute bootstrapped 95% confidence intervals for the mean of a 1D array X 
+# (i.e., resample the elements of an array with replacement N times, 
+# compute the mean of each sample, and then compute percentiles over the means). (★★★)
 #`hint: np.percentile`
