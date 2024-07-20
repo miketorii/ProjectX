@@ -1004,6 +1004,11 @@ print(C)
 CC = np.where(C.any((3,1)).all(1))[0]
 print(CC)
 
+print("-----------")
+A = np.array([[1,1,1],[1,1,0]])
+#B = np.all(A)
+B = A.all(1)
+print(B)
 
 '''
 AA = np.arange(10)
