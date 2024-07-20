@@ -1063,11 +1063,6 @@ print(X)
 Y = np.unique(X, axis=0)
 print(Y)
 
-'''
-
-#### 97. Considering 2 vectors A & B, write the einsum equivalent of inner, outer, sum, and mul function (★★★)
-#`hint: np.einsum`
-
 #97
 A = np.array([1,2,3])
 B = np.array([3,4,5])
@@ -1085,11 +1080,46 @@ print(X)
 X = np.outer(A,B) 
 print(X)
 
+'''
+
+#98
+
+x1 = np.array([1,2,3,4,5])
+y1 = x1 / np.sqrt(3)
+print(y1)
+
+x2 = np.array([1,2,3,4,5])
+y2 = x1 * np.sqrt(3)
+print(y2)
+
+dr = (np.diff(y1)**2 + np.diff(y2)**2 )**0.5
+print(dr)
+
+r = np.zeros(5)
+r[1:] = np.cumsum(dr)
+print(r)
+
+y3 = np.interp(x1,r,y1)
+y4 = np.interp(x2,r,y2)
+print(y3)
+print(y4)
+
+'''
+a = np.array([[1,2,3],[4,5,6]])
+b=np.cumsum(a)
+print(b)
+b=np.cumsum(a,axis=0)
+print(b)
+b=np.cumsum(a,axis=1)
+print(b)
+
+xp = np.array([1,2,3])
+fp = np.array([2,4,6])
+z = np.interp(2.5,xp,fp)
+print(z)
+'''
 
 
-
-#### 98. Considering a path described by two vectors (X,Y), how to sample it using equidistant samples (★★★)?
-#`hint: np.cumsum, np.interp`
 #### 99. Given an integer n and a 2D array X, select from X the rows which can be interpreted as draws from a multinomial distribution with n degrees, i.e., the rows which only contain integers and which sum to n. (★★★)
 #`hint: np.logical_and.reduce, np.mod`
 #### 100. Compute bootstrapped 95% confidence intervals for the mean of a 1D array X (i.e., resample the elements of an array with replacement N times, compute the mean of each sample, and then compute percentiles over the means). (★★★)
