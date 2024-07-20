@@ -1045,9 +1045,7 @@ print(U)
 
 '''
 
-#### 95. Convert a vector of ints into a matrix binary representation (★★★)
-#`hint: np.unpackbits`
-
+#95
 a = np.array([[2],[7],[10]], dtype=np.uint8)
 print(a)
 b = np.unpackbits(a, axis=1)
