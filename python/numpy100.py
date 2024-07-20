@@ -1054,8 +1054,6 @@ print(I)
 B = ((I.reshape(-1,1) & (2**np.arange(8))) != 0).astype(int)
 print(B[:,::-1])
 
-'''
-
 #96
 X = np.array([[1,2,3,4],
               [5,6,7,8],
@@ -1065,8 +1063,31 @@ print(X)
 Y = np.unique(X, axis=0)
 print(Y)
 
+'''
+
 #### 97. Considering 2 vectors A & B, write the einsum equivalent of inner, outer, sum, and mul function (★★★)
 #`hint: np.einsum`
+
+#97
+A = np.array([1,2,3])
+B = np.array([3,4,5])
+
+X = np.einsum("i->",A) # np.sum(A)
+print(X)
+X = np.einsum("i,i->i",A,B) # A*B
+print(X)
+X = np.einsum("i,i",A,B) # 
+print(X)
+X = np.inner(A,B) 
+print(X)
+X = np.einsum("i,j->ij",A,B) # 
+print(X)
+X = np.outer(A,B) 
+print(X)
+
+
+
+
 #### 98. Considering a path described by two vectors (X,Y), how to sample it using equidistant samples (★★★)?
 #`hint: np.cumsum, np.interp`
 #### 99. Given an integer n and a 2D array X, select from X the rows which can be interpreted as draws from a multinomial distribution with n degrees, i.e., the rows which only contain integers and which sum to n. (★★★)
