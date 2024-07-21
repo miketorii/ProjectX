@@ -3,7 +3,6 @@ from numpy._typing import NDArray
 
 print(np.__version__)
 
-'''
 Z = np.zeros(10)
 print(Z)
 
@@ -896,7 +895,6 @@ print("block sum =")
 S = Y[::k, ::k, ...].sum(axis=(-2, -1))
 print(S)
 
-'''
 #### 88. How to implement the Game of Life using numpy arrays? (★★★)
 #`No hints provided...`
 
@@ -908,7 +906,7 @@ print(S)
 #生存: 生きているセルに隣接する生きたセルが2つか3つならば、次の世代でも生存します。
 #過疎: 生きているセルに隣接する生きたセルが1つ以下ならば、過疎により死滅します。
 #過密: 生きているセルに隣接する生きたセルが4つ以上ならば、過密により死滅します。
-'''
+
 def iterate(Z):
     # Count neighbours
     N = (Z[0:-2,0:-2] + Z[0:-2,1:-1] + Z[0:-2,2:] +
@@ -925,7 +923,6 @@ def iterate(Z):
 Z = np.random.randint(0,2,(50,50))
 for i in range(100): Z = iterate(Z)
 print(Z)
-'''
 
 def iterate(Z):
     #print("---itereate---")
@@ -949,8 +946,6 @@ for i in range(2):
     Z = iterate(Z)
 print(Z)
 
-
-'''
 #89
 n = 3
 Z = np.array([2,3,5,1,0,9,4])
@@ -1188,4 +1183,3 @@ print(confint)
 X = np.array([[10,7,4],[3,2,1]])
 Y = np.percentile(X,50,axis=0)
 print(Y)
-'''
