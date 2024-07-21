@@ -925,7 +925,32 @@ def iterate(Z):
 Z = np.random.randint(0,2,(50,50))
 for i in range(100): Z = iterate(Z)
 print(Z)
+'''
 
+def iterate(Z):
+    #print("---itereate---")
+    N = (Z[0:-2,0:-2] + Z[0:-2,1:-1] + Z[0:-2,2:] +
+         Z[1:-1,0:-2]                + Z[1:-1,2:] +
+         Z[2:  ,0:-2] + Z[2:  ,1:-1] + Z[2:  ,2:])
+    #print("N=", N)
+    #print(Z[1:-1,1:-1])
+
+    birth = (N==3) & (Z[1:-1,1:-1]==0)
+    #print(birth)
+    survive = ((N==2) | (N==3)) & (Z[1:-1,1:-1]==1)
+    Z[...]=0
+    Z[1:-1,1:-1][birth | survive] = 1
+
+    return Z
+
+Z = np.random.randint(0,2,(10,10))
+print(Z)
+for i in range(2):
+    Z = iterate(Z)
+print(Z)
+
+
+'''
 #89
 n = 3
 Z = np.array([2,3,5,1,0,9,4])
@@ -1144,7 +1169,6 @@ X = np.arange(8).reshape((2,2,2))
 print(X)
 a = np.logical_and.reduce(X,0)
 print(a)
-'''
 
 #100
 
@@ -1161,7 +1185,6 @@ means = X[idx].mean(axis=1)
 confint = np.percentile(means,50)
 print(confint)
 
-'''
 X = np.array([[10,7,4],[3,2,1]])
 Y = np.percentile(X,50,axis=0)
 print(Y)
