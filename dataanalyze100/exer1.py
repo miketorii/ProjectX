@@ -49,3 +49,12 @@ print( len(joindata) )
 print("===============================================")
 joindata["price"] = joindata["quantity"] * joindata["item_price"]
 print( joindata[["quantity", "item_price", "price"]].head() )
+
+print("===============================================")
+print( joindata["price"].sum() )
+print( trans["price"].sum() )
+
+print("===============================================")
+print( joindata.isnull().sum() )
+print( joindata.describe() )
+
