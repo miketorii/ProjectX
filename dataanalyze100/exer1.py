@@ -58,3 +58,13 @@ print("===============================================")
 print( joindata.isnull().sum() )
 print( joindata.describe() )
 
+print("===============================================")
+print( joindata.dtypes )
+
+joindata["payment_date"] = pd.to_datetime( joindata["payment_date"] )
+joindata["payment_month"] = joindata["payment_date"].dt.strftime("%Y%m")
+print(joindata[["payment_date","payment_month"]].head())
+
+#print( joindata.dtypes )
+
+print( joindata.groupby("payment_month").sum(numeric_only=True)["price"] )
