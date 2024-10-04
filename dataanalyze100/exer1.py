@@ -68,3 +68,11 @@ print(joindata[["payment_date","payment_month"]].head())
 #print( joindata.dtypes )
 
 print( joindata.groupby("payment_month").sum(numeric_only=True)["price"] )
+
+print("===============================================")
+print( joindata.groupby(["payment_month", "item_name"]).sum(numeric_only=True)[["price", "quantity"]] )
+
+print("===============================================")
+print( pd.pivot_table( joindata, index='item_name', columns="payment_month", values=["price","quantity"], aggfunc="sum") )
+
+
