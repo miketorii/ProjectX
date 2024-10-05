@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 trans1 = pd.read_csv('./data/transaction_1.csv')
 print( trans1.head() )
@@ -75,4 +76,16 @@ print( joindata.groupby(["payment_month", "item_name"]).sum(numeric_only=True)[[
 print("===============================================")
 print( pd.pivot_table( joindata, index='item_name', columns="payment_month", values=["price","quantity"], aggfunc="sum") )
 
+print("===============================================")
+graphdata = pd.pivot_table( joindata, index='payment_month', columns="item_name", values="price", aggfunc="sum")
+print(graphdata.head())
 
+print(graphdata.columns)
+
+plt.plot( list(graphdata.index), graphdata["PC-A"], label="PC-A" )
+plt.plot( list(graphdata.index), graphdata["PC-B"], label="PC-B" )
+plt.plot( list(graphdata.index), graphdata["PC-C"], label="PC-C" )
+plt.plot( list(graphdata.index), graphdata["PC-D"], label="PC-D" )
+plt.plot( list(graphdata.index), graphdata["PC-E"], label="PC-E" )
+plt.legend()
+plt.savefig("exer1.png")

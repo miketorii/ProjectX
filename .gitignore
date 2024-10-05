@@ -8,6 +8,7 @@ t10k-*
 train-*
 deeplearning/data/*
 *.csv
+*.png
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
@@ -15,6 +16,8 @@ dataanalyze100/bin
 dataanalyze100/include
 dataanalyze100/lib
 dataanalyze100/lib64
+dataanalyze100/share
+
 
 
 
