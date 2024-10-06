@@ -9,6 +9,7 @@ train-*
 deeplearning/data/*
 *.csv
 *.png
+*.xlsx
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
