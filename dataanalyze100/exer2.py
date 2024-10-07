@@ -11,3 +11,5 @@ print( kokyakudata.head() )
 print( len(kokyakudata) )
 
 print("===============================================")
+print( uriagedata["item_name"].head() )
+print( uriagedata["item_price"].head() )
