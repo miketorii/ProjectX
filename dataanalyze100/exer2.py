@@ -15,10 +15,6 @@ print( uriagedata["item_name"].head() )
 print( uriagedata["item_price"].head() )
 
 print("===============================================")
-
-
-
-print("===============================================")
 uriagedata["purchase_date"] = pd.to_datetime( uriagedata["purchase_date"] )
 uriagedata["purchase_month"] = uriagedata["purchase_date"].dt.strftime("%Y%m")
 print( uriagedata[["purchase_date","purchase_month"]].head() )
@@ -52,6 +48,17 @@ print( uriagedata.isnull().any(axis=0) )
 for trg in list( uriagedata.loc[fig_is_null, "item_name"].unique() ):
     print( trg + " MAX " + str(uriagedata.loc[ uriagedata["item_name"]==trg ]["item_price"].max() ) )
     print( trg + " MIN " + str(uriagedata.loc[ uriagedata["item_name"]==trg ]["item_price"].min(skipna=False) ) )    
+
+print("===============================================")
+
+print( kokyakudata["顧客名"].head() )
+print( uriagedata["customer_name"].head() )
+
+kokyakudata["顧客名"] = kokyakudata["顧客名"].str.replace("　","")
+kokyakudata["顧客名"] = kokyakudata["顧客名"].str.replace(" ","")
+print( kokyakudata["顧客名"].head() )
+
+
 
 
 
