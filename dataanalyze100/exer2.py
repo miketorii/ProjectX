@@ -58,6 +58,34 @@ kokyakudata["顧客名"] = kokyakudata["顧客名"].str.replace("　","")
 kokyakudata["顧客名"] = kokyakudata["顧客名"].str.replace(" ","")
 print( kokyakudata["顧客名"].head() )
 
+print("===============================================")
+print( kokyakudata.head() )
+fig_is_serial = kokyakudata["登録日"].astype("str").str.isdigit()
+print( fig_is_serial.sum() )
+
+fromSerial = pd.to_timedelta( kokyakudata.loc[fig_is_serial, "登録日"].astype("float")-2, unit="D" ) + pd.to_datetime('1900/1/1')
+print( fromSerial )
+
+fromString = pd.to_datetime( kokyakudata.loc[~fig_is_serial, "登録日"] )
+print( fromString )
+
+kokyakudata["登録日"] = pd.concat( [fromSerial, fromString] )
+print( kokyakudata )
+
+kokyakudata["登録年月"] = kokyakudata["登録日"].dt.strftime("%Y%m")
+rslt = kokyakudata.groupby("登録年月").count()["顧客名"]
+print( rslt )
+print( len(kokyakudata) )
+
+fig_is_serial = kokyakudata["登録日"].astype("str").str.isdigit()
+print( fig_is_serial.sum() )
+
+
+
+
+
+
+
 
 
 
