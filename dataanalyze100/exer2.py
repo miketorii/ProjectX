@@ -80,6 +80,14 @@ print( len(kokyakudata) )
 fig_is_serial = kokyakudata["登録日"].astype("str").str.isdigit()
 print( fig_is_serial.sum() )
 
+print("===============================================")
+
+joindata = pd.merge( uriagedata, kokyakudata, left_on="customer_name", right_on="顧客名", how="left" )
+joindata = joindata.drop("customer_name", axis=1)
+
+print( joindata.head() )
+
+
 
 
 
