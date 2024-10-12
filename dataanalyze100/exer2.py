@@ -87,8 +87,32 @@ joindata = joindata.drop("customer_name", axis=1)
 
 print( joindata.head() )
 
+print("===============================================")
 
+dumpdata = joindata[["purchase_date","purchase_month","item_name","item_price","顧客名","かな","地域","メールアドレス","登録日"]]
+print(dumpdata)
 
+dumpdata.to_csv("dump_data.csv",index=False)
+
+print("===============================================")
+importdata = pd.read_csv("dump_data.csv")
+print(importdata)
+
+byItem = importdata.pivot_table( index="purchase_month", columns="item_name", aggfunc="size", fill_value=0)
+print(byItem)
+
+byPrice = importdata.pivot_table( index="purchase_month", columns="item_name", values="item_price", aggfunc="sum", fill_value=0)
+print(byPrice)
+
+byCustomer = importdata.pivot_table( index="purchase_month", columns="顧客名", aggfunc="size", fill_value=0)
+print(byCustomer)
+
+byRegion = importdata.pivot_table( index="purchase_month", columns="地域", aggfunc="size", fill_value=0)
+print(byRegion)
+
+awaydata = pd.merge( uriagedata, kokyakudata, left_on="customer_name", right_on="顧客名", how="right" )
+checkdata = awaydata[ awaydata["purchase_date"].isnull() ][["顧客名","メールアドレス","登録日"]]
+print(checkdata)
 
 
 
