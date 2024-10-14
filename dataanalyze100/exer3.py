@@ -62,3 +62,19 @@ print(customerstart.tail())
 
 print("====================================================")
 
+customerjoindata["end_date"] = pd.to_datetime( customerjoindata["end_date"] )
+customernewer = customerjoindata.loc[(customerjoindata["end_date"]>=pd.to_datetime("20190331"))|(customerjoindata["end_date"].isna())]
+print(customernewer.head())
+print( len(customernewer) )
+
+calcval = customernewer.groupby("class_name").count()["customer_id"]
+print(calcval)
+
+calcval = customernewer.groupby("campaign_name").count()["customer_id"]
+print(calcval)
+
+calcval = customernewer.groupby("gender").count()["customer_id"]
+print(calcval)
+
+
+
