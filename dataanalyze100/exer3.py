@@ -76,5 +76,31 @@ print(calcval)
 calcval = customernewer.groupby("gender").count()["customer_id"]
 print(calcval)
 
+print("====================================================")
+
+uselogdata["usedate"] = pd.to_datetime( uselogdata["usedate"] )
+uselogdata["年月"] = uselogdata["usedate"].dt.strftime("%Y%m")
+uselogmonth = uselogdata.groupby(["年月","customer_id"], as_index=False).count()
+uselogmonth.rename( columns={"log_id":"count"}, inplace=True )
+del uselogmonth["usedate"]
+print(uselogmonth.head())
+
+#uselogcustomer = uselogmonth.groupby("customer_id").mean(numeric_only=True)["count"]
+uselogcustomer = uselogmonth.groupby("customer_id").agg( "mean", numeric_only=True )["count"]
+print(uselogcustomer.head())
+
+uselogcustomer = uselogmonth.groupby("customer_id").agg( "median", numeric_only=True )["count"]
+print(uselogcustomer.head())
+
+uselogcustomer = uselogmonth.groupby("customer_id").agg( "max", numeric_only=True )["count"]
+print(uselogcustomer.head())
+
+uselogcustomer = uselogmonth.groupby("customer_id").agg( "min", numeric_only=True )["count"]
+print(uselogcustomer.head())
+#uselogcustomer = uselogcustomer.reset_index(drop=False)
+
+
+
+
 
 
