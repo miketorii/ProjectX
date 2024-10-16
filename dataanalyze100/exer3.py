@@ -99,8 +99,18 @@ uselogcustomer = uselogmonth.groupby("customer_id").agg( "min", numeric_only=Tru
 print(uselogcustomer.head())
 #uselogcustomer = uselogcustomer.reset_index(drop=False)
 
+print("====================================================")
 
+print( uselogdata.head() )
+uselogdata["weekday"] = uselogdata["usedate"].dt.weekday
+uselogweekday = uselogdata.groupby(["customer_id","年月","weekday"], as_index=False).count()[["customer_id","年月","weekday","log_id"]]
+uselogweekday.rename( columns={"log_id":"count"}, inplace=True )
+print( uselogweekday.head() )
 
+uselogweekday = uselogweekday.groupby("customer_id", as_index=False).max(  numeric_only=True )[["customer_id","count"]]
+uselogweekday["routine_flg"] = 0
+uselogweekday["routine_flg"] = uselogweekday["routine_flg"].where( uselogweekday["count"]<4, 1)
+print( uselogweekday.head() )
 
 
 
