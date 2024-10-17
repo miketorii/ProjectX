@@ -112,5 +112,21 @@ uselogweekday["routine_flg"] = 0
 uselogweekday["routine_flg"] = uselogweekday["routine_flg"].where( uselogweekday["count"]<4, 1)
 print( uselogweekday.head() )
 
+print("====================================================")
 
+print(customerjoindata.head())
+print("---------------------------------------------------")
+print(uselogcustomer.head())
+print("---------------------------------------------------")
+print( uselogweekday.head() )
+print("---------------------------------------------------")
+
+customerjoindata = pd.merge( customerjoindata, uselogcustomer, on="customer_id", how="left")
+
+customerjoindata = pd.merge( customerjoindata, uselogweekday[["customer_id","routine_flg"]], on="customer_id", how="left")
+print(customerjoindata.head())
+
+print( customerjoindata.isnull().sum() )
+
+print("====================================================")
 
