@@ -129,4 +129,29 @@ print(customerjoindata.head())
 print( customerjoindata.isnull().sum() )
 
 print("====================================================")
+'''
+import datetime
+from dateutil.relativedelta import relativedelta
+
+d = datetime.datetime(2023,4,1)
+r = relativedelta(years=1)
+print(d+r)
+'''
+
+from dateutil.relativedelta import relativedelta
+
+customerjoindata["calc_date"] = customerjoindata["end_date"]
+customerjoindata["calc_date"] = customerjoindata["calc_date"].fillna(pd.to_datetime("20190430"))
+customerjoindata["membership_period"] = 0
+
+for i in range( len(customerjoindata) ):
+    delta = relativedelta(customerjoindata["calc_date"].iloc[i], customerjoindata["start_date"].iloc[i] )
+    customerjoindata.loc[i, "membership_period"] = delta.years*12 + delta.months
+    
+print(customerjoindata.head())
+print(customerjoindata[1000:1020])
+print(customerjoindata.loc[10])
+print(customerjoindata[ customerjoindata["customer_id"] == "OA789036" ] )
+
+print("====================================================")
 
