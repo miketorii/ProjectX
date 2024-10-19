@@ -1,4 +1,5 @@
 import pandas as pd
+import matplotlib.pyplot as plt
 
 print("====================================================")
 
@@ -154,4 +155,16 @@ print(customerjoindata.loc[10])
 print(customerjoindata[ customerjoindata["customer_id"] == "OA789036" ] )
 
 print("====================================================")
+
+#print( customerjoindata.describe() )
+print( customerjoindata.describe().loc[["min","max","mean","50%"]] )
+routinedata = customerjoindata.groupby("routine_flg").count()["customer_id"]
+print(routinedata)
+
+plt.hist( customerjoindata["membership_period"] )
+plt.savefig("exer3.png")
+
+
+
+
 
