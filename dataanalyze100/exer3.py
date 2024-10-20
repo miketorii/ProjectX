@@ -164,6 +164,19 @@ print(routinedata)
 plt.hist( customerjoindata["membership_period"] )
 plt.savefig("exer3.png")
 
+print("====================================================")
+
+customerend = customerjoindata.loc[ customerjoindata["is_deleted"]==1 ]
+print( customerend.describe() )
+
+customerstay = customerjoindata.loc[ customerjoindata["is_deleted"]==0 ]
+print( customerstay.describe() )
+
+customerjoindata.to_csv("customer_join.csv", index=False)
+
+print("====================================================")
+
+
 
 
 
