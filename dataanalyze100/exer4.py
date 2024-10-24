@@ -13,4 +13,10 @@ print( customerdata.isnull().sum() )
 
 print("==========================================")
 
+customercluster = customerdata.max(numeric_only=True)
+print( customercluster.head() )
+
+customercluster = customerdata.max(numeric_only=True)["membership_period"]
+print(customercluster)
+
 
