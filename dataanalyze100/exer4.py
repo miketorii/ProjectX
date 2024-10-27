@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
 print("==========================================")
 
@@ -44,6 +45,19 @@ print("------------------------------------------")
 print( customercluster.groupby("cluster").mean() )
 
 print("==========================================")
+X = customercluster
+pca = PCA(n_components=2)
+pca.fit(X)
+x_pca = pca.transform(X)
+pca_df = pd.DataFrame(x_pca)
+pca_df["cluster"] = customercluster["cluster"]
+
+for i in customercluster["cluster"].unique():
+    tmp = pca_df.loc[pca_df["cluster"]==i]
+    plt.scatter(tmp[0], tmp[1])
+
+plt.savefig("exer4.png")
+
 
 
 
