@@ -36,6 +36,16 @@ print(customercluster["cluster"].unique())
 print(customercluster.head())
 print(customercluster.tail())
 
+print("==========================================")
+
+print( customercluster.groupby("cluster").count() )
+
+print("------------------------------------------")
+print( customercluster.groupby("cluster").mean() )
+
+print("==========================================")
+
+
 
 
 
