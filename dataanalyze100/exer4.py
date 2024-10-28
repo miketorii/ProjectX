@@ -58,6 +58,14 @@ for i in customercluster["cluster"].unique():
 
 plt.savefig("exer4.png")
 
+print("==========================================")
+
+customercluster = pd.concat([customercluster, customerdata], axis=1 )
+print(customercluster.head())
+print( customercluster.groupby(["cluster","is_deleted"],as_index=False).count()[["cluster","is_deleted","customer_id"]] )
+print( customercluster.groupby(["cluster","routine_flg"],as_index=False).count()[["cluster","routine_flg","customer_id"]] )
+
+
 
 
 
