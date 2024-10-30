@@ -5,6 +5,8 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+from dateutil.relativedelta import relativedelta
+
 print("==========================================")
 
 uselogdata = pd.read_csv("./data/use_log.csv")
@@ -94,12 +96,18 @@ predict_data = predict_data.reset_index(drop=True)
 
 print( predict_data.head() )
 
+print("==========================================")
 
+predict_data = pd.merge(predict_data, customerdata[["customer_id","start_date"]], on="customer_id", how="left")
+print( predict_data.head() )
 
+predict_data["now_date"] = pd.to_datetime(predict_data["年月"], format="%Y%m")
+predict_data["start_date"] = pd.to_datetime(predict_data["start_date"])
 
+predict_data["period"] = None
+for i in range(len(predict_data)):
+    delta = relativedelta(predict_data.loc[i,"now_date"], predict_data.loc[i,"start_date"])
+    predict_data.loc[i, "period"] = delta.years*12 + delta.months
 
-
-
-
-
+print( predict_data.head() )
 
