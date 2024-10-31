@@ -5,6 +5,9 @@ from sklearn.cluster import KMeans
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 
+from sklearn import linear_model
+import sklearn.model_selection
+
 from dateutil.relativedelta import relativedelta
 
 print("==========================================")
@@ -110,4 +113,19 @@ for i in range(len(predict_data)):
     predict_data.loc[i, "period"] = delta.years*12 + delta.months
 
 print( predict_data.head() )
+
+print("==========================================")
+
+predict_data = predict_data.loc[ predict_data["start_date"]>=pd.to_datetime("20180401") ]
+
+model = linear_model.LinearRegression()
+X = predict_data[["count_0","count_1","count_2","count_3","count_4","count_5","period" ]]
+y = predict_data["count_pred"]
+X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=0)
+model.fit(X_train, y_train)
+
+print( predict_data.head() )
+
+print( model.score(X_train, y_train) )
+print( model.score(X_test, y_test) )
 
