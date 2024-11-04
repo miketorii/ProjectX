@@ -56,5 +56,26 @@ print( exit_uselog.head() )
 
 print("=====================================================")
 
+conti_customer = customer.loc[ customer["is_deleted"]==0 ]
+conti_uselog = pd.merge( uselog, conti_customer, on=["customer_id"], how="left" )
+print( len(conti_uselog) )
+conti_uselog = conti_uselog.dropna(subset=["name"])
+print( len(conti_uselog) )
+
+conti_uselog = conti_uselog.sample( frac=1, random_state=0).reset_index(drop=True)
+conti_uselog = conti_uselog.drop_duplicates(subset="customer_id")
+print( len(conti_uselog) )
+
+print( conti_uselog.head() )
+
+predict_data = pd.concat([conti_uselog, exit_uselog], ignore_index=True)
+print( len(predict_data) )
+print( predict_data.head() )
+print( predict_data.tail() )
+
+print("=====================================================")
+print("=====================================================")
+print("=====================================================")
+
 
     
