@@ -74,8 +74,21 @@ print( predict_data.head() )
 print( predict_data.tail() )
 
 print("=====================================================")
+
+predict_data["period"] = 0
+predict_data["now_date"] = pd.to_datetime( predict_data["年月"], format="%Y%m")
+predict_data["start_date"] = pd.to_datetime(predict_data["start_date"])
+
+for i in range( len(predict_data) ):
+    delta = relativedelta( predict_data.loc[ i, "now_date"], predict_data.loc[ i, "start_date"] )
+    predict_data.loc[i, "period"] = int( delta.years*12 + delta.months )
+print( predict_data.head() )
+print( predict_data.tail() )
+
 print("=====================================================")
 print("=====================================================")
+print("=====================================================")
+
 
 
     
