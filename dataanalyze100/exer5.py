@@ -86,6 +86,12 @@ print( predict_data.head() )
 print( predict_data.tail() )
 
 print("=====================================================")
+
+print( predict_data.isna().sum() )
+
+predict_data = predict_data.dropna( subset=["count_1"] )
+print( predict_data.isna().sum() )
+
 print("=====================================================")
 print("=====================================================")
 
