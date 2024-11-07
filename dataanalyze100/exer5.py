@@ -93,6 +93,21 @@ predict_data = predict_data.dropna( subset=["count_1"] )
 print( predict_data.isna().sum() )
 
 print("=====================================================")
+
+target_col = ["campaign_name","class_name","gender","count_1","routine_flg","period","is_deleted"]
+predict_data = predict_data[target_col]
+print( predict_data.head() )
+
+predict_data = pd.get_dummies(predict_data)
+print( predict_data.head() )
+
+del predict_data["campaign_name_通常"]
+del predict_data["class_name_ナイト"]
+del predict_data["gender_M"]
+print( predict_data.head() )
+
+print("=====================================================")
+print("=====================================================")
 print("=====================================================")
 
 
