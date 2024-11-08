@@ -2,6 +2,8 @@ import pandas as pd
 
 from dateutil.relativedelta import relativedelta
 
+from sklearn.tree import DecisionTreeClassifier
+import sklearn.model_selection
 
 customer = pd.read_csv('./data/customer_join2.csv')
 print(customer.head())
@@ -107,6 +109,25 @@ del predict_data["gender_M"]
 print( predict_data.head() )
 
 print("=====================================================")
+
+exit = predict_data.loc[ predict_data["is_deleted"]==1 ]
+conti = predict_data.loc[ predict_data["is_deleted"]==0 ].sample( len(exit), random_state=0 )
+
+X = pd.concat( [exit, conti], ignore_index=True )
+y = X["is_deleted"]
+del X["is_deleted"]
+X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=0)
+
+model = DecisionTreeClassifier(random_state=0)
+model.fit(X_train, y_train)
+y_test_pred = model.predict(X_test)
+print(y_test_pred)
+
+print("=====================================================")
+
+results_test = pd.DataFrame({"y_test":y_test,"y_pred":y_test_pred})
+print( results_test.head() )
+
 print("=====================================================")
 print("=====================================================")
 
