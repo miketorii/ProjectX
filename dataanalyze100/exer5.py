@@ -118,7 +118,8 @@ y = X["is_deleted"]
 del X["is_deleted"]
 X_train, X_test, y_train, y_test = sklearn.model_selection.train_test_split(X, y, random_state=0)
 
-model = DecisionTreeClassifier(random_state=0)
+#model = DecisionTreeClassifier(random_state=0)
+model = DecisionTreeClassifier(random_state=0, max_depth=5)
 model.fit(X_train, y_train)
 y_test_pred = model.predict(X_test)
 print(y_test_pred)
@@ -127,6 +128,14 @@ print("=====================================================")
 
 results_test = pd.DataFrame({"y_test":y_test,"y_pred":y_test_pred})
 print( results_test.head() )
+
+correct = len( results_test.loc[ results_test["y_test"]==results_test["y_pred"] ] )
+data_count = len( results_test )
+print( correct/data_count )
+
+
+print( model.score(X_test, y_test) )
+print( model.score(X_train, y_train) )
 
 print("=====================================================")
 print("=====================================================")
