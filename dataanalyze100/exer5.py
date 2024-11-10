@@ -5,6 +5,12 @@ from dateutil.relativedelta import relativedelta
 from sklearn.tree import DecisionTreeClassifier
 import sklearn.model_selection
 
+from sklearn import tree
+import matplotlib.pyplot as plt
+import japanize_matplotlib
+
+#==========================================================
+
 customer = pd.read_csv('./data/customer_join2.csv')
 print(customer.head())
 
@@ -138,6 +144,15 @@ print( model.score(X_test, y_test) )
 print( model.score(X_train, y_train) )
 
 print("=====================================================")
+
+importance = pd.DataFrame( {"feature_names":X.columns, "coefficient":model.feature_importances_} )
+print( importance )
+
+plt.figure( figsize=(20,8) )
+tree.plot_tree( model, feature_names=X.columns, fontsize=8 )
+
+plt.savefig("exer5.png")
+
 print("=====================================================")
 
 
