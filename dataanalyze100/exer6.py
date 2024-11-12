@@ -11,3 +11,25 @@ print( cost.head() )
 
 trans = pd.read_csv("./data/tbl_transaction.csv", index_col=0 )
 print( trans.head() )
+
+join_data = pd.merge( trans, cost, left_on=["ToFC","FromWH"], right_on=["FCID","WHID"], how="left" )
+print( join_data.head() )
+print( len(join_data) )
+
+join_data = pd.merge( join_data, factories, left_on=["ToFC"], right_on=["FCID"], how="left" )
+print( join_data.head() )
+
+join_data = pd.merge( join_data, warehouses, left_on=["FromWH"], right_on=["WHID"], how="left" )
+join_data = join_data[ ["TransactionDate","Quantity","Cost","ToFC","FCName","FCDemand","FromWH","WHName","WHSupply","WHRegion"] ]
+print( join_data.head() )
+
+kanto = join_data.loc[ join_data["WHRegion"]=="関東" ]
+print( kanto.head() )
+
+tohoku = join_data.loc[ join_data["WHRegion"]=="東北" ]
+print( tohoku.head() )
+
+
+
+
+
