@@ -29,6 +29,19 @@ print( kanto.head() )
 tohoku = join_data.loc[ join_data["WHRegion"]=="東北" ]
 print( tohoku.head() )
 
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+
+print( "関東 Cost = " , kanto["Cost"].sum() )
+print( "東北 Cost = ", tohoku["Cost"].sum() )
+
+print( "関東 Quantity = " , kanto["Quantity"].sum() )
+print( "東北 Quantity = ", tohoku["Quantity"].sum() )
+
+
+
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
 
 
 
