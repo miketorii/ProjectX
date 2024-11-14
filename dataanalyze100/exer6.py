@@ -37,6 +37,16 @@ print( "東北 Cost = ", tohoku["Cost"].sum() )
 print( "関東 Quantity = " , kanto["Quantity"].sum() )
 print( "東北 Quantity = ", tohoku["Quantity"].sum() )
 
+kanto_per_q = kanto["Cost"].sum() / kanto["Quantity"].sum() * 10000
+print( kanto_per_q )
+tohoku_per_q = tohoku["Cost"].sum() / tohoku["Quantity"].sum() * 10000
+print( tohoku_per_q )
+
+cost_chk = pd.merge( cost, factories, on="FCID", how="left" )
+kanto_mean = cost_chk["Cost"].loc[ cost_chk["FCRegion"]=="関東" ].mean()
+print( kanto_mean )
+tohoku_mean = cost_chk["Cost"].loc[ cost_chk["FCRegion"]=="東北" ].mean()
+print( tohoku_mean )
 
 
 print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
