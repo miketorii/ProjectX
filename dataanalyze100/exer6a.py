@@ -23,3 +23,14 @@ nx.draw(G, pos)
 plt.savefig("exer6a.png")
 
 print("=====================")
+
+G.add_node("nodeD")
+G.add_edge("nodeA","nodeD")
+pos["nodeD"]=(1,0)
+
+nx.draw(G, pos, with_labels=True )
+
+plt.savefig("exer6a2.png")
+
+print("=====================")
+print("=====================")
