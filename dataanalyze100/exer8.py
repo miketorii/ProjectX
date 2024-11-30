@@ -57,8 +57,29 @@ for t in range(T_NUM):
 
 print( list_timeSeries )
 
-    
+def active_node_coloring(t, list_active):
+    print(list_timeSeries[t])
+    list_color = []
+    for i in range( len(list_timeSeries[t]) ):
+        if list_timeSeries[t][i]==1:
+            list_color.append("r")
+        else:
+            list_color.append("k")
+    return list_color
 
+print("----------------------------------------")
+
+t = 0
+nx.draw_networkx(G, font_color="w",node_color=active_node_coloring(t,list_timeSeries[t]) )
+plt.savefig("exer8t0.png")
+
+t = 11
+nx.draw_networkx(G, font_color="w",node_color=active_node_coloring(t,list_timeSeries[t]) )
+plt.savefig("exer8t11.png")
+
+t = 35
+nx.draw_networkx(G, font_color="w",node_color=active_node_coloring(t,list_timeSeries[t]) )
+plt.savefig("exer8t35.png")
 
 print("----------------------------------------")
 
