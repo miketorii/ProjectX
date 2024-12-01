@@ -83,6 +83,13 @@ plt.savefig("exer8t35.png")
 
 print("----------------------------------------")
 
+list_timeSeries_num = []
+for i in range( len(list_timeSeries) ):
+    list_timeSeries_num.append( sum(list_timeSeries[i]) )
+
+plt.clf()
+plt.plot(list_timeSeries_num)
+plt.savefig("exer8time.png")
 
 
 
