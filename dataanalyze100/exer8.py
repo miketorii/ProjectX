@@ -26,7 +26,7 @@ plt.savefig("exer8.png")
 
 print("----------------------------------------")
 
-def determin_link(percent):
+def determine_link(percent):
     rand_val = np.random.rand()
     if rand_val <= percent:
         return 1
@@ -39,7 +39,7 @@ def simulate_percolation(num, list_active, percent_percolation):
             for j in range(num):
                 node_name = "Node" + str(j)
                 if df_links[node_name].iloc[i]==1:
-                    if determin_link(percent_percolation)==1:
+                    if determine_link(percent_percolation)==1:
                         list_active[j] = 1
     return list_active
 
@@ -91,6 +91,45 @@ plt.clf()
 plt.plot(list_timeSeries_num)
 plt.savefig("exer8time.png")
 
+print("----------------------------------------")
 
+def simulate_population(num, list_active, percent_percolation, percent_disapparence, df_links):
+    #
+    for i in range(num):
+        if list_active[i]==1:
+            for j in range(num):
+                node_name = "Node" + str(j)
+                if df_links[node_name].iloc[i]==1:
+                    if determine_link(percent_percolation)==1:
+                        list_active[j] = 1
+
+    #
+    for i in range(num):
+        if determine_link(percent_percolation)==1:
+            list_active[i] = 0
+        
+    return list_active
+
+percent_percolation = 0.1
+percent_disapparence = 0.05
+T_NUM = 100
+NUM = len(df_links.index)
+list_active = np.zeros(NUM)
+list_active[0] = 1
+
+list_timeSeries = []
+for t in range(T_NUM):
+    list_active = simulate_population(NUM, list_active, percent_percolation, percent_disapparence, df_links)
+    list_timeSeries.append(list_active.copy())
+
+list_timeSeries_num = []
+for i in range( len(list_timeSeries) ):
+    list_timeSeries_num.append( sum(list_timeSeries[i]) )
+
+plt.clf()
+plt.plot(list_timeSeries_num)
+plt.savefig("exer8sim.png")
+
+print("----------------------------------------")
 
 
