@@ -111,7 +111,8 @@ def simulate_population(num, list_active, percent_percolation, percent_disappare
     return list_active
 
 percent_percolation = 0.1
-percent_disapparence = 0.05
+#percent_disapparence = 0.05
+percent_disapparence = 0.3
 T_NUM = 100
 NUM = len(df_links.index)
 list_active = np.zeros(NUM)
