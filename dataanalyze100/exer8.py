@@ -105,14 +105,14 @@ def simulate_population(num, list_active, percent_percolation, percent_disappare
 
     #
     for i in range(num):
-        if determine_link(percent_percolation)==1:
+        if determine_link(percent_disapparence)==1:
             list_active[i] = 0
         
     return list_active
 
 percent_percolation = 0.1
 #percent_disapparence = 0.05
-percent_disapparence = 0.3
+percent_disapparence = 0.2
 T_NUM = 100
 NUM = len(df_links.index)
 list_active = np.zeros(NUM)
@@ -132,5 +132,38 @@ plt.plot(list_timeSeries_num)
 plt.savefig("exer8sim.png")
 
 print("----------------------------------------")
+
+print("----------------75----------------------")
+
+T_NUM = 100
+NUM_PhaseDiagram = 20
+phaseDiagram = np.zeros( (NUM_PhaseDiagram, NUM_PhaseDiagram) )
+
+for i_p in range(NUM_PhaseDiagram):
+    for i_d in range(NUM_PhaseDiagram):
+        percent_percolation = 0.05*i_p
+        percent_disappearance = 0.05*i_d
+        list_active = np.zeros(NUM)
+        list_active[0] = 1
+        for t in range(T_NUM):
+            list_active = simulate_population(NUM, list_active, percent_percolation, percent_disappearance, df_links)
+        phaseDiagram[i_p][i_d] = sum(list_active)
+
+print(phaseDiagram)
+
+plt.clf()
+
+plt.matshow(phaseDiagram)
+plt.colorbar(shrink=0.0)
+plt.xlabel("percent_disappearance")
+plt.ylabel("percent_percolation")
+plt.xticks( np.arange(0.0, 20.0, 5), np.arange(0.0, 1.0, 0.25) )
+plt.yticks( np.arange(0.0, 20.0, 5), np.arange(0.0, 1.0, 0.25) )
+plt.tick_params(bottom=False, left=False, right=False, top=False)
+
+plt.savefig("exer8matshow.png")
+
+print("----------------------------------------")
+
 
 
