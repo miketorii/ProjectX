@@ -165,5 +165,24 @@ plt.savefig("exer8matshow.png")
 
 print("----------------------------------------")
 
+df_mem_links = pd.read_csv("./data/links_members.csv", index_col="Node")
+df_mem_info = pd.read_csv("./data/info_members.csv", index_col="Node")
+print( df_mem_links.head() )
+print( df_mem_info.head() )
+
+NUM = len(df_mem_links.index)
+array_linkNum = np.zeros(NUM)
+for i in range(NUM):
+    array_linkNum[i] = sum(df_mem_links["Node"+str(i)])
+
+plt.clf()
+plt.hist( array_linkNum, bins=10, range=(0,250) )
+plt.savefig("exer8hist.png")
+
+print("----------------------------------------")
+print("----------------------------------------")
+print("----------------------------------------")
+
+
 
 
