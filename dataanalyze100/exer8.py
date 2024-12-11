@@ -180,6 +180,45 @@ plt.hist( array_linkNum, bins=10, range=(0,250) )
 plt.savefig("exer8hist.png")
 
 print("----------------------------------------")
+
+NUM = len(df_mem_info.index)
+T_NUM = len(df_mem_info.columns)-1
+
+count_active = 0
+count_active_to_inactive = 0
+for t in range(T_NUM):
+    for i in range(NUM):
+        if(df_mem_info.iloc[i].iloc[t]==1):
+            count_active_to_inactive += 1
+            if(df_mem_info.iloc[i].iloc[t+1]==0):
+               count_active += 1
+estimated_percent_disapparence = count_active/count_active_to_inactive
+
+print(estimated_percent_disapparence)
+
+count_link = 0
+count_link_to_active = 0
+count_link_temp = 0
+for t in range(T_NUM):
+    df_link_t = df_mem_info[df_mem_info[str(t)]==1]
+    temp_flag_count = np.zeros(NUM)
+    for i in range( len(df_link_t.index) ):
+        index_i = int(df_link_t.index[i].replace("Node",""))
+        df_link_temp = df_mem_links[df_mem_links["Node"+str(index_i)]==1]
+        for j in range( len(df_link_temp.index) ):
+            index_j = int(df_link_temp.index[j].replace("Node",""))
+            if (df_mem_info.iloc[index_j].iloc[t]==0):
+                if(temp_flag_count[index_j]==0):
+                    count_link += 1
+                if(df_mem_info.iloc[index_j].iloc[t+1]==1):
+                    if(temp_flag_count[index_j]==0):
+                        temp_flag_count[index_j] = 1
+                        count_link_to_active += 1
+estimated_percent_percolation = count_link_to_active/count_link
+
+print(estimated_percent_percolation)
+
+
 print("----------------------------------------")
 print("----------------------------------------")
 
