@@ -113,6 +113,7 @@ def simulate_population(num, list_active, percent_percolation, percent_disappare
 percent_percolation = 0.1
 #percent_disapparence = 0.05
 percent_disapparence = 0.2
+
 T_NUM = 100
 NUM = len(df_links.index)
 list_active = np.zeros(NUM)
@@ -218,8 +219,40 @@ estimated_percent_percolation = count_link_to_active/count_link
 
 print(estimated_percent_percolation)
 
-
 print("----------------------------------------")
+
+percent_percolation = 0.039006364196263604
+percent_disapparence = 0.10147163541419415
+
+T_NUM = 24
+NUM = len(df_mem_links.index)
+list_active = np.zeros(NUM)
+list_active[0] = 1
+list_timeSeries = []
+
+for t in range(T_NUM):
+    list_active = simulate_population(NUM, list_active, percent_percolation, percent_disapparence, df_mem_links)
+    list_timeSeries.append(list_active.copy())
+
+list_timeSeries_num = []
+for i in range(len(list_timeSeries)):
+    list_timeSeries_num.append(sum(list_timeSeries[i]))
+
+T_NUM = len(df_mem_info.columns)-1
+list_timeSeries_num_real = []
+for t in range(0, T_NUM):
+    list_timeSeries_num_real.append( len( df_mem_info[ df_mem_info[str(t)]==1 ].index ) )
+
+plt.clf()
+
+plt.plot(list_timeSeries_num, label = 'simulated')
+plt.plot(list_timeSeries_num_real, label='real')
+plt.xlabel('month')
+plt.ylabel('population')
+plt.legend(loc='lower right')
+
+plt.savefig("exer8sim2.png")
+
 print("----------------------------------------")
 
 
