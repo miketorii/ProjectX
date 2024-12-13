@@ -1,3 +1,12 @@
+* GenAI
+
+* AzureFuncs
+
+* RNN
+
+Keras
+LSTM
+RNN
 
 * dataanalyze100
 
