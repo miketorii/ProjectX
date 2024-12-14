@@ -256,7 +256,33 @@ plt.savefig("exer8sim2.png")
 print("----------------------------------------")
 print("-----------------80---------------------")
 
+percent_percolation = 0.039006364196263604
+percent_disapparence = 0.10147163541419415
 
+T_NUM = 36
+NUM = len(df_mem_links.index)
+list_active = np.zeros(NUM)
+list_active[0] = 1
+list_timeSeries = []
+
+for t in range(T_NUM):
+    list_active = simulate_population(NUM, list_active, percent_percolation, percent_disapparence, df_mem_links)
+    list_timeSeries.append(list_active.copy())
+
+list_timeSeries_num = []
+for i in range(len(list_timeSeries)):
+    list_timeSeries_num.append(sum(list_timeSeries[i]))
+
+plt.clf()
+
+plt.plot(list_timeSeries_num, label = 'simulated')
+plt.xlabel('month')
+plt.ylabel('population')
+plt.legend(loc='lower right')
+
+plt.savefig("exer8sim3.png")
+
+print("----------------------------------------")
 print("----------------------------------------")
 
 
