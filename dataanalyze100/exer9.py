@@ -57,3 +57,20 @@ anim = FuncAnimation(plt.gcf(), animate, frames=len(list_frame), interval=1000/3
 plt.close()
 
 HTML(anim.to_jshtml())
+
+######### 83 ##############
+cap = cv2.VideoCapture("/content/drive/MyDrive/chap9/mov/mov01.avi")
+num = 0
+count = cap.get(cv2.CAP_PROP_FRAME_COUNT)
+
+while(cap.isOpened()):
+  ret, frame = cap.read()
+  if ret:
+    filepath = "/content/drive/MyDrive/chap9/snapshot/snapshot_" + str(num) + ".jpg"
+    cv2.imwrite(filepath, frame)
+  num = num + 1
+  if num >= count:
+    break
+
+cap.release()
+cv2.destroyAllWindows()
