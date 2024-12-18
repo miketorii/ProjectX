@@ -19,3 +19,5 @@ RNN
 ![exer8hist](https://github.com/user-attachments/assets/406d1a11-9b72-4af3-a32a-bb7c1682124b)
 
 ![temp](https://github.com/user-attachments/assets/4b22d721-1196-456a-959a-e381d309445e)
+
+![temp2](https://github.com/user-attachments/assets/b4aaed8f-dc5f-496e-a821-b83a9c46bc42)
