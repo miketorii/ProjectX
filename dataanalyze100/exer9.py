@@ -74,3 +74,34 @@ while(cap.isOpened()):
 
 cap.release()
 cv2.destroyAllWindows()
+
+#################### 84
+hog = cv2.HOGDescriptor()
+hog.setSVMDetector(cv2.HOGDescriptor_getDefaultPeopleDetector())
+hogParams = { 'winStride': (8,8), 'padding': (32,32), 'scale' : 1.05, 'hitThreshold' : 0, 'groupThreshold' : 5 }
+
+img = cv2.imread("/content/drive/MyDrive/chap9/img/img01.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+human, r = hog.detectMultiScale( gray, **hogParams )
+if( len(human)>0 ):
+  for (x,y,w,h) in human:
+    cv2.rectangle(img, (x,y), (x+w, y+h), (255,255,255), 3)
+
+cv2_imshow(img)
+cv2.imwrite("/content/drive/MyDrive/chap9/temp.jpg",img)
+
+###################### 85
+cascade_file = "/content/drive/MyDrive/chap9/haarcascade_frontalface_alt.xml"
+cascade = cv2.CascadeClassifier(cascade_file)
+
+img = cv2.imread("/content/drive/MyDrive/chap9/img/img02.jpg")
+gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+face_list = cascade.detectMultiScale(gray, minSize=(50,50))
+
+for (x, y, w, h) in face_list:
+  color = (0, 0, 255)
+  pen_w = 3
+  cv2.rectangle(img, (x,y), (x+w,y+h), color, thickness=pen_w)
+
+cv2_imshow(img)
+cv2.imwrite("/content/drive/MyDrive/chap9/temp2.jpg",img)
