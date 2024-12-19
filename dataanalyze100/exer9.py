@@ -105,3 +105,27 @@ for (x, y, w, h) in face_list:
 
 cv2_imshow(img)
 cv2.imwrite("/content/drive/MyDrive/chap9/temp2.jpg",img)
+
+############## 86
+import dlib
+import math
+
+predictor = dlib.shape_predictor("/content/drive/MyDrive/chap9/shape_predictor_68_face_landmarks.dat")
+detector = dlib.get_frontal_face_detector()
+
+img = cv2.imread("/content/drive/MyDrive/chap9/img/img02.jpg")
+dets = detector(img, 1)
+
+for k, d in enumerate(dets):
+  shape = predictor(img, d)
+
+  color_f = (0,0,255)
+  color_l_out = (255,0,0)
+  color_l_in = (0,255,0)
+  line_w = 3
+  circle_r = 3
+  fontType = cv2.FONT_HERSHEY_SIMPLEX
+  fontSize = 1
+  cv2.rectangle(img, (d.left(), d.top()), (d.right(),d.bottom()), color_f, line_w)
+  cv2.putText(img, (d.left(), d.top()), fontType, fontSize, color_f, line_w)
+                 
