@@ -19,6 +19,13 @@ dataanalyze100/lib
 dataanalyze100/lib64
 dataanalyze100/share
 
+AzureOpenAI1/bin
+AzureOpenAI1/lib
+AzureOpenAI1/lib64
+AzureOpenAI1/include
+AzureOpenAI1/pyvenv.cfg
+
+
 
 
 
