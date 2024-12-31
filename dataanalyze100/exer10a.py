@@ -32,5 +32,41 @@ for i in words2:
 
 print(words_arr2)
 
+#################### prep ##########################
+
+import os
+from google.colab import drive
+import pandas as pd
+
+drive.mount("/content/drive")
+
+survey = pd.read_csv("/content/drive/MyDrive/chap10/survey.csv")
+print( survey.head() )
+
 #################### 96 ##########################
 
+all_words = []
+parts = ["名詞"]
+
+#text2 = "hey guys"
+for n in range(len(survey)):
+  text = survey["comment"].iloc[n]
+  #print(text)
+  words = tagger.parse(str(text)).splitlines()
+  words_arr3 = []
+  for i in words:
+    if i == "EOS" or i == "" : continue
+    word_tmp = i.split()[0]
+    if len(i.split()) >= 4:
+      part = i.split()[4].split("-")[0]
+      if not (part in parts) : continue
+      words_arr3.append(word_tmp)
+  all_words.extend(words_arr3)
+
+print(all_words)
+
+all_words_df = pd.DataFrame( { "words": all_words, "count": len(all_words)*[1] })
+all_words_df = all_words_df.groupby("words").sum()
+print( all_words_df.sort_values("count", ascending=False).head(20) )
+
+#################### 97 ##########################
