@@ -70,3 +70,29 @@ all_words_df = all_words_df.groupby("words").sum()
 print( all_words_df.sort_values("count", ascending=False).head(20) )
 
 #################### 97 ##########################
+
+stop_words = ["時"]
+all_words4 = []
+parts = ["名詞"]
+
+for n in range(len(survey)):
+  text = survey["comment"].iloc[n]
+  words = tagger.parse(str(text)).splitlines()
+  words_arr4 = []
+  for i in words:
+    if i == "EOS" or i == "" : continue
+    word_tmp4 = i.split()[0]
+    if len(i.split()) >= 4:
+      part = i.split()[4].split("-")[0]
+      if not (part in parts) : continue
+      if word_tmp4 in stop_words: continue
+      words_arr4.append(word_tmp4)
+  all_words4.extend(words_arr4)
+
+print(all_words4)
+
+all_words_df4 = pd.DataFrame({"words": all_words4, "count": len(all_words4)*[1]})
+all_words_df4 = all_words_df4.groupby("words").sum()
+print( all_words_df4.sort_values("count", ascending=False).head(20) )
+
+#################### 98 ##########################
