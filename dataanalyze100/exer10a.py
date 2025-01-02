@@ -96,3 +96,35 @@ all_words_df4 = all_words_df4.groupby("words").sum()
 print( all_words_df4.sort_values("count", ascending=False).head(20) )
 
 #################### 98 ##########################
+
+stop_words = ["時"]
+parts = ["名詞"]
+all_words5 = []
+satisfaction = []
+
+for n in range(len(survey)):
+  text = survey["comment"].iloc[n]
+  words = tagger.parse(str(text)).splitlines()
+  words_arr5 = []
+  for i in words:
+    if i == "EOS" or i == "" : continue
+    word_tmp5 = i.split()[0]
+    if len(i.split()) >= 4:
+      part = i.split()[4].split("-")[0]
+      if not (part in parts) : continue
+      if word_tmp5 in stop_words: continue
+      words_arr5.append(word_tmp5)
+      satisfaction.append(survey["satisfaction"].iloc[n])
+  all_words5.extend(words_arr5)
+
+print(all_words5)
+
+all_words_df5 = pd.DataFrame({"words": all_words5, "satisfaction": satisfaction, "count": len(all_words5)*[1]})
+print( all_words_df5.head() )
+
+words_satisfaction = all_words_df5.groupby("words").mean()["satisfaction"]
+words_count = all_words_df5.groupby("words").sum()["count"]
+words_df = pd.concat([words_satisfaction, words_count],axis=1)
+print( words_df.head() )
+
+##################### 99 ####################
