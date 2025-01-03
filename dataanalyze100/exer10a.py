@@ -127,4 +127,49 @@ words_count = all_words_df5.groupby("words").sum()["count"]
 words_df = pd.concat([words_satisfaction, words_count],axis=1)
 print( words_df.head() )
 
-##################### 99 ####################
+#################### 99 #######################
+
+parts = ["名詞"]
+all_words_df = pd.DataFrame()
+satisfaction = []
+
+for n in range(len(survey)):
+  text = survey["comment"].iloc[n]
+  words = tagger.parse(str(text)).splitlines()
+  words_df = pd.DataFrame()
+  for i in words:
+    if i == "EOS" or i == "" : continue
+    word_tmp = i.split()[0]
+    if len(i.split()) >= 4:
+      part = i.split()[4].split("-")[0]
+      if not (part in parts) : continue
+      words_df[word_tmp] = [1]
+  all_words_df = pd.concat([all_words_df, words_df], ignore_index=True)
+
+#print(all_words_df.head())
+all_words_df = all_words_df.fillna(0)
+print(all_words_df.head())
+
+################## 100 #################
+
+print(survey["comment"].iloc[2])
+target_text = all_words_df.iloc[2]
+print(target_text)
+
+import numpy as np
+
+cos_sim = []
+for i in range(len(all_words_df)):
+  cos_text = all_words_df.iloc[i]
+  cos = np.dot(target_text, cos_text) / ( np.linalg.norm(target_text) * np.linalg.norm(cos_text) )
+  cos_sim.append(cos)
+
+all_words_df["cos_sim"] = cos_sim
+print( all_words_df.sort_values("cos_sim",ascending=False).head() )
+
+print(survey["comment"].iloc[2])
+print(survey["comment"].iloc[24])
+print(survey["comment"].iloc[15])
+print(survey["comment"].iloc[33])
+
+
