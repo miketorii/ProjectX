@@ -25,6 +25,15 @@ AzureOpenAI1/lib64
 AzureOpenAI1/include
 AzureOpenAI1/pyvenv.cfg
 
+cosmosdb/bin
+cosmosdb/lib
+cosmosdb/lib64
+cosmosdb/include
+cosmosdb/pyvenv.cfg
+cosmosdb/config.py
+cosmosdb/__pycache__
+
+
 
 
 
