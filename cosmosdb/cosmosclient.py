@@ -27,7 +27,8 @@ def get_device_info(num):
     macaddr_base = 0xDCAB0000
     macaddr = macaddr_base + num
     device_id = format(macaddr,'x')
-    device = {'deviceid': device_id,
+    device = {'id': str(num+1),
+              'deviceid': device_id,
               'modelname': 'iR-ADV C550'+str(num),
               'ipaddr': '192.168.11.'+str(addr4),
               'location': 'building H '+str(num)+'F',
