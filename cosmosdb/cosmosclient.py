@@ -57,31 +57,68 @@ def query_items(container):
 
     return items
 
+######################################
+#
+def delete_item(container, num, pkey):
+    print("---delete_items---")
+    response = container.delete_item(item=num, partition_key=pkey)
+    print(response)
+   
+######################################
+#
+def execute_db_ops():
+    print("----------------------start--------------------")
+    
+    credential = DefaultAzureCredential()
+    
+    endpoint = config.settings['host']
+    print(endpoint)    
+    client = CosmosClient(endpoint, credential)
+    
+    databasename = config.settings['database_id']
+    db = client.get_database_client(databasename)
 
+    containername = config.settings['container_id']
+    container = db.get_container_client(containername)
+    
+    create_items(container)
+    
+    devices = query_items(container)
+    print(devices)
+
+    print("----------------------end--------------------")
+
+######################################
+#
+def query_devices():
+    print("----------------------start--------------------")
+    
+    credential = DefaultAzureCredential()
+    
+    endpoint = config.settings['host']
+    print(endpoint)    
+    client = CosmosClient(endpoint, credential)
+    
+    databasename = config.settings['database_id']
+    db = client.get_database_client(databasename)
+
+    containername = config.settings['container_id']
+    container = db.get_container_client(containername)
+    
+    devices = query_items(container)
+    print(devices)
+
+    delete_item(container, "10", "dcab0009")
+    
+    devices = query_items(container)
+    print(devices)
+    
+    print("----------------------end--------------------")
     
 ######################################
 #    
-print("----------------------start--------------------")
+if __name__ == '__main__':
+    #execute_db_ops()
 
-credential = DefaultAzureCredential()
-
-endpoint = config.settings['host']
-print(endpoint)
-
-client = CosmosClient(endpoint, credential)
-
-databasename = config.settings['database_id']
-
-
-db = client.get_database_client(databasename)
-
-containername = config.settings['container_id']
-
-container = db.get_container_client(containername)
-
-create_items(container)
-
-devices = query_items(container)
-print(devices)
-
-print("----------------------end--------------------")
+    query_devices()
+    
