@@ -27,12 +27,12 @@ def get_device_info(num):
     macaddr_base = 0xDCAB0000
     macaddr = macaddr_base + num
     device_id = format(macaddr,'x')
-    device = {'id': str(num+1),
+    device = {'id': device_id,
               'deviceid': device_id,
               'modelname': 'iR-ADV C550'+str(num),
               'ipaddr': '192.168.11.'+str(addr4),
               'location': 'building H '+str(num)+'F',
-              'optionss': [
+              'options': [
                   {'adf': 1,
                    'paper_deck': 1,
                    'ps': 0,
@@ -44,6 +44,8 @@ def get_device_info(num):
               }
 
     return device
+
+
 
 ######################################
 #
@@ -59,10 +61,19 @@ def query_items(container):
 
 ######################################
 #
-def delete_item(container, num, pkey):
+def delete_item(container, pkey):
     print("---delete_items---")
-    response = container.delete_item(item=num, partition_key=pkey)
+    response = container.delete_item(item=pkey, partition_key=pkey)
     print(response)
+
+######################################
+#
+def read_item(container, pkey):
+    print("---read_items---")
+    response = container.read_item(item=pkey, partition_key=pkey)
+#    print(response)
+
+    return response
    
 ######################################
 #
@@ -90,6 +101,21 @@ def execute_db_ops():
 
 ######################################
 #
+def display_device(device):
+    print(device.get('id'))
+    print(device.get('deviceid'))    
+    print(device.get('ipaddr'))
+    print(device.get('location'))    
+    print(device.get('status'))
+    print(device.get('number'))
+    print(device['options'][0].get('adf'))
+    print(device['options'][0].get('paper_deck'))
+    print(device['options'][0].get('ps'))
+    print(device['options'][0].get('finisher'))        
+    
+                  
+######################################
+#
 def query_devices():
     print("----------------------start--------------------")
     
@@ -105,11 +131,16 @@ def query_devices():
     containername = config.settings['container_id']
     container = db.get_container_client(containername)
     
-    devices = query_items(container)
-    print(devices)
+#    devices = query_items(container)
+#    print(devices)
 
-    delete_item(container, "10", "dcab0009")
-    
+#    delete_item(container, "dcab0009")
+
+    device = read_item(container, "dcab0004")
+    print(device)
+
+    display_device(device)
+
     devices = query_items(container)
     print(devices)
     
