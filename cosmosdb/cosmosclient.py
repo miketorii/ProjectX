@@ -71,10 +71,20 @@ def delete_item(container, pkey):
 def read_item(container, pkey):
     print("---read_items---")
     response = container.read_item(item=pkey, partition_key=pkey)
-#    print(response)
 
     return response
-   
+
+######################################
+#
+def upsert_item(container, pkey, itemkey, value):
+    print("---upsert_items---")
+    read_item = container.read_item(item=pkey, partition_key=pkey)
+    read_item[itemkey] = value
+    response = container.upsert_item(body=read_item)
+    
+    return response
+
+
 ######################################
 #
 def execute_db_ops():
@@ -131,18 +141,27 @@ def query_devices():
     containername = config.settings['container_id']
     container = db.get_container_client(containername)
     
-#    devices = query_items(container)
-#    print(devices)
+    #devices = query_items(container)
+    #print(devices)
 
-#    delete_item(container, "dcab0009")
+    #delete_item(container, "dcab0009")
 
-    device = read_item(container, "dcab0004")
-    print(device)
-
+    primarykey = "dcab0004"
+    device = read_item(container, primarykey)
     display_device(device)
 
-    devices = query_items(container)
-    print(devices)
+    itemkey = 'location'
+    value = 'Building A 10F'
+    updated_device = upsert_item(container, primarykey, itemkey, value)
+
+    display_device(updated_device)
+
+    primarykey = "dcab0004"
+    device = read_item(container, primarykey)
+    display_device(device)
+    
+#    devices = query_items(container)
+#    print(devices)
     
     print("----------------------end--------------------")
     
