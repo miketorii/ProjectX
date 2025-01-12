@@ -69,10 +69,19 @@ def delete_item(container, pkey):
 ######################################
 #
 def read_item(container, pkey):
-    print("---read_items---")
+    print("---read_item---")
     response = container.read_item(item=pkey, partition_key=pkey)
 
     return response
+
+######################################
+#
+def read_items(container, maxnum):
+    print("---read_items---")
+    response = container.read_all_items(max_item_count=maxnum)
+
+    return response
+
 
 ######################################
 #
@@ -153,13 +162,18 @@ def query_devices():
     itemkey = 'location'
     value = 'Building A 10F'
     updated_device = upsert_item(container, primarykey, itemkey, value)
-
     display_device(updated_device)
 
-    primarykey = "dcab0004"
-    device = read_item(container, primarykey)
-    display_device(device)
-    
+    maxnum = 10
+    response = read_items(container, maxnum)
+
+    print("------------------------------------------")
+    print("------------------------------------------")    
+    print("------------------------------------------")    
+    devices = list( response )
+    for dev in devices:
+        display_device(dev)
+        
 #    devices = query_items(container)
 #    print(devices)
     
