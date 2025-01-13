@@ -46,6 +46,20 @@ def get_device_info(num):
     return device
 
 
+######################################
+#
+def query_item(container, pkey):
+    print("---query_item---")
+
+    items = list( container.query_items(
+        query="SELECT * FROM r WHERE r.id=@id",
+        parameters=[
+            {"name": "@id", "value": pkey}
+        ],
+        enable_cross_partition_query=True
+    ))
+
+    return items[0]
 
 ######################################
 #
@@ -159,11 +173,18 @@ def query_devices():
     device = read_item(container, primarykey)
     display_device(device)
 
+    print("------------------------------------------")    
+    primarykey2 = 'dcab0006'
+    device2 = query_item(container, primarykey2)
+    display_device(device2)
+ 
+    print("------------------------------------------")   
     itemkey = 'location'
     value = 'Building A 10F'
     updated_device = upsert_item(container, primarykey, itemkey, value)
     display_device(updated_device)
 
+    print("------------------------------------------")    
     maxnum = 10
     response = read_items(container, maxnum)
 
