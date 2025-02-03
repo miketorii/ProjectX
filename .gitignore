@@ -33,6 +33,15 @@ cosmosdb/pyvenv.cfg
 cosmosdb/config.py
 cosmosdb/__pycache__
 
+claude-env/bin
+claude-env/include
+claude-env/lib
+claude-env/lib64
+claude-env/__pycache__
+claude-env/pyvenv.cfg
+
+
+
 
 
 
