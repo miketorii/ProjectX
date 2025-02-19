@@ -40,6 +40,13 @@ claude-env/lib64
 claude-env/__pycache__
 claude-env/pyvenv.cfg
 
+*/bin
+*/include
+*/lib
+*/lib64
+*/__pycache__
+*/pyvenv.cfg
+
 
 
 
