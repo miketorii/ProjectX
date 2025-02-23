@@ -65,6 +65,7 @@ def agent_node(state, agent, name):
 
 # ## 4.スーパーバイザー設定
 from langchain.output_parsers.openai_functions import JsonOutputFunctionsParser
+#from langchain.output_parsers import PydanticOutputParser
 
 members = ["sales_staff", "sales_manager", "sales_director"]
 system_prompt = (
@@ -113,6 +114,7 @@ supervisor_chain = (
     | llm.bind_functions(functions=[function_def], function_call="route")
 #    | llm.bind_tools(tools=[function_def], tool_choice="route")
     | JsonOutputFunctionsParser()
+#    | PydanticOutputParser()
 )
 
 
