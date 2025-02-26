@@ -46,7 +46,7 @@ claude-env/pyvenv.cfg
 */lib64
 */__pycache__
 */pyvenv.cfg
-
+*/share
 
 
 
