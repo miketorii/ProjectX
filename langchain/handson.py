@@ -3,6 +3,10 @@ from typing import Annotated
 
 from pydantic import BaseModel, Field
 
+from langgraph.graph import StateGraph
+
+from langchain_openai import AzureChatOpenAI
+
 print("------------start---------------")
 
 ROLES = {
@@ -23,6 +27,34 @@ ROLES = {
     }    
 }
 
-print( ROLES )
+#print( ROLES )
+
+#################################################################
+#
+# State class
+#
+class State(BaseModel):
+    query: str = Field( ..., description="ユーザーからの質問")
+    current_role: str = Field(default="", description="選定された回答ロール")
+    messages: Annotated[list[str], operator.add] = Field(default=[], description="回答履歴")
+    current_judge: bool = Field(default=False, description="品質チェックの結果")
+    judgement_reason: str = Field(default="", description="品質チェックの判定理由")
+    
+workflow = StateGraph(State)
+
+#################################################################
+#
+# Create client for LLM
+#
+llm = AzureChatOpenAI(
+    azure_deployment="MyModel",  # or your deployment
+    api_version="2024-02-01",  # or your api version
+    temperature=0.7,
+    streaming=True,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,
+    # other params...
+)
 
 print("------------end---------------")
