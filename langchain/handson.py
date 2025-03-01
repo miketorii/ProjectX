@@ -52,8 +52,10 @@ workflow = StateGraph(State)
 # Create client for LLM
 #
 llm = AzureChatOpenAI(
-    azure_deployment="MyModel",  # or your deployment
-    api_version="2024-02-01",  # or your api version
+    #azure_deployment="MyModel",  # or your deployment
+    #api_version="2024-02-01",  # or your api version
+    azure_deployment="my-gpt-4o-1",  # or your deployment    
+    api_version="2024-08-01-preview",  # or your api version
     temperature=0.7,
     streaming=True,
     max_tokens=None,
@@ -72,6 +74,7 @@ llm = AzureChatOpenAI(
 # selection node
 #
 def selection_node(state: State) -> dict[str, Any]:
+    print("------selection_node-------")    
     query = state.query
     role_options = "\n".join([ f"{k}. {v['name']}: {v['description']} " for k, v in ROLES.items() ])
     prompt = ChatPromptTemplate.from_template(
@@ -98,6 +101,7 @@ def selection_node(state: State) -> dict[str, Any]:
 # answering node
 #
 def answering_node(state: State) -> dict[str, Any]:
+    print("------answering_node-------")
     query = state.query
     role = state.current_role
     role_details = "\n".join([ f"- {v['name']}: {v['details']} " for v in ROLES.values() ])
@@ -115,34 +119,71 @@ def answering_node(state: State) -> dict[str, Any]:
     chain = prompt | llm | StrOutputParser()
     answer = chain.invoke({"role": role, "role_details": role_details, "query": query})
 
-    return {"messages" : [answer]}
+    return {"messages": [answer]}
 
 #################################################################
 #
 # check node
 #
 class Judgement(BaseModel):
-    reson: str = Field( defalut="", description="判定理由")
-    judge: bool = Field( defalut=False, description="判定結果")
+    reason: str = Field( default="", description="判定理由")
+    judge: bool = Field( default=False, description="判定結果")
 
 
 def check_node(state: State) -> dict[str, Any]:
+    print("------check_node-------")
     query = state.query
     answer = state.messages[-1]
+    print(query)
+    print("-------------------")
+    print(answer)
+
+    '''
     prompt = ChatPromptTemplate.from_template(
 """以下の回答の品質をチェックし、問題がある場合は'False'、問題がない場合は'True'を回答してください。また、その判断理由も説明してください。
 
 ユーザーからの質問: {query}
-
 回答: {answer}
 """.strip()
     )
-
+    print("---chain---")
     chain = prompt | llm.with_structured_output(Judgement)
+    print("---invoke---")    
     result: Judgement = chain.invoke({"query": query, "answer": answer})
 
+    print(result)
+    
     return {
-        "current_judge" : result.judge,
+        "current_judge": result.judge,
+        "judgement_reason": result.reason
+    }
+    '''
+
+    print("---prompt---")
+    
+    prompt = ChatPromptTemplate.from_messages([
+        (
+            'system',
+            """以下の回答の品質をチェックし、問題がある場合は'False'、問題がない場合は'True'を回答してください。また、その判断理由も説明してください。
+
+            ユーザーからの質問: {query}
+            回答: {answer}
+            """,
+        ),
+        ('placeholder', '{query}'),
+        ('placeholder', '{answer}'),        
+    ])
+    
+    print("---chain---")
+    chain = prompt | llm.with_structured_output(Judgement)
+    print("---invoke---")
+    result: Judgement = chain.invoke({"messages": query})
+    #result: Judgement = chain.invoke({"query": query, "answer": answer})        
+
+    print(result)
+    
+    return {
+        "current_judge": result.judge,
         "judgement_reason": result.reason
     }
 
