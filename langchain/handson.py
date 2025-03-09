@@ -12,6 +12,8 @@ from langchain_core.output_parsers import StrOutputParser
 
 from langgraph.graph import END
 
+from langchain_core.output_parsers import PydanticOutputParser
+
 print("------------start---------------")
 
 ROLES = {
@@ -160,22 +162,30 @@ def check_node(state: State) -> dict[str, Any]:
     '''
 
     print("---prompt---")
+
+    output_parser_judge = PydanticOutputParser(pydantic_object=Judgement)
+    format_instruction_judge = output_parser_judge.get_format_instructions()
     
     prompt = ChatPromptTemplate.from_messages([
         (
-            'system',
+            "human",
             """以下の回答の品質をチェックし、問題がある場合は'False'、問題がない場合は'True'を回答してください。また、その判断理由も説明してください。
 
             ユーザーからの質問: {query}
             回答: {answer}
             """,
         ),
-        ('placeholder', '{query}'),
-        ('placeholder', '{answer}'),        
     ])
+
+    prompt_with_format_instructions_judge = prompt.partial(
+        format_instructions=format_instruction_judge
+    )
+    prompt_value_judge = prompt_with_format_instructions_judge.invoke({{"query":query}, {"answer":answer}})
     
     print("---chain---")
-    chain = prompt | llm.with_structured_output(Judgement)
+    #chain = prompt_with_format_instructions_judge | llm.with_structured_output(Judgement)
+    chain = prompt_with_format_instructions_judge | llm | output_parser_judge
+    
     print("---invoke---")
     result: Judgement = chain.invoke({"messages": query})
     #result: Judgement = chain.invoke({"query": query, "answer": answer})        
