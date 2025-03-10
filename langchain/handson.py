@@ -164,9 +164,16 @@ def check_node(state: State) -> dict[str, Any]:
     print("---prompt---")
 
     output_parser_judge = PydanticOutputParser(pydantic_object=Judgement)
-    format_instruction_judge = output_parser_judge.get_format_instructions()
+    
+    format_instructions = output_parser_judge.get_format_instructions()
+    print(format_instructions)
     
     prompt = ChatPromptTemplate.from_messages([
+        (
+            "system",
+            ""
+            "{format_instructions}",
+        ),
         (
             "human",
             """以下の回答の品質をチェックし、問題がある場合は'False'、問題がない場合は'True'を回答してください。また、その判断理由も説明してください。
@@ -177,20 +184,34 @@ def check_node(state: State) -> dict[str, Any]:
         ),
     ])
 
+    print("---call prompt.partial---")
     prompt_with_format_instructions_judge = prompt.partial(
-        format_instructions=format_instruction_judge
+        format_instructions = format_instructions
     )
-    prompt_value_judge = prompt_with_format_instructions_judge.invoke({{"query":query}, {"answer":answer}})
+
+    print("---call prompt_with_format_instructions_judge.invoke()---")    
+    prompt_value_judge = prompt_with_format_instructions_judge.invoke({"query":query, "answer":answer})
+    print("-------------------")
+    print(prompt_value_judge.messages[0].content)
+    print(prompt_value_judge.messages[1].content)    
     
     print("---chain---")
     #chain = prompt_with_format_instructions_judge | llm.with_structured_output(Judgement)
-    chain = prompt_with_format_instructions_judge | llm | output_parser_judge
+    #chain = prompt_with_format_instructions_judge | llm | output_parser_judge
     
     print("---invoke---")
-    result: Judgement = chain.invoke({"messages": query})
+    #result: Judgement = chain.invoke({"messages": query})
     #result: Judgement = chain.invoke({"query": query, "answer": answer})        
 
-    print(result)
+    ai_msg = llm.invoke(prompt_value_judge)
+    print(ai_msg)
+
+    print("---output_parser_judge.invoke---")    
+    result = output_parser_judge.invoke(ai_msg)
+
+    print( result.judge )
+    print("--------------------------------------------------------------")
+    print( result.reason )
     
     return {
         "current_judge": result.judge,
