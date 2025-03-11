@@ -48,6 +48,8 @@ claude-env/pyvenv.cfg
 */pyvenv.cfg
 */share
 
+langchain/data
+
 
 
 
