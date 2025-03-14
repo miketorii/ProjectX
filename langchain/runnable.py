@@ -26,12 +26,12 @@ output_parser = StrOutputParser()
 chain = prompt | llm | output_parser
 
 # invoke
-#ai_msg = chain.invoke({"dish":"カレー"})
-#print(ai_msg)
+ai_msg = chain.invoke({"dish":"カレー"})
+print(ai_msg)
 
 # stream
-for chunk in chain.stream({"dish":"カレー"}):
-    print(chunk, end="", flush=True)
+#for chunk in chain.stream({"dish":"カレー"}):
+#    print(chunk, end="", flush=True)
 
 # batch
 #ai_msgs = chain.batch([{"dish":"カレー"},{"dish":"うどん"}])
