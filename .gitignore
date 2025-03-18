@@ -10,6 +10,7 @@ deeplearning/data/*
 *.csv
 *.png
 *.xlsx
+.env
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
