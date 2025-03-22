@@ -65,8 +65,12 @@ class SinglePathPlanGeneration:
         return graph.compile()
 
     def _goal_setting(self, state: SinglePathPlanGenerationState) -> dict[str, Any]:
-        optimized_response = null
-        return { "optimized_goal": null,
+        goal: Goal = self.passive_goal_creator.run(query=state.query)
+        optimzed_goal: OptimizedGoal = self.prompt_optimizer.run(query=goal.text)
+        
+        optimized_response: str = self.response_optimizer.run(query=optimized_goal.text)
+        
+        return { "optimized_goal": optimized_goal.text,
                  "optimized_response": optimized_response
         }
     
