@@ -2,10 +2,12 @@ import operator
 from datetime import datetime
 from typing import Annotated, Any
 
+from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_openai import AzureChatOpenAI
 from langgraph.graph import END, StateGraph
+from langgraph.prebuilt import create_react_agent
 from pydantic import BaseModel, Field
 
 from response_optimizer import Goal, PassiveGoalCreator
@@ -73,13 +75,67 @@ class QueryDecomposer:
 class TaskExecutor:
     def __init__(self, llm: AzureChatOpenAI):
         self.llm = llm
+        self.tools = [TavilySearchResults(max_results=3)]
+
+    def run(self, task: str) -> str:
+        print("---run in TaskExecutor---")
+        agent = create_react_agent(self.llm, self.tools)
+        result = agent.invoke(
+            {
+                "messages": [
+                    (
+                        "human",
+                        (
+                            "次のタスクを実行し、詳細な回答を提供してください。\n\n"
+                            f"タスク: {task} \n\n"
+                            "要件:\n"
+                            "1. 必要に応じて提供されたツールを使用してください。\n"
+                            "2. 実行は徹底的かつ包括的に行ってください。\n"
+                            "3. 可能な限り具体的な事実やデータを提供してください。\n"
+                            "4. 発見した内容を明確に要約してください。\n"
+                         ),
+                     )
+                ]
+            }
+        )
+        print(result)
+        print(result["messages"][-1].content)
+        print("---done run in TaskExecutor---")        
+        return result["messages"][-1].content
 
 ################################################
 #
 #
 class ResultAggregator:
     def __init__(self, llm: AzureChatOpenAI):
-        self.llm = llm        
+        self.llm = llm
+
+    def run(self, query: str, response_definition: str, results: list[str]) -> str:
+        print("------run in ResultAggregator----")
+        prompt = ChatPromptTemplate.from_template(
+            "与えられた目標\n{query}\n\n"
+            "調査結果:{results}\n\n"
+            "与えられた目標に対し、調査結果を用いて、以下の指示に基づいてレスポンスを生成してください。\n"
+            "{response_definition}"
+        )
+        
+        results_str = "\n\n".join(
+            f"Info {i+1}:\n{result}" for i, result in enumerate(results)
+        )
+        
+        chain = prompt | self.llm | StrOutputParser()
+        
+        response = chain.invoke(
+            {
+                "query": query,
+                "results": results_str,
+                "response_definition": response_definition,
+            }
+        )
+        
+        print(response)
+        print("------done run in ResultAggregator----")        
+        return response
         
 ################################################
 #
@@ -132,10 +188,16 @@ class SinglePathPlanGeneration:
         return {"tasks": decomposed_tasks.values}
         
     def _execute_task(self, state: SinglePathPlanGenerationState) -> dict[str, Any]:
-        return {"results": null, "current_task_index": 1}
+        current_task = state.tasks[state.current_task_index]
+        result = self.task_executor.run(task=current_task)
+        return {"results": [result], "current_task_index": state.current_task_index + 1}
     
     def _aggregate_results(self, state: SinglePathPlanGenerationState) -> dict[str, Any]:
-        final_output = null
+        final_output = self.result_aggregator.run(
+            query=state.optimized_goal,
+            response_definition=state.optimized_response,
+            results=state.results,
+        )
         return {"final_output": final_output}
         
     def run(self, query: str) -> str:
