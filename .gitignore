@@ -48,6 +48,7 @@ claude-env/pyvenv.cfg
 */__pycache__
 */pyvenv.cfg
 */share
+*/tmp
 
 langchain/data
 

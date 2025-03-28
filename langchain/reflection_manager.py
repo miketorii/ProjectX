@@ -1,5 +1,11 @@
+import os
+from dotenv import load_dotenv
+
 from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field
+from langchain_openai import AzureOpenAIEmbeddings
+
+from settings import Settings
 
 ##########################################################
 #
@@ -24,7 +30,34 @@ class Reflection(BaseModel):
 class ReflectionManager:
     def __init__(self, file_path: str):
         self.file_path = file_path
+        conf = Settings()
+        conf.readenv()
+        self.embeddings = AzureOpenAIEmbeddings(
+            model="my-text-embedding-3-large",
+            azure_endpoint=os.environ["AZURE_OPENAI_EMBEDDED_ENDPOINT"],
+            api_key=os.environ["AZURE_OPENAI_EMBEDDED_API_KEY"],
+            # openai_api_version=AZURE_OPENAI_EMBEDDING_API_VERSION    
+            # dimensions: Optional[int] = None, # Can specify dimensions with new text-embedding-3 models
+        )
+        self.reflections: dict[str, Reflection] = {}
+        self.embeddings_dict: dict[str, list[float]] = {}
+        self.index = None
+        self.load_reflections()
 
+    def load_reflections(self):
+        print("----load_reflections----")
+        if os.path.exists(self.file_path):
+            with open(self.file_path,"r") as file:
+                data = json.load(file)
+                for item in data:
+                    reflection = Reflection(**item["reflection"])
+                    self.reflections[reflection.id] = reflection
+                    self.embeddings_dict[reflection.id] = item["embedding"]
+
+            if self.reflections:
+                embeddings = list(self.embeddings_dict.values())
+                self.index = faiss.IndexFlatL2(len(embeddings[0]))
+                self.index.add(np.array(embeddings).astype("float32"))
         
 ##########################################################
 #
@@ -34,3 +67,6 @@ class TaskReflector:
         self.llm = llm
         self.reflection_manager = reflection_manager
         
+
+if __name__=="__main__":
+    refmgr = ReflectionManager("./tmp/self_reflection_db.json")

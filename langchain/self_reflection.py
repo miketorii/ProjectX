@@ -45,6 +45,11 @@ class ReflectiveAgentState(BaseModel):
     final_output: str = Field(default="", description="最終的な出力結果")
     retry_count: int = Field(default=0, description="タスクの再試行回数")
 
+################################################
+#
+#
+
+    
 '''    
 ################################################
 #
