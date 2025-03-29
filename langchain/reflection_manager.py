@@ -1,5 +1,10 @@
 import os
 from dotenv import load_dotenv
+import json
+import uuid
+
+import faiss
+import numpy as np
 
 from langchain_core.language_models.chat_models import BaseChatModel
 from pydantic import BaseModel, Field
@@ -58,7 +63,33 @@ class ReflectionManager:
                 embeddings = list(self.embeddings_dict.values())
                 self.index = faiss.IndexFlatL2(len(embeddings[0]))
                 self.index.add(np.array(embeddings).astype("float32"))
-        
+
+    def save_reflection(self, reflection: Reflection) -> str:
+        reflection.id = str(uuid.uuid4())
+        reflection_id = reflection.id
+        self.reflections[reflection_id] = reflection
+        embedding = self.embeddings.embed_query(reflection.reflection)
+        self.embeddings_dict[reflection_id] = embedding
+
+        if self.index is None:
+            self.index = faiss.IndexFlatL2(len(embedding))
+        self.index.add(np.array([embedding]).astype("float32") )
+
+        with open(self.file_path, "w", encoding="utf-8") as file:
+            json.dump(
+                [
+                    {"reflection": reflection.dict(), "embedding": embedding}
+                    for reflection, embedding in zip(
+                            self.reflections.values(), self.embeddings_dict.values()
+                    )
+                ],
+                file,
+                ensure_ascii=False,
+                indent=4,
+            )
+
+        return reflection_id
+    
 ##########################################################
 #
 #
@@ -69,4 +100,19 @@ class TaskReflector:
         
 
 if __name__=="__main__":
-    refmgr = ReflectionManager("./tmp/self_reflection_db.json")
+    refmgr = ReflectionManager("tmp/self_reflection_db.json")
+    ref_judge = ReflectionJudgement(
+        needs_retry=True,
+        confidence=0.9,
+        reasons=["str1","str2"]
+    )
+    print(ref_judge)
+    ref = Reflection(
+        id="100",
+        task="task a",
+        reflection="this is reflection",
+        judgement=ref_judge        
+    )
+    print(ref)
+    ret = refmgr.save_reflection(ref)
+    print(ret)
