@@ -48,17 +48,33 @@ class ReflectiveAgentState(BaseModel):
 ################################################
 #
 #
+class ReflectiveGoalCreator:
+    def __init__(self, llm: AzureChatOpenAI, reflection_manager: ReflectionManager):
+        self.llm = llm
+        self.reflection_manager = reflection_manager
+        self.passive_goal_creator = PassiveGoalCreator(llm=self.llm)
+        self.prompt_optimizer = PromptOptimizer(llm=self.llm)
 
+################################################
+#
+#
+class ReflectiveResponseOptimizer:
+    def __init__(self, llm: AzureChatOpenAI, reflection_manager: ReflectionManager):
+        self.llm = llm
+        self.reflection_manager = reflection_manager
+        self.response_optimizer = ResponseOptimizer(llm=llm)
     
-'''    
+
 ################################################
 #
 #
 class QueryDecomposer:
-    def __init__(self, llm: AzureChatOpenAI):
-        self.llm = llm
+    def __init__(self, llm: AzureChatOpenAI, reflection_manager: ReflectionManager):
+        self.llm = llm.with_structured_output(DecomposedTasks)
         self.current_date = datetime.now().strftime("%Y-%m-%d")
-
+        self.reflection_manager = reflection_manager
+        
+'''
     def run(self, query: str) -> DecomposedTasks:
         print("----run in QueryDecomposer----")
         prompt = ChatPromptTemplate.from_template(
@@ -81,15 +97,19 @@ class QueryDecomposer:
         print(response)
         print("----done invoke in QueryDecomposer----")        
         return response
-        
+'''
+
 ################################################
 #
 #
 class TaskExecutor:
-    def __init__(self, llm: AzureChatOpenAI):
+    def __init__(self, llm: AzureChatOpenAI, reflection_manager: ReflectionManager):
         self.llm = llm
+        self.reflection_manager = reflection_manager
+        self.current_date = datetime.now().strftime("%Y-%m-%d")        
         self.tools = [TavilySearchResults(max_results=3)]
 
+'''
     def run(self, task: str) -> str:
         print("---run in TaskExecutor---")
         agent = create_react_agent(self.llm, self.tools)
@@ -115,14 +135,19 @@ class TaskExecutor:
         print(result["messages"][-1].content)
         print("---done run in TaskExecutor---")        
         return result["messages"][-1].content
+'''
 
 ################################################
 #
 #
 class ResultAggregator:
-    def __init__(self, llm: AzureChatOpenAI):
+    def __init__(self, llm: AzureChatOpenAI, reflection_manager: ReflectionManager):
         self.llm = llm
+        self.reflection_manager = reflection_manager
+        self.current_date = datetime.now().strftime("%Y-%m-%d")        
 
+        
+'''        
     def run(self, query: str, response_definition: str, results: list[str]) -> str:
         print("------run in ResultAggregator----")
         prompt = ChatPromptTemplate.from_template(
@@ -149,7 +174,9 @@ class ResultAggregator:
         print(response)
         print("------done run in ResultAggregator----")        
         return response
-        
+'''
+
+'''
 ################################################
 #
 #
@@ -235,6 +262,28 @@ class ReflectiveAgent:
     ):
         self.reflection_manager = reflection_manager
         self.task_reflector = task_reflector
+        self.reflective_goal_creator = ReflectiveGoalCreator(
+            llm=llm, reflection_manager=self.reflection_manager
+        )
+        self.reflective_response_optimizer = ReflectiveResponseOptimizer(
+            llm=llm, reflection_manager=self.reflection_manager
+        )
+        self.query_decomposer = QueryDecomposer(
+            llm=llm, reflection_manager=self.reflection_manager
+        )
+        self.task_executor = TaskExecutor(
+            llm=llm, reflection_manager=self.reflection_manager            
+        )
+        self.result_aggregator = ResultAggregator(
+            llm=llm, reflection_manager=self.reflection_manager            
+        )
+        self.max_retries = max_retries
+        self.graph = self._create_graph()
+
+    def _create_graph(self) -> StateGraph:
+        graph = StateGraph(ReflectiveAgentState)
+        return graph
+        
 
     def run(self, query: str) -> str:
         print("-------initial state of ReflectiveAgentState----")
