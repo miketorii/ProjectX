@@ -282,13 +282,102 @@ class ReflectiveAgent:
 
     def _create_graph(self) -> StateGraph:
         graph = StateGraph(ReflectiveAgentState)
-        return graph
+
+        graph.add_node("goal_setting", self._goal_setting)
+        graph.add_node("decompose_query", self._decompose_query)
+        graph.add_node("execute_task", self._execute_task)        
+        graph.add_node("reflect_on_task", self._reflect_on_task)        
+        graph.add_node("update_task_index", self._update_task_index)
+        graph.add_node("aggregate_results", self._aggregate_results)
+
+        graph.set_entry_point("goal_setting")
+
+        graph.add_edge("goal_setting", "decompose_query")
+        graph.add_edge("decompose_query", "execute_task")
+        graph.add_edge("execute_task", "reflect_on_task")
+
+        graph.add_conditional_edges(
+            "reflect_on_task",
+            self._should_retry_or_continue,
+            {
+                "retry": "execute_task",
+                "continue": "update_task_index",
+                "finish": "aggregate_results",                
+            }
+        )
+
+        graph.add_edge("update_task_index", "execute_task")
+        graph.add_edge("aggregate_results", END)
+        
+        return graph.compile()
         
 
+    def _goal_setting(self, state: ReflectiveAgentState) -> dict[str, Any]:
+        optimized_goal: str  = self.reflective_goal_creator.run(query=state.query)
+        optimized_response: str = self.reflective_response_optimizer.run(
+            query=optimized_goal
+        )
+        
+        return {
+            "optimized_goal": optimized_goal,
+            "optimized_response": optimized_response
+        }
+
+    def _decompose_query(self, state: ReflectiveAgentState) -> dict[str, Any]:
+        tasks: DecomposedTasks = self.query_decomposer.run(query=state.optimized_goal)
+        return {"tasks": tasks.values}
+        
+        
+    def _execute_task(self, state: ReflectiveAgentState) -> dict[str, Any]:
+        current_task = state.tasks[state.current_task_index]
+        result = self.task_executor.run(task=current_task)
+        return {
+            "results": [result],
+            "current_task_index": state.current_task_index
+        }
+        
+    def _reflect_on_task(self, state: ReflectiveAgentState) -> dict[str, Any]:
+        current_task = state.tasks[state.current_task_index]
+        current_result = state.results[-1]
+        reflection = self.task_reflector.run(task=current_task, result=current_result)
+        return {
+            "reflection_ids": [reflection.id],
+            "retry_count": (
+                state.retry_count + 1 if reflection.judgement.needs_retry else 0
+            )
+        }
+
+    def _should_retry_or_continue(self, state: ReflectiveAgentState) -> str:
+        latest_reflection_id = state.reflection_ids[-1]
+        latest_reflection = self.reflection_manager.get_reflection(latest_reflection_id)
+        if (
+                latest_reflection
+                and latest_reflection.judgement.needs_retry
+                and state.retry_count < self.max_retries
+        ):
+            return "retry"
+        elif state.current_task_index < len(state.tasks) - 1:
+            return "continue"
+        else:
+            return "finish"
+        
+    def _update_task_index(self, state: ReflectiveAgentState) -> dict[str, Any]:
+        return {"current_task_index": state.current_task_index + 1}
+        
+    def _aggregate_results(self, state: ReflectiveAgentState) -> dict[str, Any]:
+        final_output = self.result_aggregator.run(
+            query=state.optimized_goal,
+            results=state.results,
+            reflection_ids=state.reflection_ids,
+            response_definition=state.optimized_response
+        )
+        
+        return {"final_output": final_output}
+        
     def run(self, query: str) -> str:
         print("-------initial state of ReflectiveAgentState----")
-        #initial_state = ReflectiveAgentState(query=query)
-        #print(initial_state)
+        initial_state = ReflectiveAgentState(query=query)
+        print(initial_state)
         print("---------------------------------------------------------")
         #final_state = self.graph.invoke(initial_state, {"recursion_limit": 100})
         #return final_state.get("final_output", "エラー: 出力に失敗しました。")
