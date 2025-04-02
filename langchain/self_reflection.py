@@ -13,7 +13,21 @@ from pydantic import BaseModel, Field
 from response_optimizer import Goal, PassiveGoalCreator
 from response_optimizer import OptimizedGoal, PromptOptimizer, ResponseOptimizer
 
-from reflection_manager import ReflectionManager, TaskReflector
+from reflection_manager import Reflection,ReflectionManager, TaskReflector
+
+
+################################################
+#
+#
+def format_reflections(reflections: list[Reflection]) -> str:
+    return (
+        "\n\n".join(
+            f"<ref_{i}><task>{r.task}</task><reflection>{r.reflection}</reflection></ref_{i}>"
+            for i, r in enumerate(reflections)
+        )
+        if reflections
+        else "No relevant past reflections"
+    )
 
 ################################################
 #
@@ -59,8 +73,8 @@ class ReflectiveGoalCreator:
         relevant_reflections = self.reflection_manager.get_relevant_reflections(query)
         reflection_text = format_reflections(relevant_reflections)
 
-        query = f"{qury}\n\n目標を設定する際に以下の過去の振り返りを考慮すること:\n{reflection_text}"
-        goal: Goal = self.passive_goal_creator.run(query=query.text)
+        query = f"{query}\n\n目標を設定する際に以下の過去の振り返りを考慮すること:\n{reflection_text}"
+        goal: Goal = self.passive_goal_creator.run(query=query)
         optimized_goal: OptimizedGoal = self.prompt_optimizer.run(query=goal.text)
         
         return optimized_goal.text
@@ -90,13 +104,9 @@ class QueryDecomposer:
         self.reflection_manager = reflection_manager
 
     def run(self, query: str) -> DecomposedTasks:
-
-        tasks = null
-        return tasks
-        
-'''
-    def run(self, query: str) -> DecomposedTasks:
         print("----run in QueryDecomposer----")
+        relevant_reflections = self.reflection_manager.get_relevant_reflections(query)
+        reflection_text = format_reflections(relevant_reflections)
         prompt = ChatPromptTemplate.from_template(
             f"CURRENT_DATE: {self.current_date}\n"
             "----------\n"
@@ -109,15 +119,15 @@ class QueryDecomposer:
             "4. タスクは日本語で出力すること。\n"
             "目標: {query}"            
         )
-        chain = prompt | self.llm.with_structured_output(DecomposedTasks)
+        chain = prompt | self.llm
         print("----invoke in QueryDecomposer----")
         print(query)
         #return chain.invoke({"query": query})
-        response = chain.invoke({"query": query})
-        print(response)
+        tasks = chain.invoke({"query": query, "reflectikons": reflection_text})
+        print(tasks)
         print("----done invoke in QueryDecomposer----")        
-        return response
-'''
+        return tasks
+
 
 ################################################
 #
@@ -129,9 +139,10 @@ class TaskExecutor:
         self.current_date = datetime.now().strftime("%Y-%m-%d")        
         self.tools = [TavilySearchResults(max_results=3)]
 
-'''
     def run(self, task: str) -> str:
         print("---run in TaskExecutor---")
+        relevant_reflections = self.reflection_manager.get_relevant_reflections(task)
+        reflection_text = format_reflections(relevant_reflections)        
         agent = create_react_agent(self.llm, self.tools)
         result = agent.invoke(
             {
@@ -146,6 +157,7 @@ class TaskExecutor:
                             "2. 実行は徹底的かつ包括的に行ってください。\n"
                             "3. 可能な限り具体的な事実やデータを提供してください。\n"
                             "4. 発見した内容を明確に要約してください。\n"
+                            f"5. 以下の過去の振り返りを考慮すること:\n{reflection_text}\n"                            
                          ),
                      )
                 ]
@@ -155,7 +167,7 @@ class TaskExecutor:
         print(result["messages"][-1].content)
         print("---done run in TaskExecutor---")        
         return result["messages"][-1].content
-'''
+
 
 ################################################
 #
@@ -166,15 +178,22 @@ class ResultAggregator:
         self.reflection_manager = reflection_manager
         self.current_date = datetime.now().strftime("%Y-%m-%d")        
 
-        
-'''        
-    def run(self, query: str, response_definition: str, results: list[str]) -> str:
+    def run(self, query: str, 
+            results: list[str],
+            reflection_ids: list[str],
+            response_definition: str,            
+            ) -> str:
         print("------run in ResultAggregator----")
+        relevant_reflections = [
+            self.reflection_manager.get_reflection(rid) for rid in reflection_ids
+        ]
+        
         prompt = ChatPromptTemplate.from_template(
             "与えられた目標\n{query}\n\n"
             "調査結果:{results}\n\n"
             "与えられた目標に対し、調査結果を用いて、以下の指示に基づいてレスポンスを生成してください。\n"
-            "{response_definition}"
+            "{response_definition}\n\n"
+            "過去の振り返りを考慮すること:\n{reflection_text}\n"
         )
         
         results_str = "\n\n".join(
@@ -188,13 +207,14 @@ class ResultAggregator:
                 "query": query,
                 "results": results_str,
                 "response_definition": response_definition,
+                "reflection_text": format_reflections(relevant_reflections),
             }
         )
         
         print(response)
         print("------done run in ResultAggregator----")        
         return response
-'''
+
 
 '''
 ################################################
@@ -399,9 +419,9 @@ class ReflectiveAgent:
         initial_state = ReflectiveAgentState(query=query)
         print(initial_state)
         print("---------------------------------------------------------")
-        #final_state = self.graph.invoke(initial_state, {"recursion_limit": 100})
-        #return final_state.get("final_output", "エラー: 出力に失敗しました。")
-        return "not implemented"
+        final_state = self.graph.invoke(initial_state, {"recursion_limit": 100})
+        return final_state.get("final_output", "エラー: 出力に失敗しました。")
+
 
 ################################################
 #
