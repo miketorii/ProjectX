@@ -55,6 +55,16 @@ class ReflectiveGoalCreator:
         self.passive_goal_creator = PassiveGoalCreator(llm=self.llm)
         self.prompt_optimizer = PromptOptimizer(llm=self.llm)
 
+    def run(self, query: str) -> str:
+        relevant_reflections = self.reflection_manager.get_relevant_reflections(query)
+        reflection_text = format_reflections(relevant_reflections)
+
+        query = f"{qury}\n\n目標を設定する際に以下の過去の振り返りを考慮すること:\n{reflection_text}"
+        goal: Goal = self.passive_goal_creator.run(query=query.text)
+        optimized_goal: OptimizedGoal = self.prompt_optimizer.run(query=goal.text)
+        
+        return optimized_goal.text
+    
 ################################################
 #
 #
@@ -63,7 +73,12 @@ class ReflectiveResponseOptimizer:
         self.llm = llm
         self.reflection_manager = reflection_manager
         self.response_optimizer = ResponseOptimizer(llm=llm)
-    
+
+    def run(self, query: str) -> str:
+
+        optimized_response : str = ""
+        
+        return optimized_response
 
 ################################################
 #
@@ -73,6 +88,11 @@ class QueryDecomposer:
         self.llm = llm.with_structured_output(DecomposedTasks)
         self.current_date = datetime.now().strftime("%Y-%m-%d")
         self.reflection_manager = reflection_manager
+
+    def run(self, query: str) -> DecomposedTasks:
+
+        tasks = null
+        return tasks
         
 '''
     def run(self, query: str) -> DecomposedTasks:
