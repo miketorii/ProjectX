@@ -52,6 +52,7 @@ claude-env/pyvenv.cfg
 
 langchain/data
 langchain/langchain
+langchain/tmpgitdata
 
 
 

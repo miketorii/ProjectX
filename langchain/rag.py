@@ -1,5 +1,11 @@
 from langchain_community.document_loaders import GitLoader
 
+from langchain_chroma import Chroma
+from langchain_openai import AzureOpenAIEmbeddings
+
+import os
+from settings import Settings
+
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
@@ -61,15 +67,26 @@ def main():
     print("----------start----------------")
 
     loader = GitLoader(
-        clone_url="https://github.com/langchain-ai/langchain",
-        repo_path="./langchain",
+        clone_url="https://github.com/miketorii/ProjectX",
+        repo_path="./tmpgitdata",
         branch="master",
         file_filter=file_filter,
     )
 
     documents = loader.load()
     print(len(documents))
-    
+
+    conf = Settings()
+    conf.readenv()
+    embeddings = AzureOpenAIEmbeddings(
+        model="my-text-embedding-3-large",
+        azure_endpoint=os.environ["AZURE_OPENAI_EMBEDDED_ENDPOINT"],
+        api_key=os.environ["AZURE_OPENAI_EMBEDDED_API_KEY"],
+        # openai_api_version=AZURE_OPENAI_EMBEDDING_API_VERSION
+        # dimensions: Optional[int] = None, # Can specify dimensions with new text-embedding-3 models
+    )
+
+    db = Chroma.from_documents(documents, embeddings)
     
     llm = AzureChatOpenAI(
         azure_deployment="my-gpt-4o-1",
