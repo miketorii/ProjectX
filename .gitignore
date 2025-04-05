@@ -51,6 +51,7 @@ claude-env/pyvenv.cfg
 */tmp
 
 langchain/data
+langchain/langchain
 
 
 
