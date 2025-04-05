@@ -67,13 +67,14 @@ def main():
     print("----------start----------------")
 
     loader = GitLoader(
-        clone_url="https://github.com/miketorii/ProjectX",
+        clone_url="https://github.com/miketorii/ProjectX/langchain/testdoc",
         repo_path="./tmpgitdata",
         branch="master",
         file_filter=file_filter,
     )
 
     documents = loader.load()
+    print(documents)
     print(len(documents))
 
     conf = Settings()
@@ -86,7 +87,9 @@ def main():
         # dimensions: Optional[int] = None, # Can specify dimensions with new text-embedding-3 models
     )
 
+    print("------------Chroma in main-------")
     db = Chroma.from_documents(documents, embeddings)
+    print("------------END Chroma in main-------")
     
     llm = AzureChatOpenAI(
         azure_deployment="my-gpt-4o-1",
