@@ -9,6 +9,7 @@ from settings import Settings
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.prompts import ChatPromptTemplate
+from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import AzureChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
@@ -67,14 +68,13 @@ def main():
     print("----------start----------------")
 
     loader = GitLoader(
-        clone_url="https://github.com/miketorii/ProjectX/langchain/testdoc",
+        clone_url="https://github.com/miketorii/ProjectX",
         repo_path="./tmpgitdata",
         branch="master",
         file_filter=file_filter,
     )
 
     documents = loader.load()
-    print(documents)
     print(len(documents))
 
     conf = Settings()
@@ -87,9 +87,13 @@ def main():
         # dimensions: Optional[int] = None, # Can specify dimensions with new text-embedding-3 models
     )
 
-    print("------------Chroma in main-------")
     db = Chroma.from_documents(documents, embeddings)
-    print("------------END Chroma in main-------")
+
+    prompt = ChatPromptTemplate.from_template(
+        "以下の文脈だけを踏まえて質問に回答してください。\n\n"
+        "文脈:{context}\n\n"
+        "質問: {question}\n"
+    )
     
     llm = AzureChatOpenAI(
         azure_deployment="my-gpt-4o-1",
@@ -100,9 +104,16 @@ def main():
         max_retries=2,
     )
 
+    retriever = db.as_retriever()
+
+    chain = {"question": RunnablePassthrough(), "context": retriever } | prompt | llm | StrOutputParser()
+
+    querystr = "LangChainの概要を教えて"
+    result = chain.invoke(querystr)
 
     print("----------Final result-----------------------")
-
+    print(result)
+    
     print("----------end------------------")
     
 ################################################
