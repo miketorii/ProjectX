@@ -13,7 +13,7 @@ from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import AzureChatOpenAI
 from langgraph.prebuilt import create_react_agent
 
-
+from pydantic import BaseModel, Field
 
 ################################################
 #
@@ -64,7 +64,7 @@ def file_filter(file_path: str) -> bool:
 ################################################
 #
 #
-def main():
+def process1():
     print("----------start----------------")
 
     loader = GitLoader(
@@ -115,11 +115,107 @@ def main():
     print(result)
     
     print("----------end------------------")
+
+################################################
+#
+#
+class QueryGenerationOutput(BaseModel):
+    queries: list[str] = Field(..., description="検索クエリのリスト")
     
 ################################################
 #
 #
+def process2():
+    print("----------start process2----------------")
+
+    loader = GitLoader(
+        clone_url="https://github.com/miketorii/ProjectX",
+        repo_path="./tmpgitdata",
+        branch="master",
+        file_filter=file_filter,
+    )
+
+    documents = loader.load()
+    print(len(documents))
+
+    conf = Settings()
+    conf.readenv()
+    embeddings = AzureOpenAIEmbeddings(
+        model="my-text-embedding-3-large",
+        azure_endpoint=os.environ["AZURE_OPENAI_EMBEDDED_ENDPOINT"],
+        api_key=os.environ["AZURE_OPENAI_EMBEDDED_API_KEY"],
+        # openai_api_version=AZURE_OPENAI_EMBEDDING_API_VERSION
+        # dimensions: Optional[int] = None, # Can specify dimensions with new text-embedding-3 models
+    )
+
+    db = Chroma.from_documents(documents, embeddings)
+
+    query_generation_prompt = ChatPromptTemplate.from_template(
+        "質問に対してベクターデータベースから関連文書を検索するために、\n"
+        "３つの異なる検索クエリを生成してください。\n"
+        "距離ベースの類似性検索の限界を克服するために、\n"
+        "ユーザーの質問に対して複数の視点を提供することが目標です。\n\n"        
+        "質問: {question}\n"
+    )
+    
+    llm = AzureChatOpenAI(
+        azure_deployment="my-gpt-4o-1",
+        api_version="2024-08-01-preview",
+        temperature=0.5,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2,
+    )
+
+    retriever = db.as_retriever()
+
+    query_generation_chain = (
+        query_generation_prompt
+        | llm.with_structured_output(QueryGenerationOutput)
+        | (lambda x: x.queries)
+    )
+
+    prompt = ChatPromptTemplate.from_template(
+        "以下の文脈だけを踏まえて質問に回答してください。\n\n"
+        "文脈:{context}\n\n"
+        "質問: {question}\n"
+    )
+    
+    multi_query_rag_chain = {
+        "question": RunnablePassthrough(),
+        "context": query_generation_chain | retriever.map(),
+    } | prompt | llm | StrOutputParser()
+
+    querystr = "LangChainの概要を教えて"
+    result = multi_query_rag_chain.invoke(querystr)
+
+    print("----------Final result-----------------------")
+    print(result)
+    
+    print("----------end process2------------------")
+
+################################################
+#
+#    
+def process3():
+    print("-------process 3---------")
+    
+################################################
+#
+#
+def main(exe_num: int):
+    if exe_num == 1:
+        process1()
+    elif exe_num == 2:
+        process2()
+    else:
+        process3()    
+    
+
+################################################
+#
+#
 if __name__ == "__main__":
-    main()
+    main(2)
     
 
