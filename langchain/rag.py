@@ -12,6 +12,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain_openai import AzureChatOpenAI
 from langgraph.prebuilt import create_react_agent
+from langchain_core.documents import Document
 
 from pydantic import BaseModel, Field
 
@@ -194,11 +195,52 @@ def process2():
     
     print("----------end process2------------------")
 
+    print("-------process 3---------")
+
+    rag_fusion_chain = {
+        "question": RunnablePassthrough(),
+        "context": query_generation_chain | retriever.map() | reciprocal_rank_fusion
+    } | prompt | llm | StrOutputParser()
+
+    result3 = rag_fusion_chain.invoke(querystr)
+    print(result3)
+
+    print("----------end process3------------------")
+    
+################################################
+#
+#
+def reciprocal_rank_fusion(
+        retriever_outputs: list[list[Document]],
+        k: int = 60
+) -> list[str]:
+    content_score_mapping = {}
+
+    for docs in retriever_outputs:
+        for rank, doc in enumerate(docs):
+            content = doc.page_content
+
+            if content not in content_score_mapping:
+                content_score_mapping[content] = 0
+
+            content_score_mapping[content] += 1 / (rank+k)
+
+    ranked = sorted(content_score_mapping.items(), key=lambda x: x[1], reverse=True)
+    
+    return [content for content, _ in ranked]
+
 ################################################
 #
 #    
 def process3():
-    print("-------process 3---------")
+    print("-------process 3 empty---------")
+    
+    
+################################################
+#
+#    
+def process4():
+    print("-------process 4---------")
     
 ################################################
 #
@@ -208,8 +250,10 @@ def main(exe_num: int):
         process1()
     elif exe_num == 2:
         process2()
+    elif exe_num == 3:
+        process3()
     else:
-        process3()    
+        process4()    
     
 
 ################################################
