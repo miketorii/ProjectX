@@ -5,6 +5,7 @@ from langchain_openai import AzureOpenAIEmbeddings
 
 import os
 from settings import Settings
+from typing import Any
 
 from langchain_community.tools.tavily_search import TavilySearchResults
 from langchain_core.output_parsers import StrOutputParser
@@ -15,6 +16,8 @@ from langgraph.prebuilt import create_react_agent
 from langchain_core.documents import Document
 
 from pydantic import BaseModel, Field
+
+from langchain_cohere import CohereRerank
 
 ################################################
 #
@@ -206,6 +209,35 @@ def process2():
     print(result3)
 
     print("----------end process3------------------")
+
+    print("----------process4------------------")    
+    rerank_rag_chain = (
+        {
+            "question": RunnablePassthrough(),
+            "documents": retriever
+        }
+        | RunnablePassthrough.assign(context=rerank)
+        | prompt | model | StrOutputParser()
+    )
+
+    result4 = rerank_rag_chain.invoke(querystr)
+    print(result4)
+
+    print("----------end process4------------------")
+    
+################################################
+#
+#
+def rerank(inp: dict[str, Any], top_n: int = 3) -> list[Document]:
+    question = inp["question"]
+    documents = inp["documents"]
+
+    cohere_api_key =os.environ["COHERE_API_KEY"]
+    
+    cohere_reranker = CohereRerank(model="rerank-multilingual-v3.0", top_n=top_n)
+    
+    return cohere_reranker.compress_documents(documents=documents, query=question)
+
     
 ################################################
 #
