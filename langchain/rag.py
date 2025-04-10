@@ -19,45 +19,9 @@ from pydantic import BaseModel, Field
 
 from langchain_cohere import CohereRerank
 
-################################################
-#
-#
+from langchain_community.retrievers import TavilySearchAPIRetriever
+from enum import Enum
 
-################################################
-#
-#
-'''
-class TaskExecutor:
-    def __init__(self, llm: AzureChatOpenAI):
-        self.llm = llm
-        self.tools = [TavilySearchResults(max_results=3)]
-
-    def run(self, task: str) -> str:
-        print("---run in TaskExecutor---")
-        agent = create_react_agent(self.llm, self.tools)
-        result = agent.invoke(
-            {
-                "messages": [
-                    (
-                        "human",
-                        (
-                            "次のタスクを実行し、詳細な回答を提供してください。\n\n"
-                            f"タスク: {task} \n\n"
-                            "要件:\n"
-                            "1. 必要に応じて提供されたツールを使用してください。\n"
-                            "2. 実行は徹底的かつ包括的に行ってください。\n"
-                            "3. 可能な限り具体的な事実やデータを提供してください。\n"
-                            "4. 発見した内容を明確に要約してください。\n"
-                         ),
-                     )
-                ]
-            }
-        )
-        print(result)
-        print(result["messages"][-1].content)
-        print("---done run in TaskExecutor---")        
-        return result["messages"][-1].content
-'''
 ################################################
 #
 #
@@ -217,7 +181,7 @@ def process2():
             "documents": retriever
         }
         | RunnablePassthrough.assign(context=rerank)
-        | prompt | model | StrOutputParser()
+        | prompt | llm | StrOutputParser()
     )
 
     result4 = rerank_rag_chain.invoke(querystr)
@@ -263,10 +227,121 @@ def reciprocal_rank_fusion(
 
 ################################################
 #
+#
+class Route(str, Enum):
+    langchain_document = "langchain_document"
+    web = "web"
+
+class RouteOutput(BaseModel):
+    route: Route
+    
+################################################
+#
+#
+def routed_retriever(inp: dict[str, Any]) -> list[Document]:
+    question = inp["question"]
+    route = inp["route"]
+
+    loader = GitLoader(
+        clone_url="https://github.com/miketorii/ProjectX",
+        repo_path="./tmpgitdata",
+        branch="master",
+        file_filter=file_filter,
+    )
+
+    documents = loader.load()
+    
+    conf = Settings()
+    conf.readenv()
+
+    embeddings = AzureOpenAIEmbeddings(
+        model="my-text-embedding-3-large",
+        azure_endpoint=os.environ["AZURE_OPENAI_EMBEDDED_ENDPOINT"],
+        api_key=os.environ["AZURE_OPENAI_EMBEDDED_API_KEY"],
+    )
+    
+    db = Chroma.from_documents(documents, embeddings)
+    
+    retriever = db.as_retriever()    
+
+    langchain_document_retriever = retriever.with_config(
+        {"run_name":"langchain_document_retriever"}
+    )
+
+    web_retriever = TavilySearchAPIRetriever(k=3).with_config(
+        {"run_name":"web_retriever"}
+    )
+    
+    if route == Route.langchain_document:
+        return langchain_document_retriever.invoke(question)
+    elif route == Route.web:
+        return web_retriever.invoke(question)
+
+    raise ValueError(f"Unknown route: {route}")
+    
+################################################
+#
 #    
 def process3():
-    print("-------process 3 empty---------")
+    print("-------process 3---------")
+
+
+    ###############################
+#    langchain_document_retriever = retriever.with_config(
+#        {"run_name":"langchain_document_retriever"}
+#    )
+#
+#    web_retriever = TavilySearchAPIRetriever(k=3).with_config(
+#        {"run_name":"web_retriever"}
+#    )
     
+    route_prompt = ChatPromptTemplate.from_template(
+        "質問に回答するために適切なRetrieverを選択してください。\n\n"
+        "質問: {question}\n"
+    )
+
+    llm = AzureChatOpenAI(
+        azure_deployment="my-gpt-4o-1",
+        api_version="2024-08-01-preview",
+        temperature=0.5,
+        max_tokens=None,
+        timeout=None,
+        max_retries=2,
+    )
+    
+    route_chain = (
+        route_prompt
+        | llm.with_structured_output(RouteOutput)
+        | (lambda x: x.route)
+    )
+
+    prompt = ChatPromptTemplate.from_template(
+        "以下の文脈だけを踏まえて質問に回答してください。\n\n"
+        "文脈:{context}\n\n"
+        "質問: {question}\n"
+    )
+    
+    route_rag_chain = (
+        {
+            "question": RunnablePassthrough(),
+            "route": route_chain
+        }
+        | RunnablePassthrough.assign(context=routed_retriever)
+        | prompt | llm | StrOutputParser()
+    )
+
+    querystr = "LangChainの概要を教えて"
+    querystr2 = "東京の今日の天気は？"
+
+    result = route_rag_chain.invoke(querystr)
+    print(result)
+
+    print("--------------------------------")
+    
+    result2 = route_rag_chain.invoke(querystr2)
+    print(result2)
+    
+    print("-------END process 3---------")    
     
 ################################################
 #
@@ -292,6 +367,6 @@ def main(exe_num: int):
 #
 #
 if __name__ == "__main__":
-    main(2)
+    main(3)
     
 
