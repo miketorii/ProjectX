@@ -285,8 +285,6 @@ def routed_retriever(inp: dict[str, Any]) -> list[Document]:
 def process3():
     print("-------process 3---------")
 
-
-    ###############################
 #    langchain_document_retriever = retriever.with_config(
 #        {"run_name":"langchain_document_retriever"}
 #    )
