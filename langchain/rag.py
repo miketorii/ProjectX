@@ -22,6 +22,8 @@ from langchain_cohere import CohereRerank
 from langchain_community.retrievers import TavilySearchAPIRetriever
 from enum import Enum
 
+from langchain_community.retrievers import BM25Retriever
+
 ################################################
 #
 #
@@ -242,6 +244,10 @@ def routed_retriever(inp: dict[str, Any]) -> list[Document]:
     question = inp["question"]
     route = inp["route"]
 
+    print("------------in routed_retriever-----------")
+    print(question)
+    print(route)
+    
     loader = GitLoader(
         clone_url="https://github.com/miketorii/ProjectX",
         repo_path="./tmpgitdata",
@@ -271,11 +277,21 @@ def routed_retriever(inp: dict[str, Any]) -> list[Document]:
     web_retriever = TavilySearchAPIRetriever(k=3).with_config(
         {"run_name":"web_retriever"}
     )
-    
+
+    print("-----------in routed_retriever-------------")
+    print(route)
+
     if route == Route.langchain_document:
-        return langchain_document_retriever.invoke(question)
+        result_doc = langchain_document_retriever.invoke(question)
+        print("-----------called langchain_document_retriever.invoke-------------")        
+        #print(result_doc)
+        return result_doc
     elif route == Route.web:
-        return web_retriever.invoke(question)
+        result_web = web_retriever.invoke(question)
+        print("-----------called web_retriever.invoke-------------")        
+        #print(result_web)        
+        return result_web
+
 
     raise ValueError(f"Unknown route: {route}")
     
@@ -334,7 +350,7 @@ def process3():
     result = route_rag_chain.invoke(querystr)
     print(result)
 
-    print("--------------------------------")
+    print("-------called route_rag_chain-----------")
     
     result2 = route_rag_chain.invoke(querystr2)
     print(result2)
