@@ -54,7 +54,7 @@ langchain/data
 langchain/langchain
 langchain/tmpgitdata
 
-
+llm/*.txt
 
 
 
