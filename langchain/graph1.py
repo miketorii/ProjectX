@@ -3,12 +3,14 @@ from typing_extensions import TypedDict
 from langchain_core.messages import AIMessage, HumanMessage
 
 from langgraph.graph import StateGraph
+from typing_extensions import Annotated
+from langgraph.graph.message import add_messages
 
 ###############################################
 #
 #
 class State(TypedDict):
-    messages: list[AnyMessage]
+    messages: Annotated[list[AnyMessage], add_messages]
     extra_field: int
 
 ###############################################
@@ -23,7 +25,7 @@ def node(state: State):
 ###############################################
 #
 #
-if __name__ == "__main__":
+def process1():
     print("-----------start--------------")
 
     graph_builder = StateGraph(State)
@@ -38,6 +40,45 @@ if __name__ == "__main__":
     for message in result["messages"]:
         message.pretty_print()
 
-    print("------------end---------------")    
+    print("------------end---------------")
+
+###############################################
+#
+#        
+def process2():
+    print("------------process2------------")
+    graph = StateGraph(State).add_node(node).set_entry_point("node").compile()
+
+    input_message = {"role":"user", "content":"HiHi"}
+    result = graph.invoke({"messages":[input_message]})
+
+    for message in result["messages"]:
+        message.pretty_print()
+
+    print("------------end---------------")
+    
+###############################################
+#
+#    
+def process3():
+    print("process3")    
+    
+###############################################
+#
+#    
+def process(num: int):
+    if num == 1:
+        process1()
+    elif num == 2:
+        process2()
+    else:
+        process3()
+        
+###############################################
+#
+#
+if __name__ == "__main__":
+    process(2)
+    
     
     
