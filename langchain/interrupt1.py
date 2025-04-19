@@ -49,7 +49,16 @@ def process1():
     for event in graph.stream(initial_input, thread, stream_mode="updates"):
         print(event)
         print("\n")
-    
+
+    for event in graph.stream(
+            Command(resume="go to step 3!"), thread, stream_mode="updates"
+    ):
+        print(event)
+        print("\n")
+
+    ret = graph.get_state(thread).values
+    print(ret)
+        
     
 def process2():
     print("-----------process 2---------")
