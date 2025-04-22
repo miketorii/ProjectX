@@ -79,6 +79,14 @@ class AgentState():
 
         for event in app.stream({"messages":[input_message]}, config, stream_mode="values"):
             event["messages"][-1].pretty_print()
+
+        print("----------Show history------------")
+
+        all_states = []
+        for state in app.get_state_history(config):
+            print(state)
+            all_states.append(state)
+            print("--")
         
         print("----------end------------")        
 
