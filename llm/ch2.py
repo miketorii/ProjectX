@@ -1,6 +1,7 @@
 import os
 import urllib.request
 import re
+from token import SimpleTokenizerV1
 
 if not os.path.exists("the-verdict.txt"):
 #    url = ("https://github.com/rasbt/"
@@ -37,3 +38,14 @@ for i, item in enumerate(vocab.items()):
     print(item)
     if i >= 30:
         break
+
+tokenizer = SimpleTokenizerV1(vocab)
+
+text = """"It's the last he painted, you know,"
+           Mr.s. Gisburn said with pardonable pride."""
+
+ids = tokenizer.encode(text)
+print(ids)
+
+result = tokenizer.decode(ids)
+print(result)
