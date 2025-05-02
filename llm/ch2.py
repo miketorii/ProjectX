@@ -1,7 +1,7 @@
 import os
 import urllib.request
 import re
-from token import SimpleTokenizerV1
+from tokenv1 import SimpleTokenizerV1
 from tokenv2 import SimpleTokenizerV2
 
 if not os.path.exists("the-verdict.txt"):
