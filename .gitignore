@@ -50,6 +50,9 @@ claude-env/pyvenv.cfg
 */share
 */tmp
 */*/__pycache__
+*/Lib
+*/Include
+*/Scripts
 
 langchain/data
 langchain/langchain
