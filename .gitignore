@@ -11,6 +11,8 @@ deeplearning/data/*
 *.png
 *.xlsx
 .env
+*.pub
+*.pri
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
