@@ -9,6 +9,7 @@ train-*
 deeplearning/data/*
 *.csv
 *.png
+*.bmp
 *.xlsx
 .env
 *.pub
