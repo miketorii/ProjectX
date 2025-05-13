@@ -24,4 +24,24 @@ for i, x_i in enumerate(inputs):
 
 print(attn_scores_2)
 
+#########################################
+res = 0
+
+for idx, element in enumerate(inputs[0]):
+    res += inputs[0][idx] * query[idx]
+
+print(res)
+print(torch.dot(inputs[0],query))
+#########################################
+
+attn_weights_2_tmp = attn_scores_2 / attn_scores_2.sum()
+print("Attention weights", attn_weights_2_tmp)
+print("Sum:", attn_weights_2_tmp.sum())
+
+def softmax_naive(x):
+    return torch.exp(x) / torch.exp(x).sum(dim=0)
+
+attn_weights_2_naive = softmax_naive(attn_scores_2)
+print("Attention weights", attn_weights_2_naive)
+print("Sum:", attn_weights_2_naive.sum())
 
