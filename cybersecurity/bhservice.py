@@ -15,7 +15,6 @@ class BHServerSvc(win32serviceutil.ServiceFramework):
     _svc_name_ = "BlackHatService"
     _svc_display_name_ = "Black Hat Service"
     _svc_description_ = ("Executes VBScripts at regular intervals." + "What could possibly go wrong?")
-
     
     def __init__(self, args):
         self.vbs = os.path.join(TGTDIR, 'bhservice_task.vbs')
