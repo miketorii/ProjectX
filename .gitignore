@@ -17,6 +17,7 @@ deeplearning/data/*
 *.vbs
 *.rst
 *.exe
+*.spec
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
