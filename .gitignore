@@ -16,6 +16,7 @@ deeplearning/data/*
 *.pri
 *.vbs
 *.rst
+*.exe
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
@@ -58,6 +59,9 @@ claude-env/pyvenv.cfg
 */Lib
 */Include
 */Scripts
+*/dist
+*/temp
+*/build
 
 langchain/data
 langchain/langchain

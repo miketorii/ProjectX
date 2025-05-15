@@ -8,8 +8,8 @@ import win32event
 import win32service
 import win32serviceutil
 
-SRCDIR = "C:\\Users\\IEUser"
-TGTDIR = "C:\\Windows\\TEMP"
+SRCDIR = "C:\\Users\\mtorii\\develop\\ProjectX\\cybersecurity"
+TGTDIR = "C:\\Windows\\mtorii\\develop\\ProjectX\\cybersecurity\\temp"
 
 class BHServerSvc(win32serviceutil.ServiceFramework):
     _svc_name_ = "BlackHatService"
@@ -45,12 +45,12 @@ class BHServerSvc(win32serviceutil.ServiceFramework):
             
 if __name__ == "__main__":
     print("---------------start--------------")
-    print("---------------end--------------")
     if len(sys.argv) == 1:
         servicemanager.Initialize()
         servicemanager.PrepareToHostSingle(BHServerSvc)
         servicemanager.StartServiceCtrlDispatcher()
     else:
-        win32serviceutil.HanaldeCommandLine(BHServerSvc)
+        win32serviceutil.HandleCommandLine(BHServerSvc)
+    print("---------------end--------------")
 
         
