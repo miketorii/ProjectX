@@ -29,26 +29,29 @@ def monitor():
     process_watcher = c.Win32_Process.watch_for('creation')
     print("process watcher")
 
-    while True:
-        try:  
-            new_process = process_watcher()
-            cmdline = new_process.CommandLine
-            create_date = new_process.CreationDate
-            executable = new_process.ExecutablePath
-            parent_pid = new_process.ParentProcessId
-            pid = new_process.ProcessId
-            proc_owner = new_process.GetOwner()
+    new_process = process_watcher()
+    cmdline = new_process.CommandLine
+    create_date = new_process.CreationDate
+    executable = new_process.ExecutablePath
+    parent_pid = new_process.ParentProcessId
+    pid = new_process.ProcessId
+    proc_owner = new_process.GetOwner()
 
-            privileges = get_process_privileges(pid)
-            process_log_message = (
-                f'{cmdline}, {create_date}, {executable},'
-                f'{parent_pid}, {pid}, {proc_owner}, {privileges}'
-            )
-            print(process_log_message)
-            log_to_file(process_log_message)
-                      
-        except Exception:
-            pass
+    privileges = get_process_privileges(pid)
+    process_log_message = (
+        f'{cmdline}, {create_date}, {executable},'
+        f'{parent_pid}, {pid}, {proc_owner}, {privileges}'
+    )
+    print(process_log_message)
+    log_to_file(process_log_message)
+
+            
+#    while True:
+#        try:
+
+            
+#       except Exception:
+#                pass
     
     
 if __name__ == "__main__":
