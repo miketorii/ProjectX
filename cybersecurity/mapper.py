@@ -39,12 +39,16 @@ def test_remote():
         else:
             sys.stdout.write('x')
         sys.stdout.flush()
+
+def testprint():
+    print("test print")
     
 def run():
     print("-----run----")
     mythreads = list()
     for i in range(THREADS):
         print(f"Spawing thread {i}")
+#        t = threading.Thread(target=testprint)
         t = threading.Thread(target=test_remote)
         mythreads.append(t)
         t.start()
