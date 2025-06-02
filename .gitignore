@@ -18,6 +18,7 @@ deeplearning/data/*
 *.rst
 *.exe
 *.spec
+cain.txt
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
