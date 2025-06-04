@@ -24,7 +24,7 @@ def execute(cmd):
     else:
         shell = False
 
-    output = subprocess.check_out(shlex.split(cmd),
+    output = subprocess.check_output(shlex.split(cmd),
                                   stderr=subprocess.STDOUT,
                                   shell=shell)
 
@@ -117,7 +117,7 @@ class NetCat:
                     while '\n' not in cmd_buffer.decode():
                         cmd_buffer += client_socket.recv(64)
                         
-                    response = execute(cmd_buffer.encode())
+                    response = execute(cmd_buffer.decode())
                     if response:
                         client_socket.send(response.encode())
                     cmd_buffer = b''
@@ -151,7 +151,7 @@ def main():
 
     parser.add_argument('-l', '--listen', action='store_true', help='通信待受モード')
     parser.add_argument('-p', '--port', type=int, default=5555, help='ポート番号の指定')
-    parser.add_argument('-t', '--target', default='10.0.0.4', help='IPアドレスの指定')
+    parser.add_argument('-t', '--target', default='127.0.0.1', help='IPアドレスの指定')
     parser.add_argument('-u', '--upload', help='ファイルのアップロード')
 
     args = parser.parse_args()
