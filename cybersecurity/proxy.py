@@ -8,6 +8,10 @@ HEX_FILTER = ''.join(
 
 def proxy_handler(client_socket, remote_host, remote_port, receive_first):
     print("---proxy handler----")
+    remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    remote_socket.connect((remote_host, remote_port))
+
+    
     
 def server_loop(local_host, local_port, remote_host, remote_port, receive_first):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
