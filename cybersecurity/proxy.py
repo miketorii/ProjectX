@@ -62,7 +62,16 @@ def proxy_handler(client_socket, remote_host, remote_port, receive_first):
             client_socket.send(remote_buffer)
             print("[==>] Sent to local")
 
-    
+    while True:
+        local_buffer = receive_from(client_socket)
+        if len(local_buffer):
+            print("[<==] Received %d bytes from local" % len(local_buffer) )
+            hexdump(local_buffer)
+
+            local_buffer = request_handler(local_buffer)
+            remote_socket.send(local_buffer)
+            print("[==>] Sent to remote")
+            
     
 def server_loop(local_host, local_port, remote_host, remote_port, receive_first):
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
