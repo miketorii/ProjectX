@@ -11,13 +11,16 @@ def hexdump(src, length=16, show=True):
     print("--hexdump--")
     if isinstance(src, bytes):
         src = src.decode()
+        
     results = list()
     for i in range(0, len(src), length):
-        word = str(str[i:i+length])
+        word = str( src[i:i+length] )
+
         printable = word.translate(HEX_FILTER)
-        hexa = ' '.join([f'{ord(c)}:0xX'] for c in word)
+        hexa = ' '.join( [ f'{ord(c):02X}' for c in word ] )
         hexwidth = length*3
         results.append(f'{i:04x} {hexa:<{hexwidth}} {printable}')
+        
     if show:
         for line in results:
             print(line)
@@ -134,5 +137,10 @@ def main():
 
 if __name__ == "__main__":
     print("-------start-------")
+
+    hexdump('python rocks\n and proxies roll\n')
+
+    print("---------------------")    
+    
     main()
     print("--------end--------")    
