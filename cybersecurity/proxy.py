@@ -117,6 +117,7 @@ def main():
     if len(sys.argv[1:]) !=5:
         print("proxy.py localhost localport remotehost remoteport receive_first")
         print("proxy.py 127.0.0.1 9000 10.12.132.1 9000 True")
+        print("sudo python proxy.py 127.0.0.1 21 ftp.sun.ac.za True")        
         sys.exit(0)
 
     local_host = sys.argv[1]
