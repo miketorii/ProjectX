@@ -13,7 +13,7 @@ DEFAULT_PORT = 4000
 
 g_verbose = True
 
-key_path = "/home/torii_minoru/.ssh/id_rsa" #"~/.ssh/id_rsa"
+key_path = "~/.ssh/id_rsa"
 
 def verbose(s):
     if g_verbose:
@@ -24,6 +24,34 @@ def verbose(s):
 #
 def handler(chan, host, port):
     print("---------handler----------")
+    sock = socket.socket()
+    try:
+        sock.connect((host, port))
+    except Exception as e:
+        verbose("Forwarding request to %s:%d failed: %r" % (host, port, e))
+        return
+
+    verbose(
+        "Connected! Tunnel open %r -> %r -> %r"
+        % (chan.orgin_addr, chan.getpeername(), (host, port))
+    )
+
+    while True:
+        r, w, x = select.select([sock, chan],[],[])
+        if sock in r:
+            data = sock.recv(1024)
+            if len(data) == 0:
+                break
+            chan.send(data)
+        if chan in r:
+            data = chan.recv(1024)
+            if len(data) == 0:
+                break
+            sock.send(data)
+
+    chan.close()
+    sock.close()
+    verbose("Tunnel closed from %r" % (chan.orgin_addr,) )
 
 def reverse_forward_tunnel(server_port, remote_host, remote_port, transport):
     print("-----------reverse forward tunnel---------")
