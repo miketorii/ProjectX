@@ -56,14 +56,17 @@ def sniff(host):
     if os.name == 'nt':
         sniffer.ioctl(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
 
+    print("------before recvfrom-----")
     try:
         while True:
             raw_buffer = sniffer.recvfrom(65535)[0]
+            print("after recvfrom")
             ip_header = IP(raw_buffer[0:20])
             print('Protocol: %s %s -> %s' % (ip_header.protocol, ip_header.src_address, ip_header.dst_address) )
     except KeyboardInterrupt:
         sys.exit()
 
 if __name__ == "__main__":
-    host = "127.0.0.1"
+    #host = "127.0.0.1"
+    host = "10.0.0.4"    
     sniff(host)
