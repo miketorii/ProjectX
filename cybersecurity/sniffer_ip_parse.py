@@ -8,37 +8,34 @@ from ctypes import *
 import socket
 import struct
 
-class IP(Structure):
-    _fields_ = [
-        ("ver", c_ubyte, 4),
-        ("ihl", c_ubyte, 4),
-        ("tos", c_ubyte, 8),
-        ("len", c_ushort, 16),
-        ("id", c_ushort, 16),
-        ("offset", c_ushort, 16),        
-        ("ttl", c_ubyte, 8),
-        ("protocol_num", c_ubyte, 8),
-        ("sum", c_ushort, 16),
-        ("src", c_uint32, 32),
-        ("dst", c_uint32, 32)        
-    ]
-
-    def ___new__(cls, socket_buffer=None):
-        print("-----new-----")
-        return cls.from_buffer_copy(socket_buffer)
-
-    def __init__(self, socket_buffer=None):
-        print("-----init-----")        
-        self.src_address = socket.inet_ntoa( struct.pack("<L", self.src) )
-        self.dst_address = socket.inet_ntoa( struct.pack("<L", self.dst) )        
+class IP:
+    def __init__(self, buff=None):
+        print("-----init-----")
+        header = struct.unpack('<BBHHHBBH4s4s', buff)
+        self.ver = header[0] >> 4
+        self.ihl = header[0] & 0xF
+        
+        self.tos = header[1]
+        self.len = header[2]
+        self.id = header[3]
+        self.offset = header[4]
+        self.ttl = header[5]
+        self.protocol_num = header[6]
+        self.sum = header[7]
+        self.src = header[8]
+        self.dst = header[9]
+        
+        self.src_address = ipaddress.ip_address(self.src)
+        self.dst_address = ipaddress.ip_address(self.dst)        
         
         self.protocol_map = {1: "ICMP", 6: "TCP", 17: "UDP"}
+        
         try:
             self.protocol = self.protocol_map[self.protocol_num]
         except Exception as e:
             print("%s No protocol for %s" % (e, self.protocol_num))
             self.protocol = str(self.protocol_num)
-        
+    
 def sniff(host):
     print("--------sniff------")
     print(host)
