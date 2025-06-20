@@ -4,10 +4,9 @@ import socket
 import struct
 import sys
 
-from ctypes import *
-import socket
-import struct
-
+############################################
+#
+#
 class IP:
     def __init__(self, buff=None):
         print("-----init-----")
@@ -35,7 +34,22 @@ class IP:
         except Exception as e:
             print("%s No protocol for %s" % (e, self.protocol_num))
             self.protocol = str(self.protocol_num)
-    
+
+############################################
+#
+#
+class ICMP:
+    def __init__(self, buff):
+        header = struct.unpack('<BBHHH', buff)
+        self.type = header[0]
+        self.code = header[1]
+        self.sum = header[2]
+        self.id = header[3]
+        self.seq = header[4]
+        
+############################################
+#
+#            
 def sniff(host):
     print("--------sniff------")
     print(host)
@@ -59,7 +73,11 @@ def sniff(host):
             raw_buffer = sniffer.recvfrom(65535)[0]
             ip_header = IP(raw_buffer[0:20])
             print(raw_buffer[0:20])
-            print('Protocol: %s %s -> %s' % (ip_header.protocol, ip_header.src_address, ip_header.dst_address) )
+            if ip_header.protocol == "ICMP":
+                print('Protocol: %s %s -> %s' % (ip_header.protocol, ip_header.src_address, ip_header.dst_address) )
+                print(f'Version: {ip_header.ver}' )
+                print(f'Header Length: {ip_header.ihl} TTL: {ip_header.ttl}')
+                
     except KeyboardInterrupt:
         sys.exit()
 
