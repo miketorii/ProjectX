@@ -47,3 +47,4 @@ attn_weights_2_naive = softmax_naive(attn_scores_2)
 print("Attention weights", attn_weights_2_naive)
 print("Sum:", attn_weights_2_naive.sum())
 
+print("----End---")
