@@ -1,6 +1,8 @@
 from importlib.metadata import version
 import torch
 
+print("----Start---")
+
 print(version("torch"))
 
 inputs = torch.tensor(
