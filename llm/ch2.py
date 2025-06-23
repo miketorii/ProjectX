@@ -83,3 +83,5 @@ print(ids)
 
 result = tokenizer.decode(ids)
 print(result)
+
+print("--------")
