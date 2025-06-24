@@ -41,11 +41,20 @@ attn_weights_2_tmp = attn_scores_2 / attn_scores_2.sum()
 print("Attention weights", attn_weights_2_tmp)
 print("Sum:", attn_weights_2_tmp.sum())
 
+#########################################
+
 def softmax_naive(x):
     return torch.exp(x) / torch.exp(x).sum(dim=0)
 
 attn_weights_2_naive = softmax_naive(attn_scores_2)
 print("Attention weights", attn_weights_2_naive)
 print("Sum:", attn_weights_2_naive.sum())
+
+#########################################
+
+attn_weights_2 = torch.softmax(attn_scores_2, dim=0)
+
+print("Attention weights", attn_weights_2)
+print("Sum:", attn_weights_2.sum())
 
 print("----End---")
