@@ -59,4 +59,12 @@ print("Sum:", attn_weights_2.sum())
 
 #########################################
 
+attn_scores = torch.empty(6,6)
+
+for i, x_i in enumerate(inputs):
+    for j, x_j in enumerate(inputs):
+        attn_scores[i, j] = torch.dot(x_i, x_j)
+        
+print(attn_scores)
+
 print("----End---")
