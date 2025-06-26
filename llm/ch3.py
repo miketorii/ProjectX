@@ -2,7 +2,6 @@ from importlib.metadata import version
 import torch
 
 print("----Start---")
-print("----Start---")
 
 print(version("torch"))
 
