@@ -64,9 +64,13 @@ context_vec_2 = torch.zeros(query.shape)
 for i, x_i in enumerate(inputs):
     context_vec_2 += attn_weights_2[i]*x_i
 
+print("context vector")
 print(context_vec_2)
 
+
 ##########3.3.2###########################
+
+print("---------------------------------")
 
 attn_scores = torch.empty(6,6)
 
