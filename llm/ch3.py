@@ -80,4 +80,21 @@ for i, x_i in enumerate(inputs):
         
 print(attn_scores)
 
+#########################################
+
+attn_scores2 = inputs @ inputs.T
+print(attn_scores2)
+
+#########################################
+
+attn_weights = torch.softmax(attn_scores, dim=1)
+print(attn_weights)
+
+print("All row sums:", attn_weights.sum(dim=1))
+
+#########################################
+
+all_context_vecs = attn_weights @ inputs
+print(all_context_vecs)
+
 print("----End---")
