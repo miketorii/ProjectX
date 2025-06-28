@@ -97,4 +97,48 @@ print("All row sums:", attn_weights.sum(dim=1))
 all_context_vecs = attn_weights @ inputs
 print(all_context_vecs)
 
+#########################################
+
+x_2 = inputs[1]
+d_in = inputs.shape[1]
+d_out = 2
+print("x_2=", x_2, "d_in=", d_in)
+
+torch.manual_seed(123)
+
+W_query = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+W_key = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+W_value = torch.nn.Parameter(torch.rand(d_in, d_out), requires_grad=False)
+
+print("W_query=", W_query)
+
+query_2 = x_2 @ W_query
+key_2 = x_2 @ W_key
+value_2 = x_2 @ W_value
+
+print("query_2=",query_2)
+
+keys = inputs @ W_key
+values = inputs @ W_value
+
+print("keys=", keys, keys.shape)
+print("values=", values, values.shape)
+
+keys_2 = keys[1]
+attn_score_22 = query_2.dot(keys_2)
+print(attn_score_22)
+
+attn_scores_2 = query_2 @ keys.T
+print("attn_scores_2=", attn_scores_2)
+
+d_k = keys.shape[1]
+print("d_k=", d_k)
+attn_weights_2 = torch.softmax(attn_scores_2 / d_k**0.5, dim=-1)
+print("attn_weights_2=", attn_weights_2)
+
+print("attn_weights_2.shape=", attn_weights_2.shape)
+print("values.shape=", values.shape)
+context_vec_2 = attn_weights_2 @ values
+print("context_vec_2=", context_vec_2)
+
 print("----End---")
