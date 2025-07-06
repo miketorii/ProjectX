@@ -16,18 +16,21 @@ class MultiHeadAttention(nn.Module):
         self.W_key = nn.Linear(d_in, d_out, bias=qkv_bias)
         self.W_value = nn.Linear(d_in, d_out, bias=qkv_bias)
 
-        self.out_proj = nn.Linear(d_in, d_out)
+        self.out_proj = nn.Linear(d_out, d_out)
         self.dropout = nn.Dropout(dropout)
         self.register_buffer('mask', torch.triu(torch.ones(context_length, context_length), diagonal=1))
         
         
     def forward(self, x):
         b, num_tokens, d_in = x.shape
-                             
+
+        print("b num_tokens d_in=", b, num_tokens, d_in)
         keys = self.W_key(x)
         queries = self.W_query(x)
         values = self.W_value(x)
 
+        print("keys.shape=", keys.shape)
+        
         keys = keys.view(b, num_tokens, self.num_heads, self.head_dim)
         queries = queries.view(b, num_tokens, self.num_heads, self.head_dim)
         values = values.view(b, num_tokens, self.num_heads, self.head_dim)        
@@ -72,6 +75,7 @@ if __name__ == "__main__":
     torch.manual_seed(123)
 
     batch_size, context_length, d_in = batch.shape
+    print("batch_size context_length d_in = ", batch_size, context_length, d_in)    
     d_out = 2
     print("d_in d_out = ", d_in, d_out)
 
