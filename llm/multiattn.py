@@ -8,18 +8,23 @@ class MultiHeadAttention(nn.Module):
     def __init__(self, d_in, d_out, context_length, dropout, num_heads, qkv_bias=False):
         print("---Multi Head Attention--")
         super().__init__()
+
+        assert (d_out % num_heads == 0), \
+            "d_out must be divisible by num_heads"
+
         self.d_out = d_out
         self.num_heads = num_heads
-        self.head_dim = d_out
+        self.head_dim = d_out // num_heads
+
+        print("head_dim=", self.head_dim)
         
         self.W_query = nn.Linear(d_in, d_out, bias=qkv_bias)
         self.W_key = nn.Linear(d_in, d_out, bias=qkv_bias)
         self.W_value = nn.Linear(d_in, d_out, bias=qkv_bias)
-
+        
         self.out_proj = nn.Linear(d_out, d_out)
         self.dropout = nn.Dropout(dropout)
         self.register_buffer('mask', torch.triu(torch.ones(context_length, context_length), diagonal=1))
-        
         
     def forward(self, x):
         b, num_tokens, d_in = x.shape
@@ -30,7 +35,7 @@ class MultiHeadAttention(nn.Module):
         values = self.W_value(x)
 
         print("keys.shape=", keys.shape)
-        
+
         keys = keys.view(b, num_tokens, self.num_heads, self.head_dim)
         queries = queries.view(b, num_tokens, self.num_heads, self.head_dim)
         values = values.view(b, num_tokens, self.num_heads, self.head_dim)        
@@ -64,15 +69,15 @@ if __name__ == "__main__":
          [0.77, 0.25, 0.10], # one      (x^5)
          [0.05, 0.80, 0.55]] # step     (x^6)
     )
-
+    
     print(inputs.shape)
     print(inputs)
+
+    torch.manual_seed(123)
     
     batch = torch.stack((inputs, inputs), dim=0)
     print(batch.shape)
     print(batch)
-
-    torch.manual_seed(123)
 
     batch_size, context_length, d_in = batch.shape
     print("batch_size context_length d_in = ", batch_size, context_length, d_in)    
@@ -84,4 +89,3 @@ if __name__ == "__main__":
 
     print(context_vecs)
     print(context_vecs.shape)
-    
