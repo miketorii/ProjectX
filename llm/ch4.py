@@ -75,26 +75,86 @@ class LayerNorm(nn.Module):
         var = x.var(dim=-1, keepdim=True, unbiased=False)
         norm_x = (x-mean) / torch.sqrt(var*self.eps)
         return self.scale * norm_x + self.shift
+
+#################################################
+#
+#
+class GELU(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, x):
+        return 0.5 * x * ( 1 + torch.tanh(
+            torch.sqrt( torch.tensor(2.0 / torch.pi) ) *
+            (x + 0.044715 * torch.pow(x,3) )
+        ))
         
 #################################################
 #
 #
-tokenizer = tiktoken.get_encoding("gpt2")
+class FeedForward(nn.Module):
+    def __init__(self, cfg):
+        super().__init__()
+        self.layers = nn.Sequential(
+            nn.Linear(cfg["emb_dim"], 4*cfg["emb_dim"]),
+            GELU(),
+            nn.Linear(4*cfg["emb_dim"], cfg["emb_dim"])
+        )
 
-batch = []
+    def forward(self, x):
+        return self.layers(x)
+    
+#################################################
+#
+#
+def testGELU():
+    gelu = GELU()
+    x = torch.linspace(-3,3,100)
+    y_gelu = gelu(x)
 
-txt1 = "Every effort moves you"
-txt2 = "Every day holds a"
+    print(y_gelu)
 
-batch.append( torch.tensor(tokenizer.encode(txt1)) )
-batch.append( torch.tensor(tokenizer.encode(txt2)) )
-batch = torch.stack(batch, dim=0)
+    relu = nn.ReLU()
+    y_relu = relu(x)
 
-print(batch)
+    print(y_relu)
 
-torch.manual_seed(123)
-model = DummyGPTModel(GPT_CONFIG_124M)
+def testForward():
+    ffn = FeedForward(GPT_CONFIG_124M)
+    x = torch.rand(2,3,768)
+    out = ffn(x)
+    print(out.shape)
 
-logits = model(batch)
-print("Output shape: ", logits.shape)
-print(logits)
+    print(out)
+    
+#################################################
+#
+#
+def mainfunc():
+    tokenizer = tiktoken.get_encoding("gpt2")
+
+    batch = []
+
+    txt1 = "Every effort moves you"
+    txt2 = "Every day holds a"
+
+    batch.append( torch.tensor(tokenizer.encode(txt1)) )
+    batch.append( torch.tensor(tokenizer.encode(txt2)) )
+    batch = torch.stack(batch, dim=0)
+
+    print(batch)
+
+    torch.manual_seed(123)
+    model = DummyGPTModel(GPT_CONFIG_124M)
+
+    logits = model(batch)
+    print("Output shape: ", logits.shape)
+    print(logits)
+
+if __name__ == "__main__":
+#    mainfunc()
+
+#    testGELU()
+    testForward()
+    
+    
