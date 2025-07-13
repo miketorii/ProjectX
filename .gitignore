@@ -73,6 +73,7 @@ langchain/tmpgitdata
 
 llm/*.txt
 
+Quantum/qc_workbook/*
 
 
 
