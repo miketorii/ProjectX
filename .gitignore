@@ -64,6 +64,8 @@ claude-env/pyvenv.cfg
 */dist
 */temp
 */build
+*/etc
+*/.ipynb_checkpoints/*
 
 langchain/data
 langchain/langchain
