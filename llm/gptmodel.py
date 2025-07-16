@@ -253,4 +253,17 @@ if __name__ == "__main__":
     print("Input batch:", batch)
     print("Output shape", out.shape)
     print(out)
+
+    total_params = sum(p.numel() for p in model.parameters() )
+    print(f"Total number of parameters: {total_params}")
+
+    print("Token embedding layer shape: ", model.tok_emb.weight.shape)
+    print("Output layer shape:", model.out_head.weight.shape)
     
+    total_params_gpt2 = total_params - sum(p.numel() for p in model.out_head.parameters() )
+    print(f"total params gpt2: {total_params_gpt2}")
+
+    total_size_bytes = total_params * 4
+    total_size_mb = total_size_bytes / (1024*1024)
+
+    print(f"Total size of the model: {total_size_mb:.2f} MB")
