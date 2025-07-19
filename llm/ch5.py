@@ -312,7 +312,33 @@ def gptmodeltest():
     decoded_text = tokenizer.decode(out.squeeze(0).tolist())
     print(decoded_text)
 
+############################################
+#
+#
+def calc_text_generation_loss(model):
+    inputs = torch.tensor([
+        [16833, 3626, 6100],
+        [40, 1107, 588]
+    ])
+    targets = torch.tensor([
+        [3626, 6100, 345],
+        [1107, 588, 11311]
+    ])
 
+    with torch.no_grad():
+        logits = model(inputs)
+
+    probas = torch.softmax(logits, dim=-1)
+    print(probas.shape)
+
+    token_ids = torch.argmax(probas, dim=-1, keepdim=True)
+    print("Token IDs:\n", token_ids)
+
+    print("Target batch 1:\n", token_ids_to_text(targets[0], tokenizer))
+    print("Output batch 1:\n", token_ids_to_text(token_ids[0].flatten(), tokenizer))
+
+
+        
 ############################################
 #
 #
@@ -346,3 +372,6 @@ if __name__ == "__main__":
 
     print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
     
+
+    print("---------------------------")
+    calc_text_generation_loss(model)
