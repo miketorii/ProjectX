@@ -328,9 +328,12 @@ def calc_text_generation_loss(model, tokenizer):
     with torch.no_grad():
         logits = model(inputs)
 
+    print(logits)
+    
     probas = torch.softmax(logits, dim=-1)
     print(probas.shape)
-
+    print(probas)
+    
     token_ids = torch.argmax(probas, dim=-1, keepdim=True)
     print("Token IDs:\n", token_ids)
 
@@ -343,7 +346,18 @@ def calc_text_generation_loss(model, tokenizer):
 
     text_idx = 1
     target_probas_2 = probas[text_idx, [0,1,2], targets[text_idx]]
-    print("Text 2:",target_probas_2)    
+    print("Text 2:",target_probas_2)
+
+    log_probas = torch.log(torch.cat((target_probas_1, target_probas_2)))
+    print(log_probas)
+
+    avg_log_probas = torch.mean(log_probas)
+    print(avg_log_probas)
+
+    neg_avg_log_probas = avg_log_probas * -1
+    print(neg_avg_log_probas)
+
+    
         
 ############################################
 #
@@ -361,7 +375,6 @@ def token_ids_to_text(token_ids, tokenizer):
 #
 #
 if __name__ == "__main__":
-#def main1():
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
@@ -381,8 +394,7 @@ if __name__ == "__main__":
 
     print("---------------------------")
     calc_text_generation_loss(model, tokenizer)
-    
-'''    
+       
 
 
 
