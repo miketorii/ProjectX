@@ -315,7 +315,7 @@ def gptmodeltest():
 ############################################
 #
 #
-def calc_text_generation_loss(model):
+def calc_text_generation_loss(model, tokenizer):
     inputs = torch.tensor([
         [16833, 3626, 6100],
         [40, 1107, 588]
@@ -337,7 +337,13 @@ def calc_text_generation_loss(model):
     print("Target batch 1:\n", token_ids_to_text(targets[0], tokenizer))
     print("Output batch 1:\n", token_ids_to_text(token_ids[0].flatten(), tokenizer))
 
+    text_idx = 0
+    target_probas_1 = probas[text_idx, [0,1,2], targets[text_idx]]
+    print("Text 1:",target_probas_1)
 
+    text_idx = 1
+    target_probas_2 = probas[text_idx, [0,1,2], targets[text_idx]]
+    print("Text 2:",target_probas_2)    
         
 ############################################
 #
@@ -354,7 +360,8 @@ def token_ids_to_text(token_ids, tokenizer):
 ############################################
 #
 #
-if __name__ == "__main__":    
+if __name__ == "__main__":
+#def main1():
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
@@ -371,7 +378,11 @@ if __name__ == "__main__":
     )
 
     print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
-    
 
     print("---------------------------")
-    calc_text_generation_loss(model)
+    calc_text_generation_loss(model, tokenizer)
+    
+'''    
+
+
+
