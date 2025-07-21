@@ -30,12 +30,12 @@ class MultiHeadAttention(nn.Module):
     def forward(self, x):
         b, num_tokens, d_in = x.shape
 
-        print("b num_tokens d_in=", b, num_tokens, d_in)
+#        print("b num_tokens d_in=", b, num_tokens, d_in)
         keys = self.W_key(x)
         queries = self.W_query(x)
         values = self.W_value(x)
 
-        print("keys.shape=", keys.shape)
+#        print("keys.shape=", keys.shape)
 
         keys = keys.view(b, num_tokens, self.num_heads, self.head_dim)
         queries = queries.view(b, num_tokens, self.num_heads, self.head_dim)
@@ -59,39 +59,6 @@ class MultiHeadAttention(nn.Module):
         context_vec = self.out_proj(context_vec)
         
         return context_vec
-
-############################################
-#
-#    
-def multiheadmain():
-    inputs = torch.tensor(
-        [[0.43, 0.15, 0.89], # Your     (x^1)
-         [0.55, 0.87, 0.66], # journey  (x^2)
-         [0.57, 0.85, 0.64], # starts   (x^3)
-         [0.22, 0.58, 0.33], # with     (x^4)
-         [0.77, 0.25, 0.10], # one      (x^5)
-         [0.05, 0.80, 0.55]] # step     (x^6)
-    )
-    
-    print(inputs.shape)
-    print(inputs)
-
-    torch.manual_seed(123)
-    
-    batch = torch.stack((inputs, inputs), dim=0)
-    print(batch.shape)
-    print(batch)
-
-    batch_size, context_length, d_in = batch.shape
-    print("batch_size context_length d_in = ", batch_size, context_length, d_in)    
-    d_out = 2
-    print("d_in d_out = ", d_in, d_out)
-
-    mha = MultiHeadAttention(d_in, d_out, context_length, 0.0, num_heads=2)
-    context_vecs = mha(batch)
-
-    print(context_vecs)
-    print(context_vecs.shape)
 
 ############################################
 #
@@ -190,20 +157,6 @@ GPT_CONFIG_124M = {
 ############################################
 #
 #
-def testtransformer():
-    torch.manual_seed(123)
-
-    x = torch.rand(2, 4, 768)
-    block = TransformerBlock(GPT_CONFIG_124M)
-
-    output = block(x)
-
-    print("Input shape:", x.shape)
-    print("Output shape", output.shape)
-
-############################################
-#
-#
 class GPTModel(nn.Module):
     def __init__(self, cfg):
         super().__init__()
@@ -252,88 +205,35 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
 ############################################
 #
 #
-def gptmodeltest():
-    torch.manual_seed(123)
-
-    tokenizer = tiktoken.get_encoding("gpt2")
-
-    batch = []
-
-    txt1 = "Every effort moves you"
-    txt2 = "Every day holds a"
-
-    batch.append(torch.tensor(tokenizer.encode(txt1)))
-    batch.append(torch.tensor(tokenizer.encode(txt2)))
-    batch = torch.stack(batch, dim=0)
-    print(batch)
-
-    model = GPTModel(GPT_CONFIG_124M)
-
-    out = model(batch)
-
-    print("Input batch:", batch)
-    print("Output shape", out.shape)
-    print(out)
-
-    total_params = sum(p.numel() for p in model.parameters() )
-    print(f"Total number of parameters: {total_params}")
-
-    print("Token embedding layer shape: ", model.tok_emb.weight.shape)
-    print("Output layer shape:", model.out_head.weight.shape)
-    
-    total_params_gpt2 = total_params - sum(p.numel() for p in model.out_head.parameters() )
-    print(f"total params gpt2: {total_params_gpt2}")
-
-    total_size_bytes = total_params * 4
-    total_size_mb = total_size_bytes / (1024*1024)
-
-    print(f"Total size of the model: {total_size_mb:.2f} MB")
-
-    start_context = "Hello, I am"
-
-    encoded = tokenizer.encode(start_context)
-    print("encoded: ", encoded)
-
-    encoded_tensor = torch.tensor(encoded).unsqueeze(0)
-    print("encoded_tensor.shape: ", encoded_tensor.shape)
-
-    model.eval()
-
-    out = generate_text_simple(
-        model=model,
-        idx=encoded_tensor,
-        max_new_tokens=6,
-        context_size=GPT_CONFIG_124M["context_length"]
-    )
-
-    print("Output:", out)
-    print("Output length:", len(out[0]) )
-
-    decoded_text = tokenizer.decode(out.squeeze(0).tolist())
-    print(decoded_text)
-
-############################################
-#
-#
 def calc_text_generation_loss(model, tokenizer):
-    inputs = torch.tensor([
-        [16833, 3626, 6100],
-        [40, 1107, 588]
-    ])
-    targets = torch.tensor([
-        [3626, 6100, 345],
-        [1107, 588, 11311]
-    ])
+#    inputs = torch.tensor([
+#        [16833, 3626, 6100],
+#        [40, 1107, 588]
+#    ])
+#    targets = torch.tensor([
+#        [3626, 6100, 345],
+#        [1107, 588, 11311]
+#    ])
+#
+#    with torch.no_grad():
+#        logits = model(inputs)
+#        probas = torch.softmax(logits, dim=-1)
+#        print(probas.shape)
 
+    inputs = torch.tensor([[16833, 3626, 6100],   # ["every effort moves",
+                           [40,    1107, 588]])   #  "I really like"]
+
+    targets = torch.tensor([[3626, 6100, 345  ],  # [" effort moves you",
+                            [1107,  588, 11311]]) #  " really like chocolate"]
+        
     with torch.no_grad():
         logits = model(inputs)
-
-    print(logits)
-    
-    probas = torch.softmax(logits, dim=-1)
-    print(probas.shape)
+        print(logits)
+        
+    probas = torch.softmax(logits, dim=-1) # Probability of each token in vocabulary
+    print(probas.shape) # Shape: (batch_size, num_tokens, vocab_size)
     print(probas)
-    
+        
     token_ids = torch.argmax(probas, dim=-1, keepdim=True)
     print("Token IDs:\n", token_ids)
 
@@ -395,6 +295,5 @@ if __name__ == "__main__":
     print("---------------------------")
     calc_text_generation_loss(model, tokenizer)
        
-
 
 
