@@ -22,20 +22,6 @@ GPT_CONFIG_124M = {
 #
 #
 def calc_text_generation_loss(model, tokenizer):
-#    inputs = torch.tensor([
-#        [16833, 3626, 6100],
-#        [40, 1107, 588]
-#    ])
-#    targets = torch.tensor([
-#        [3626, 6100, 345],
-#        [1107, 588, 11311]
-#    ])
-#
-#    with torch.no_grad():
-#        logits = model(inputs)
-#        probas = torch.softmax(logits, dim=-1)
-#        print(probas.shape)
-
     inputs = torch.tensor([[16833, 3626, 6100],   # ["every effort moves",
                            [40,    1107, 588]])   #  "I really like"]
 
@@ -86,6 +72,35 @@ def text_to_token_ids(text, tokenizer):
 def token_ids_to_text(token_ids, tokenizer):
     flat = token_ids.squeeze(0)
     return tokenizer.decode(flat.tolist())
+
+############################################
+#
+#
+
+def calc_cross_entropy(model, tokenizer):
+    print("------------cross entropy------------")
+    
+    inputs = torch.tensor([[16833, 3626, 6100],   # ["every effort moves",
+                           [40,    1107, 588]])   #  "I really like"]
+
+    targets = torch.tensor([[3626, 6100, 345  ],  # [" effort moves you",
+                            [1107,  588, 11311]]) #  " really like chocolate"]
+        
+    with torch.no_grad():
+        logits = model(inputs)
+        print(logits)
+
+    logits_flat = logits.flatten(0,1)
+    targets_flat = targets.flatten()
+
+    print("logits flat:", logits_flat.shape)
+    print("targets flat:", targets_flat.shape)
+
+    loss = torch.nn.functional.cross_entropy(logits_flat, targets_flat)
+    print(loss)
+
+    perplexity = torch.exp(loss)
+    print(perplexity)
     
 ############################################
 #
@@ -111,5 +126,5 @@ if __name__ == "__main__":
     print("---------------------------")
     calc_text_generation_loss(model, tokenizer)
        
-
+    calc_cross_entropy(model, tokenizer)
 
