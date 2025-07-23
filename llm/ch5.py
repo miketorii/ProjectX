@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import tiktoken
 
-from previous_chapters import GPTModel, generate_text_simple
+from previous_chapters import GPTModel, generate_text_simple, create_dataloader_v1
 
 import os
 import urllib.request
@@ -123,8 +123,57 @@ def calc_train(model, tokenizer):
     print("Characters", total_characters)
     print("Tokens", total_tokens)
                  
-    
-    
+    train_ratio = 0.90
+    split_idx = int(train_ratio * len(text_data))
+    train_data = text_data[:split_idx]
+    val_data = text_data[split_idx:]
+
+    train_loader = create_dataloader_v1(
+        train_data,
+        batch_size=2,
+        max_length=GPT_CONFIG_124M["context_length"],
+        stride=GPT_CONFIG_124M["context_length"],
+        drop_last=True,
+        shuffle=True,
+        num_workers=0        
+    )
+
+    val_loader = create_dataloader_v1(
+        val_data,
+        batch_size=2,
+        max_length=GPT_CONFIG_124M["context_length"],
+        stride=GPT_CONFIG_124M["context_length"],
+        drop_last=False,
+        shuffle=False,
+        num_workers=0        
+    )    
+
+    if total_tokens * (train_ratio) < GPT_CONFIG_124M["context_length"]:
+        print("Not enough token for the training loader")
+
+    if total_tokens * (1-train_ratio) < GPT_CONFIG_124M["context_length"]:
+        print("Not enough tokens for the validation loader")
+
+    print("Train loader:")
+    for x, y in train_loader:
+        print(x.shape, y.shape)
+
+    print("Validation loader:")
+    for x, y in val_loader:
+        print(x.shape, y.shape)        
+
+    train_tokens = 0
+    for input_batch, target_batch in train_loader:
+        train_tokens += input_batch.numel()
+
+    val_tokens = 0
+    for input_batch, target_batch in val_loader:
+        val_tokens += input_batch.numel()
+
+    print("Training tokens;", train_tokens)
+    print("Validatiaon tokens:", val_tokens)
+    print("All tokens", train_tokens+val_tokens)
+        
 ############################################
 #
 #
