@@ -4,6 +4,9 @@ import tiktoken
 
 from previous_chapters import GPTModel, generate_text_simple
 
+import os
+import urllib.request
+
 ############################################
 #
 #
@@ -101,6 +104,26 @@ def calc_cross_entropy(model, tokenizer):
 
     perplexity = torch.exp(loss)
     print(perplexity)
+
+############################################
+#
+#
+def calc_train(model, tokenizer):
+    file_path = "the-verdict.txt"
+
+    with open(file_path, "r", encoding="utf-8") as file:
+        text_data = file.read()
+
+    print(text_data[:99])
+    print(text_data[-99:])    
+
+    total_characters = len(text_data)
+    total_tokens = len(tokenizer.encode(text_data))
+
+    print("Characters", total_characters)
+    print("Tokens", total_tokens)
+                 
+    
     
 ############################################
 #
@@ -128,3 +151,4 @@ if __name__ == "__main__":
        
     calc_cross_entropy(model, tokenizer)
 
+    calc_train(model, tokenizer)
