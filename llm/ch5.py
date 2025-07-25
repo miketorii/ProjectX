@@ -221,7 +221,8 @@ def calc_loss_loader(data_loader, model, device, input_batch, target_batch, num_
 ############################################
 #
 #
-if __name__ == "__main__":
+#if __name__ == "__main__":
+def funcmain1():
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
@@ -245,3 +246,15 @@ if __name__ == "__main__":
     calc_cross_entropy(model, tokenizer)
 
     calc_train(model, tokenizer)
+
+if __name__ == "__main__":
+    torch.manual_seed(123)
+
+    model = GPTModel(GPT_CONFIG_124M)
+    model.to("cpu")
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.0004, weight_decay=0.1)
+
+    num_epochs = 10
+
+    print("epoch:", num_epochs)
