@@ -247,14 +247,77 @@ def funcmain1():
 
     calc_train(model, tokenizer)
 
+############################################
+#
+#
+def train_model_simple(model, train_loader, val_loader, optimizer, device, num_epochs,
+                       eval_freq, eval_iter, start_context, tokenizer ):
+
+    train_losses, val_losses, tokens_seen = [], [], []
+    tokens_seen, global_step = 0, -1
+    
+    return train_losses, val_losses, tokens_seen
+        
+############################################
+#
+#    
 if __name__ == "__main__":
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
     model.to("cpu")
 
+    tokenizer = tiktoken.get_encoding("gpt2")
+    
+#######
+    file_path = "the-verdict.txt"
+
+    with open(file_path, "r", encoding="utf-8") as file:
+        text_data = file.read()
+
+    total_characters = len(text_data)
+    total_tokens = len(tokenizer.encode(text_data))
+
+    train_ratio = 0.90
+    split_idx = int(train_ratio * len(text_data))
+    train_data = text_data[:split_idx]
+    val_data = text_data[split_idx:]
+
+    train_loader = create_dataloader_v1(
+        train_data,
+        batch_size=2,
+        max_length=GPT_CONFIG_124M["context_length"],
+        stride=GPT_CONFIG_124M["context_length"],
+        drop_last=True,
+        shuffle=True,
+        num_workers=0        
+    )
+
+    val_loader = create_dataloader_v1(
+        val_data,
+        batch_size=2,
+        max_length=GPT_CONFIG_124M["context_length"],
+        stride=GPT_CONFIG_124M["context_length"],
+        drop_last=False,
+        shuffle=False,
+        num_workers=0        
+    )    
+
+######    
+    
     optimizer = torch.optim.AdamW(model.parameters(), lr=0.0004, weight_decay=0.1)
 
+    device = "cpu"
     num_epochs = 10
 
+
+    
     print("epoch:", num_epochs)
+
+    train_losses, val_losses, tokens_seen = train_model_simple(
+        model, train_loader, val_loader, optimizer, device,
+        num_epochs=num_epochs, eval_freq=5, eval_iter=5,
+        start_context="Every effort moves you", tokenizer=tokenizer
+    )
+
+    print("----------------End--------------")
