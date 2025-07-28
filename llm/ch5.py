@@ -7,6 +7,9 @@ from previous_chapters import GPTModel, generate_text_simple, create_dataloader_
 import os
 import urllib.request
 
+import matplotlib.pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
 ############################################
 #
 #
@@ -283,6 +286,9 @@ def train_model_simple(model, train_loader, val_loader, optimizer, device, num_e
     
     return train_losses, val_losses, tokens_seen
 
+############################################
+#
+#    
 def evaluate_model(model, train_loader, val_loader, device, eval_iter):
     print("--evaluate model--")
     model.eval()
@@ -292,7 +298,31 @@ def evaluate_model(model, train_loader, val_loader, device, eval_iter):
         
     model.train()
     return train_loss, val_loss
-                
+
+############################################
+#
+#
+def plot_losses(epochs_seen, tokens_seen, train_losses, val_losses):
+    fig, ax1 = plt.subplots(figsize=(5,3))
+
+    ax1.plot(epochs_seen, train_losses, label="Training loss")
+    ax1.plot(epochs_seen, val_losses, linestyle="-.", label="Validation loss")
+    ax1.set_xlabel("Epochs")
+    ax1.set_ylabel("Loss")
+    ax1.legend("upper right")
+    ax1.xaxis.set_major_locator(MaxNLocator(integer=True))
+
+    ax2 = ax1.twiny()
+    ax2.plot(tokens_seen, train_losses, alpha=0)
+    ax2.set_xlabel("Tokens seen")
+
+    fig.tight_layout()
+    plt.savefig("loss-plot.pdf")
+    
+    
+############################################
+#
+#    
 def geneate_and_print_sample( model, tokenizer, device, start_context):
     print("--generate_and_print_sample--")
     model.eval()
@@ -306,7 +336,9 @@ def geneate_and_print_sample( model, tokenizer, device, start_context):
     print(decoded_text.replace("\n"," "))
     model.train()
     
-    
+############################################
+#
+#        
         
 ############################################
 #
@@ -359,8 +391,6 @@ if __name__ == "__main__":
 
     device = "cpu"
     num_epochs = 10
-
-
     
     print("epoch:", num_epochs)
 
@@ -370,4 +400,7 @@ if __name__ == "__main__":
         start_context="Every effort moves you", tokenizer=tokenizer
     )
 
+    epochs_tensor = torch.linspace(0, num_epochs, len(train_losses))
+    plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
+    
     print("----------------End--------------")
