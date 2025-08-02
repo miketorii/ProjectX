@@ -336,15 +336,13 @@ def geneate_and_print_sample( model, tokenizer, device, start_context):
     decoded_text = token_ids_to_text(token_ids, tokenizer)
     print(decoded_text.replace("\n"," "))
     model.train()
+
     
-############################################
-#
-#        
-        
 ############################################
 #
 #    
 if __name__ == "__main__":
+#def funcmain3():
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
@@ -403,5 +401,93 @@ if __name__ == "__main__":
 
     epochs_tensor = torch.linspace(0, num_epochs, len(train_losses))
     plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
+
+    torch.save(model.state_dict(), "model.pth")
+    
+    ######################
+    #
+    print("----------------generate--------------")    
+    start_context = "Every effort moves you"
+    token_ids = generate(
+        model=model,
+        idx=text_to_token_ids(start_context, tokenizer),
+        max_new_tokens=15,
+        context_size=GPT_CONFIG_124M["context_length"],
+        top_k=25,
+        temperature=1.4
+    )
+
+    print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
     
     print("----------------End--------------")
+
+############################################
+#
+#        
+def generate( model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
+    print("--generate--")
+
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+
+        logits = logits[:,-1,:]
+
+        if top_k is not None:
+            top_logits, _ = torch.topk(logits, top_k)
+
+            print(top_logits)
+            
+            min_val = top_logits[:,-1]
+            
+            print(min_val)
+            
+            logits = torch.where( logits<min_val, torch.tensor(float("-inf")).to(logits.device), logits)
+            
+
+        if temperature > 0.0:
+            logits = logits / temperature
+
+            probs = torch.softmax(logits, dim=-1)
+
+            idx_next = torch.multinomial(probs, num_samples=1)
+
+        else:
+            idx_next = torch.argmax(logits, dim=-1, keepdim=True)
+
+        if idx_next == eos_id:
+            break
+
+        idx = torch.cat((idx, idx_next), dim=1)
+        
+    return idx
+    
+    
+############################################
+#
+#
+#if __name__ == "__main__":
+def main4():    
+    torch.manual_seed(123)
+
+    model = GPTModel(GPT_CONFIG_124M)
+    model.eval()
+
+    start_context = "Every effort moves you"
+    tokenizer = tiktoken.get_encoding("gpt2")
+    
+    token_ids = generate(
+        model=model,
+        idx=text_to_token_ids(start_context, tokenizer),
+        max_new_tokens=15,
+        context_size=GPT_CONFIG_124M["context_length"],
+        top_k=25,
+        temperature=1.4
+    )
+
+    print("Output text:\n", token_ids_to_text(token_ids, tokenizer))
+
+    print("---------------------------")
+
+    
