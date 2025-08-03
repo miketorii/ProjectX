@@ -337,12 +337,55 @@ def geneate_and_print_sample( model, tokenizer, device, start_context):
     print(decoded_text.replace("\n"," "))
     model.train()
 
+
+############################################
+#
+#        
+def generate( model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
+    print("--generate--")
+
+    for _ in range(max_new_tokens):
+        idx_cond = idx[:, -context_size:]
+        with torch.no_grad():
+            logits = model(idx_cond)
+
+        logits = logits[:,-1,:]
+
+        if top_k is not None:
+            top_logits, _ = torch.topk(logits, top_k)
+
+            print(top_logits)
+            
+            min_val = top_logits[:,-1]
+            
+            print(min_val)
+            
+            logits = torch.where( logits<min_val, torch.tensor(float("-inf")).to(logits.device), logits)
+            
+
+        if temperature > 0.0:
+            logits = logits / temperature
+
+            probs = torch.softmax(logits, dim=-1)
+
+            idx_next = torch.multinomial(probs, num_samples=1)
+
+        else:
+            idx_next = torch.argmax(logits, dim=-1, keepdim=True)
+
+        if idx_next == eos_id:
+            break
+
+        idx = torch.cat((idx, idx_next), dim=1)
+        
+    return idx
+    
     
 ############################################
 #
 #    
-if __name__ == "__main__":
-#def funcmain3():
+#if __name__ == "__main__":
+def main_train_run():
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
@@ -390,6 +433,7 @@ if __name__ == "__main__":
 
     device = "cpu"
     num_epochs = 10
+    #num_epochs = 2
     
     print("epoch:", num_epochs)
 
@@ -421,57 +465,16 @@ if __name__ == "__main__":
     
     print("----------------End--------------")
 
-############################################
-#
-#        
-def generate( model, idx, max_new_tokens, context_size, temperature=0.0, top_k=None, eos_id=None):
-    print("--generate--")
-
-    for _ in range(max_new_tokens):
-        idx_cond = idx[:, -context_size:]
-        with torch.no_grad():
-            logits = model(idx_cond)
-
-        logits = logits[:,-1,:]
-
-        if top_k is not None:
-            top_logits, _ = torch.topk(logits, top_k)
-
-            print(top_logits)
-            
-            min_val = top_logits[:,-1]
-            
-            print(min_val)
-            
-            logits = torch.where( logits<min_val, torch.tensor(float("-inf")).to(logits.device), logits)
-            
-
-        if temperature > 0.0:
-            logits = logits / temperature
-
-            probs = torch.softmax(logits, dim=-1)
-
-            idx_next = torch.multinomial(probs, num_samples=1)
-
-        else:
-            idx_next = torch.argmax(logits, dim=-1, keepdim=True)
-
-        if idx_next == eos_id:
-            break
-
-        idx = torch.cat((idx, idx_next), dim=1)
-        
-    return idx
-    
     
 ############################################
 #
 #
 #if __name__ == "__main__":
-def main4():    
+def main_load_pthfile():    
     torch.manual_seed(123)
 
     model = GPTModel(GPT_CONFIG_124M)
+    model.load_state_dict(torch.load("model.pth", map_location="cpu", weights_only=True))
     model.eval()
 
     start_context = "Every effort moves you"
@@ -490,4 +493,9 @@ def main4():
 
     print("---------------------------")
 
+    
+if __name__ == "__main__":
+    #main_load_pthfile()
+    main_train_run()
+    
     
