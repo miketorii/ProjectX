@@ -20,6 +20,8 @@ deeplearning/data/*
 *.spec
 cain.txt
 *.pth
+*.zip
+*.tsv
 
 dataanalyze100/pyvenv.cfg
 dataanalyze100/data/*
@@ -67,6 +69,7 @@ claude-env/pyvenv.cfg
 */build
 */etc
 */.ipynb_checkpoints/*
+*/data
 
 langchain/data
 langchain/langchain
