@@ -39,6 +39,20 @@ def read_data():
 
     print(df["Label"].value_counts())
 
+    return df
+
+def create_balanced_dataset(df):
+    num_spam = df[ df["Label"] == "spam"  ].shape[0]
+
+    ham_subset = df[ df["Label"] == "ham" ].sample(num_spam, random_state=123)
+
+    balanced_df = pd.concat([ham_subset, df[ df["Label"] == "spam" ] ])
+
+    print(balanced_df["Label"].value_counts())
+    
+    return balanced_df
+
 if __name__ == "__main__":
-    read_data()
+    df = read_data()
+    create_balanced_dataset(df)
     
