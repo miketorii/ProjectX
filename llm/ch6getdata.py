@@ -49,7 +49,10 @@ def create_balanced_dataset(df):
     balanced_df = pd.concat([ham_subset, df[ df["Label"] == "spam" ] ])
 
     print(balanced_df["Label"].value_counts())
-    
+
+    balanced_df["Label"] = balanced_df["Label"].map({"ham": 0, "spam": 1})
+    print(balanced_df)
+        
     return balanced_df
 
 if __name__ == "__main__":
