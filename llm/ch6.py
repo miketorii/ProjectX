@@ -92,6 +92,37 @@ def calc_accuracy_loader(data_loader, model, device, num_batches=None):
 ###################################################
 #
 #
+def calc_loss_batch(input_batch, target_batch, model, device):
+    input_batch, target_batch = input_batch.to(device), target_batch.to(device)
+    logits = model(input_batch)[:,-1,:]
+    loss = torch.nn.functional.cross_entropy(logits, target_batch)
+    return loss
+
+###################################################
+#
+#
+def calc_loss_loader(data_loader, model, device, num_batches=None):
+    total_loss = 0
+
+    if len(data_loader) == 0:
+        return fload("nan")
+    elif num_batches is None:
+        num_batches = len(data_loader)
+    else:
+        num_batches = min(num_batches, len(data_loader))
+
+    for i, (input_batch, target_batch) in enumerate(data_loader):        
+        if i < num_batches:
+            loss = calc_loss_batch(input_batch, target_batch, model, device)
+            total_loss += loss.item()
+        else:
+            break
+
+    return total_loss / num_batches
+
+###################################################
+#
+#
 if __name__ == "__main__":
     tokenizer = tiktoken.get_encoding("gpt2")
     print(tokenizer.encode("<|endoftext|>", allowed_special={"<|endoftext|>"}))
@@ -246,3 +277,15 @@ if __name__ == "__main__":
     print(f"Training accuracy: {train_accuracy*100:.2f}%")
     print(f"Validation accuracy: {val_accuracy*100:.2f}%")
     print(f"Test accuracy: {test_accuracy*100:.2f}%")    
+
+    with torch.no_grad():
+        train_loss = calc_loss_loader(train_loader, model, device, num_batches=5)
+        val_loss = calc_loss_loader(val_loader, model, device, num_batches=5)
+        test_loss = calc_loss_loader(test_loader, model, device, num_batches=5)        
+
+    print(f"Training loss: {train_loss:.3f}")
+    print(f"Validation loss: {val_loss:.3f}")
+    print(f"Test loss: {test_loss:.3f}")    
+
+        
+        
