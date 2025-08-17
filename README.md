@@ -1,5 +1,10 @@
 * GenAI
 
+* Quantum computing
+<img width="875" height="423" alt="shor1" src="https://github.com/user-attachments/assets/f8ccaf75-d7c9-4297-9ecf-949a0dda3c2e" />
+<img width="878" height="419" alt="shor2" src="https://github.com/user-attachments/assets/3fa7efcd-ec9c-41e3-8bfc-78a9e9fab099" />
+
+
 * AzureFuncs
 
 * RNN
