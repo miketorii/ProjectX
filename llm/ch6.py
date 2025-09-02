@@ -12,6 +12,8 @@ from previous_chapters import GPTModel, load_weights_into_gpt
 
 from previous_chapters import generate_text_simple, text_to_token_ids, token_ids_to_text
 
+import time
+
 ###################################################
 #
 #
@@ -153,6 +155,19 @@ def train_classifier_simple(model, train_loader, val_loader, optimizer, device, 
         val_accs.append(val_accuracy)
 
     return train_losses, vall_losses, train_accs, val_accs, examples_seen
+
+###################################################
+#
+#
+def evaluate_model(model, train_loader, val_loader, device, eval_iter):
+    model.eval()
+
+    with torch.no_grad():
+        train_loss = cal_loss_loader(train_loader, model, device, num_batches=eval_iter)
+        val_loss = cal_loss_loader(val_loader, model, device, num_batches=eval_iter)
+        
+    model.train()
+    return train_loss, val_loss
 
 ###################################################
 #
@@ -321,5 +336,21 @@ if __name__ == "__main__":
     print(f"Validation loss: {val_loss:.3f}")
     print(f"Test loss: {test_loss:.3f}")    
 
-        
-        
+    #################################################
+    #
+    start_time = time.time()
+    
+    torch.manual_seed(123)
+    
+    optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5, weight_decay=0.1)
+
+    num_epochs = 5
+
+    train_losses, val_losses, train_accs, val_accs, examples_seen = train_classifier_simple(
+        model, train_loader, val_loader, optimizer, device,
+        num_epochs=num_epochs, eval_freq=50, eval_iter=5
+    )
+
+    end_time = time.time()
+    execution_time_miniutes = (end_time - start_time) / 60
+    print(f"Training completed in {executin_time_minutes: .2f} minutes.")
