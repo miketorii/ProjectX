@@ -400,7 +400,7 @@ if __name__ == "__main__":
     )
 
     end_time = time.time()
-    execution_time_miniutes = (end_time - start_time) / 60
+    execution_time_minutes = (end_time - start_time) / 60
     print(f"Training completed in {execution_time_minutes: .2f} minutes.")
 
     ##################################################
