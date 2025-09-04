@@ -405,12 +405,12 @@ if __name__ == "__main__":
 
     ##################################################
     # Draw
-    epochs_tensor = torch.linspace((), num_epochs, len(train_losses))
-    examples_seen_tensor = torch.linspace((), examples_seen, len(train_losses))
+    epochs_tensor = torch.linspace(0, num_epochs, len(train_losses))
+    examples_seen_tensor = torch.linspace(0, examples_seen, len(train_losses))
     plot_values(epochs_tensor, examples_seen_tensor, train_losses, val_losses)
 
-    epochs_tensor = torch.linspace((), num_epochs, len(train_accs))
-    examples_seen_tensor = torch.linspace((), examples_seen, len(train_accs))
+    epochs_tensor = torch.linspace(0, num_epochs, len(train_accs))
+    examples_seen_tensor = torch.linspace(0, examples_seen, len(train_accs))
     plot_values(epochs_tensor, examples_seen_tensor, train_accs, val_accs, label="accuracy")
 
     #################################################
