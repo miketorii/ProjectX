@@ -78,6 +78,7 @@ langchain/tmpgitdata
 llm/*.txt
 llm/*.pdf
 llm/gpt2/*
+llm/instruction-data.json
 
 Quantum/qc_workbook/*
 
