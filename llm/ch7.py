@@ -61,6 +61,28 @@ class InstructionDataset(Dataset):
 #######################################
 #
 #
+def custom_collate_draft_1(batch, pad_token_id=50256, device="cpu"):
+    batch_max_length = max(len(item)+1 for item in batch)
+    inputs_lst = []
+
+    for item in batch:
+        new_item = item.copy()
+        new_item += [pad_token_id]
+
+        padded = (
+            new_item + [pad_token_id] * (batch_max_length - len(new_item))
+        )
+        
+        inputs = torch.tensor(padded[:-1])
+        inputs_lst.append(inputs)
+
+    inputs_tensor = torch.stack(inputs_lst).to(device)
+    
+    return inputs_tensor
+    
+#######################################
+#
+#
 if __name__ == "__main__":
 
     #################################################3
@@ -94,4 +116,17 @@ if __name__ == "__main__":
     ##
     tokenizer = tiktoken.get_encoding("gpt2")
     print(tokenizer.encode( "<|endoftext|>", allowed_special={"<|endoftext|>"} ))
+    
+    #################################################3
+    ##
+    inputs_1 = [0,1,2,3,4]
+    inputs_2 = [5,6]
+    inputs_3 = [7,8,9]
+    batch = (
+        inputs_1,
+        inputs_2,
+        inputs_3
+    )
+    print(custom_collate_draft_1(batch))
+    
     
