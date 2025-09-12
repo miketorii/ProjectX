@@ -141,7 +141,10 @@ def custom_collate_fn(batch, pad_token_id=50256, ignore_index=-100, allowed_max_
     
     return inputs_tensor, targets_tensor    
 
-    
+#######################################
+#
+#
+
 #######################################
 #
 #
@@ -203,3 +206,24 @@ if __name__ == "__main__":
     print(inputs)
     print(targets)    
     
+    logits_1 = torch.tensor(
+        [[-1.0, 1.0],
+         [-0.5, 1.5]]
+    )
+    targets_1 = torch.tensor([0,1])
+    loss_1 = torch.nn.functional.cross_entropy(logits_1, targets_1)
+    print(loss_1)
+
+    logits_2 = torch.tensor(
+        [[-1.0, 1.0],
+         [-0.5, 1.5],
+         [-0.5, 1.5]]
+    )
+    targets_2 = torch.tensor([0,1,1])
+    loss_2 = torch.nn.functional.cross_entropy(logits_2, targets_2)
+    print(loss_2)    
+
+    targets_3 = torch.tensor([0,1,-100])
+    loss_3 = torch.nn.functional.cross_entropy(logits_2, targets_3)
+    print(loss_3)
+    print("loss_1==loss_3:", loss_1==loss_3)
