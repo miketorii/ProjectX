@@ -8,6 +8,12 @@ from torch.utils.data import Dataset
 
 import tiktoken
 
+from functools import partial
+from torch.utils.data import DataLoader
+
+from gpt_download import download_and_load_gpt2
+from previous_chapters import GPTModel, load_weights_into_gpt
+
 #######################################
 #
 #
@@ -131,7 +137,7 @@ def custom_collate_fn(batch, pad_token_id=50256, ignore_index=-100, allowed_max_
 
         if allowed_max_length is not None:
             inputs = inputs[:allowed_max_length]
-            targets = targets[:allowd_max_length]
+            targets = targets[:allowed_max_length]
 
         inputs_lst.append(inputs)
         targets_lst.append(targets)
@@ -227,3 +233,52 @@ if __name__ == "__main__":
     loss_3 = torch.nn.functional.cross_entropy(logits_2, targets_3)
     print(loss_3)
     print("loss_1==loss_3:", loss_1==loss_3)
+
+    #################################################
+    ##
+    device = "cpu"
+    customized_collate_fn = partial(custom_collate_fn, device=device, allowed_max_length=1024)
+
+    num_workers = 0
+    batch_size = 8
+
+    torch.manual_seed(123)
+
+    train_dataset = InstructionDataset(train_data, tokenizer)
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        collate_fn=customized_collate_fn,
+        shuffle=True,
+        drop_last=True,
+        num_workers=num_workers
+    )
+
+    val_dataset = InstructionDataset(val_data, tokenizer)
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        collate_fn=customized_collate_fn,
+        shuffle=False,
+        drop_last=False,
+        num_workers=num_workers
+    )
+
+    test_dataset = InstructionDataset(test_data, tokenizer)
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=batch_size,
+        collate_fn=customized_collate_fn,
+        shuffle=False,
+        drop_last=False,
+        num_workers=num_workers
+    )
+
+    print("Train loader:")
+    for inputs, targets, in train_loader:
+        print(inputs.shape, targets.shape)
+
+    print(inputs[0])
+    print(targets[0])
+    
+    
