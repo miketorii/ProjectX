@@ -13,6 +13,7 @@ from torch.utils.data import DataLoader
 
 from gpt_download import download_and_load_gpt2
 from previous_chapters import GPTModel, load_weights_into_gpt
+from previous_chapters import generate, text_to_token_ids, token_ids_to_text
 
 #######################################
 #
@@ -307,3 +308,28 @@ if __name__ == "__main__":
     model = GPTModel(BASE_CONFIG)
     load_weights_into_gpt(model, params)
     model.eval()
+
+    #################################################
+    ##
+    torch.manual_seed(123)
+
+    input_text = format_input(val_data[0])
+    print(input_text)
+
+    token_ids = generate(
+        model=model,
+        idx=text_to_token_ids(input_text, tokenizer),
+        max_new_tokens=35,
+        context_size=BASE_CONFIG["context_length"],
+        eos_id=50256
+    )
+    generated_text = token_ids_to_text(token_ids, tokenizer)
+    
+    response_text = (
+        generated_text[len(input_text):]
+        .replace("### Response:", "")
+        .strip()
+    )
+    print(response_text)
+    
+    
