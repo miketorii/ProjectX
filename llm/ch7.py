@@ -14,6 +14,11 @@ from torch.utils.data import DataLoader
 from gpt_download import download_and_load_gpt2
 from previous_chapters import GPTModel, load_weights_into_gpt
 from previous_chapters import generate, text_to_token_ids, token_ids_to_text
+from previous_chapters import calc_loss_loader, train_model_simple
+
+import time
+
+from previous_chapters import plot_losses
 
 #######################################
 #
@@ -332,4 +337,37 @@ if __name__ == "__main__":
     )
     print(response_text)
     
+    #################################################
+    ##
+    model.to(device)
+    torch.manual_seed(123)
+
+    with torch.no_grad():
+        train_loss = calc_loss_loader(train_loader, model, device, num_batches=5)
+        val_loss = calc_loss_loader(val_loader, model, device, num_batches=5)
+
+    print("Training loss:", train_loss)
+    print("Validation loss:", val_loss)
+
+    #################################################
+    ##
+    start_time = time.time()
+
+    torch.manual_seed(123)
+
+    optimizer = torch.optim.AdamW(model.parameters(), lr=0.00005, weight_decay=0.1)
+
+    num_epochs =2
+
+    train_losses, val_losses, tokens_seen = train_model_simple(
+        model, train_loader, val_loader, optimizer, device,
+        num_epochs=num_epochs, eval_freq=5, eval_iter=5,
+        start_context=format_input(val_data[0]), tokenizer=tokenizer
+    )
+
+    end_time = time.time()
+    execution_time_minutes = (end_time - start_time)/60
+    print(f"Training completed in {execution_time_minutes:.2f} minutes.")
     
+    epochs_tensor = torch.linspace(0, num_epochs, len(train_losses))
+    plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
