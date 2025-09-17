@@ -303,7 +303,8 @@ if __name__ == "__main__":
         "gpt2-xl (1558M)": {"emb_dim": 1600, "n_layers": 48, "n_heads": 25}        
     }
 
-    CHOOSE_MODEL = "gpt2-medium (355M)"
+    CHOOSE_MODEL = "gpt2-small (124M)"
+#    CHOOSE_MODEL = "gpt2-medium (355M)"    
 
     BASE_CONFIG.update(model_configs[CHOOSE_MODEL])
 
@@ -371,3 +372,31 @@ if __name__ == "__main__":
     
     epochs_tensor = torch.linspace(0, num_epochs, len(train_losses))
     plot_losses(epochs_tensor, tokens_seen, train_losses, val_losses)
+
+    #################################################
+    ##
+    torch.manual_seed(123)
+
+    for entry in test_data[:3]:
+        input_text = format_input(entry)
+
+        token_ids = generate(
+            model=model,
+            idx=text_to_token_ids(input_text, tokenizer).to(device),
+            max_new_tokens=256,
+            context_size=BASE_CONFIG["context_length"],
+            eos_id=50256
+        )
+
+        generated_text = token_ids_to_text(token_ids, tokenizer)
+
+        response_text = (
+            generated_text[len(input_text):]
+            .replace("### Response:","")
+            .strip()
+        )
+
+        print(input_text)
+        print(f"\nCorrect response:\n>> {entry['output']}")
+        print(f"\nModel response:\n>> {response_text.strip()}")
+        print("--------------------------")
