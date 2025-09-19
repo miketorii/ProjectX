@@ -436,3 +436,8 @@ if __name__ == "__main__":
     file_name = f"{re.sub(r'[ ()]', '', CHOOSE_MODEL) }-sft.pth"
     torch.save(model.state_dict(), file_name)
     print(f"Model saved as {file_name}")
+
+    #################################################
+    ##
+    print("-------------done-------------")
+    
