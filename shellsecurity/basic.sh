@@ -9,3 +9,9 @@ echo $VAR2
 VAR3=$(pwd)
 
 echo $VAR3
+
+echo $#
+echo $0
+echo $1
+echo $2
+echo $3
