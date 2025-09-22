@@ -19,3 +19,11 @@ echo $3
 echo "Type something:"
 read VAR4
 echo $VAR4
+
+if cd tmp
+then
+    echo "here is tmp"
+    ls -l
+else
+    echo "no /tmp"
+fi
