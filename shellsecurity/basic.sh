@@ -27,3 +27,10 @@ then
 else
     echo "no /tmp"
 fi
+
+FILENAME1='test.txt'
+
+if [[ -e $FILENAME1 ]]
+then
+    echo $FILENAME1 exists
+fi
