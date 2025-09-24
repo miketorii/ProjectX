@@ -34,3 +34,10 @@ if [[ -e $FILENAME1 ]]
 then
     echo $FILENAME1 exists
 fi
+
+VAL1=8
+echo $VAL1
+if (( VAL1 < 12 ))
+then
+    echo "value $VAL1 is lower than 12"
+fi
