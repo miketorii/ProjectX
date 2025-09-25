@@ -41,3 +41,17 @@ if (( VAL1 < 12 ))
 then
     echo "value $VAL1 is lower than 12"
 fi
+
+i=0
+while (( i < 5 ))
+do
+    echo $i
+    let i++
+done
+
+echo "-----------------------------------"
+
+for (( i=10; i<15; i++ ))
+do
+    echo $i
+done
