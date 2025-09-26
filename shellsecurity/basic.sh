@@ -1,5 +1,11 @@
 #!/bin/bash
 
+function myfunc()
+{
+    echo "here is in myfunc"
+    echo $1 $2 $3
+}
+
 VAR1='bash security'
 VAR2=starting
 
@@ -55,3 +61,6 @@ for (( i=10; i<15; i++ ))
 do
     echo $i
 done
+
+myfunc
+myfunc a b c
