@@ -64,3 +64,10 @@ done
 
 myfunc
 myfunc a b c
+
+echo "-----------------------------------"
+
+grep 'T.o' frost.txt
+
+egrep 'T.?o' frost.txt
+
