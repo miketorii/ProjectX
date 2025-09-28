@@ -71,3 +71,5 @@ grep 'T.o' frost.txt
 
 egrep 'T.?o' frost.txt
 
+egrep '<([A-Za-z]*)>.*</\1>' tags.txt
+
