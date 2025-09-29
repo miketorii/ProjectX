@@ -73,3 +73,8 @@ egrep 'T.?o' frost.txt
 
 egrep '<([A-Za-z]*)>.*</\1>' tags.txt
 
+echo "-----------------------------------"
+
+cut -d' ' -f2 cutfile.txt
+
+
