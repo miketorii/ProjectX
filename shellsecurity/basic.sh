@@ -77,4 +77,5 @@ echo "-----------------------------------"
 
 cut -d' ' -f2 cutfile.txt
 
+file test.png
 
