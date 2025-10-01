@@ -79,3 +79,8 @@ cut -d' ' -f2 cutfile.txt
 
 file test.png
 
+echo "-----------------------------------"
+
+awk '$2 == "Jones" {print $0}' awkusers.txt
+
+
