@@ -83,4 +83,5 @@ echo "-----------------------------------"
 
 awk '$2 == "Jones" {print $0}' awkusers.txt
 
+find ../../llm -name "*.pth"
 
