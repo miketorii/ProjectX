@@ -23,8 +23,8 @@ echo $2
 echo $3
 
 echo "Type something:"
-read VAR4
-echo $VAR4
+# read VAR4
+# echo $VAR4
 
 if cd tmp
 then
@@ -87,3 +87,19 @@ awk '$2 == "Jones" {print $0}' awkusers.txt
 
 find ../../llm -name "*.pth"
 find ~ -name ".*"
+
+echo "-----------------------------------"
+
+ps
+
+tar -czf my_logs.tar.gz .
+mkdir tmptmp
+mv my_logs.tar.gz tmptmp
+cd tmptmp
+tar -xvf my_logs.tar.gz
+ls
+cd ..
+rm -R tmptmp
+
+echo ${HOSTNAME}
+echo "-----------------------------------"
