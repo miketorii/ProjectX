@@ -126,6 +126,7 @@ ps -u
 
 #ps -x
 
+echo "-----------------------------------"
 ps aux | head
 
 #ps aux | grep mtorii
