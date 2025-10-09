@@ -126,11 +126,10 @@ ps -u
 
 #ps -x
 
-#ps aux | head
+ps aux | head
 
 #ps aux | grep mtorii
-
-ps aux | grep root
+#ps aux | grep root
 
 
 
