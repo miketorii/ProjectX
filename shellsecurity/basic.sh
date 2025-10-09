@@ -116,3 +116,21 @@ w
 echo "-----------------------------------"
 
 diff sample1.txt sample2.txt
+
+echo "-----------------------------------"
+
+ps -u
+
+#ps -A
+#ps -e
+
+#ps -x
+
+#ps aux | head
+
+#ps aux | grep mtorii
+
+ps aux | grep root
+
+
+
