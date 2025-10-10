@@ -127,7 +127,8 @@ ps -u
 #ps -x
 
 echo "-----------------------------------"
-ps aux | head
+#ps aux | head
+ps aux | tail
 
 #ps aux | grep mtorii
 #ps aux | grep root
