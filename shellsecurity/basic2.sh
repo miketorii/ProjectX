@@ -7,7 +7,6 @@ ps aux | grep root
 wc -m tmp/sample1.txt
 
 ps aux | tail
-ps aux | head
 
 echo "-------------------------------"
 
