@@ -8,6 +8,8 @@ wc -m tmp/sample1.txt
 
 ps aux | tail
 
+history
+
 echo "-------------------------------"
 
 
