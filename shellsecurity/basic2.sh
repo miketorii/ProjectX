@@ -26,3 +26,18 @@ echo "-------------------------------"
 
 awk '$1 == "02"' tmp/sample4.txt
 
+echo "-------------------------------"
+echo "---------After Spain-----------"
+echo "-------------------------------"
+
+curl google.com
+
+echo "-------------------------------"
+
+if [[ -f /usr/bin/sw_vers ]]; then
+    echo "This is macOS"
+    echo $OSTYPE
+else
+    echo "This is NOT macOS"
+fi
+
