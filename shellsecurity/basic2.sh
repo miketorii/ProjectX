@@ -41,3 +41,12 @@ else
     echo "This is NOT macOS"
 fi
 
+echo "-------------------------------"
+
+#top
+
+w
+
+
+
+
