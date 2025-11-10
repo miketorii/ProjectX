@@ -47,6 +47,15 @@ echo "-------------------------------"
 
 w
 
+echo "-------------------------------"
+
+find . -name "*.sh"
+
+cd ..
+find . -name ".gitignore"
+cd shellsecurity
+
+
 
 
 
