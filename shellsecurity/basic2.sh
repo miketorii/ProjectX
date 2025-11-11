@@ -55,6 +55,11 @@ cd ..
 find . -name ".gitignore"
 cd shellsecurity
 
+echo "-------------------------------"
+
+grep -nr "echo" .
+
+
 
 
 
