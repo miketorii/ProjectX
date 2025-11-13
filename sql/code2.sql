@@ -9,3 +9,5 @@ CREATE TABLE Address
 INSERT INTO Address VALUES('小川','080-333-1234','東京都','男',30);
 
 SELECT name, phone_nbr, address, sex, age FROM Address;
+
+SELECT name, phone_nbr FROM Address;
