@@ -71,6 +71,13 @@ echo "-------------------------------"
 
 ps -el
 
+echo "-------------------------------"
+
+mynumber=3
+mystring="this is a string variable"
+
+echo ${mynumber}
+echo ${mystring}
 
 
 
