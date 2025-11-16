@@ -79,7 +79,9 @@ mystring="this is a string variable"
 echo ${mynumber}
 echo ${mystring}
 
+echo "-------------------------------"
 
+apt list --installed | grep 'postgresql' | grep -v 'client'
 
 
 
