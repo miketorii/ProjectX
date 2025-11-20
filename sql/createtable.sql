@@ -26,3 +26,5 @@ INSERT INTO Reservations (reserve_id, shop_id, reserve_name) VALUES (1, '00001',
 SELECT shop_name
   FROM Shops S INNER JOIN Reservations R
     ON S.shop_id = R.shop_id;
+
+EXPLAIN SELECT * FROM Shops;
