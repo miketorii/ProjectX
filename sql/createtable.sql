@@ -28,3 +28,5 @@ SELECT shop_name
     ON S.shop_id = R.shop_id;
 
 EXPLAIN SELECT * FROM Shops;
+
+EXPLAIN SELECT shop_name FROM Shops S INNER JOIN Reservations R ON S.shop_id = R.shop_id;
