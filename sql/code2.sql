@@ -10,7 +10,9 @@ INSERT INTO Address VALUES('小川','080-333-1234','東京都','男',30);
 
 SELECT name, phone_nbr, address, sex, age FROM Address;
 
+SELECT name, address FROM Address WHERE address = '千葉県';
+
 SELECT name, age FROM Address WHERE age >= 30;
 
-SELECT name, address FROM Address WHERE address = '千葉県';
+
 
