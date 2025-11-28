@@ -21,3 +21,5 @@ SELECT name, address FROM Address WHERE  address='東京都' OR address='福島�
 SELECT name, address FROM Address WHERE address IN ('東京都','福島県','千葉県');
 
 SELECT name, phone_nbr FROM Address WHERE phone_nbr IS NULL;
+
+SELECT sex, COUNT(*) FROM Address GROUP BY sex;
