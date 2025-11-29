@@ -25,3 +25,5 @@ SELECT name, phone_nbr FROM Address WHERE phone_nbr IS NULL;
 SELECT sex, COUNT(*) FROM Address GROUP BY sex;
 
 SELECT address, COUNT(*) FROM Address GROUP BY address;
+
+SELECT COUNT(*) FROM Address;
