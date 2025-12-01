@@ -29,3 +29,5 @@ SELECT address, COUNT(*) FROM Address GROUP BY address;
 SELECT COUNT(*) FROM Address;
 
 SELECT address, COUNT(*) FROM Address GROUP BY address HAVING COUNT(*)=1;
+
+SELECT name, phone_nbr, address, sex, age FROM Address ORDER BY age DESC;
