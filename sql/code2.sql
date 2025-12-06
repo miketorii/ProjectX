@@ -40,3 +40,19 @@ CREATE TABLE Address2(name VARCHAR(32) NOT NULL, phone_nbr VARCHAR(32), address 
 INSERT INTO Address2 VALUES('小川', '080-333-XXXX', '東京都', '男', 30);
 
 SELECT * FROM Address2
+
+select * from Address
+UNION
+select * from Address2;
+
+SELECT * FROM Address
+INTERSECT
+SELECT * FROM Address2;
+
+SELECT * FROM Address
+EXCEPT
+SELECT * FROM Address2;
+
+UPDATE Address2 
+SET phone_nbr='080-3333-XXXX'
+WHERE name='小川'
