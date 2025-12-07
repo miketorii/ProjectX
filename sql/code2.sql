@@ -56,3 +56,12 @@ SELECT * FROM Address2;
 UPDATE Address2 
 SET phone_nbr='080-3333-XXXX'
 WHERE name='小川'
+
+SELECT address,
+       COUNT(*) OVER(PARTITION BY address)
+FROM Address;
+
+SELECT name,
+       age,
+       RANK() OVER(ORDER BY age DESC) AS rnk
+FROM Address;
