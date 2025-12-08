@@ -19,3 +19,10 @@ SELECT item_name, year,
             WHEN year >= 2002 THEN price_tax_in END AS price
 FROM Items;
   
+CREATE TABLE Population
+       (prefecture VARCHAR(32),
+        sex CHAR(1),
+        pop INTEGER,
+	CONSTRAINT pk_pop PRIMARY KEY(prefecture, sex) );
+
+INSERT INTO Population VALUES('徳島', '1', 60);
