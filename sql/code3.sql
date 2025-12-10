@@ -32,3 +32,13 @@ SELECT prefecture,
        SUM(CASE WHEN sex = '2' THEN pop ELSE 0 END) AS pop_wom
 FROM Population
 GROUP BY prefecture;
+
+CREATE Table Employees
+       (emp_id CHAR(3) NOT NULL,
+        team_id INTEGER NOT NULL,
+        emp_name CHAR(16) NOT NULL,
+        team CHAR(16) NOT NULL,
+       PRIMARY KEY(emp_id, team_id));
+
+INSERT INTO Employees VALUES('201',  1,      'Joe',  '商品企画');
+
