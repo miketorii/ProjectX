@@ -42,6 +42,26 @@ CREATE Table Employees
 
 INSERT INTO Employees VALUES('201',  1,      'Joe',  '商品企画');
 
+
+SELECT emp_name,
+	MAX(team) AS team
+FROM Employees
+GROUP BY emp_name
+HAVING COUNT(*) = 1
+UNION
+SELECT emp_name,
+	'2 ops' AS team
+FROM Employees
+GROUP BY emp_name
+HAVING COUNT(*) = 2
+UNION
+SELECT emp_name,
+	'more than 3 ops' AS team
+FROM Employees
+GROUP BY emp_name
+HAVING COUNT(*) >= 3;
+
+
 SELECT emp_name,
        CASE WHEN COUNT(*) = 1 THEN MAX(team)
        	    WHEN COUNT(*) = 2 THEN '2 operations'
@@ -49,3 +69,4 @@ SELECT emp_name,
        END AS team
 FROM Employees
 GROUP BY emp_name;
+
