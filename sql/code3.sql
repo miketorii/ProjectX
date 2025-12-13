@@ -70,3 +70,19 @@ SELECT emp_name,
 FROM Employees
 GROUP BY emp_name;
 
+CREATE TABLE ThreeElements
+(key	CHAR(8),
+ name	VARCHAR(32),
+ date_1	DATE,
+ flg_1	CHAR(1),
+ date_2	DATE,
+ flg_2	CHAR(1),
+ date_3	DATE,
+ flg_3	CHAR(1),
+
+ PRIMARY KEY(key)
+);
+
+INSERT INTO ThreadElements VALUES ('1','a', '2013-11-01','T', NULL,NULL, NULL,NULL);
+
+CREATE INDEX IDX_1 ON ThreadElements (date_1, flg_1);
