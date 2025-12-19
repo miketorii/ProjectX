@@ -34,4 +34,18 @@ SELECT id,
  FROM NonAggTbl
 GROUP BY id;
 
+CREATE TABLE PriceByAge
+(product_id 	VARCHAR(32) NOT NULL,
+ low_age	INTEGER NOT NULL,
+ high_age	INTEGER NOT NULL,
+ price		INTEGER NOT NULL,
+ PRIMARY KEY (product_id, low_age),
+   CHECK (low_age < high_age));
+
+INSERT INTO PriceByAge VALUES('製品1', 0, 50, 2000);
+
+SELECT product_id
+ FROM PriceByAge
+ GROUP BY product_id
+HAVING SUM(high_age - low_age + 1) = 101;
 
