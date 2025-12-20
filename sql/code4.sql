@@ -49,3 +49,16 @@ SELECT product_id
  GROUP BY product_id
 HAVING SUM(high_age - low_age + 1) = 101;
 
+CREATE TABLE HotelRooms
+(room_nbr	INTEGER,
+ start_date	DATE,
+ end_date	DATE,
+	PRIMARY KEY(room_nbr, start_date));
+
+INSERT INTO HotelRooms VALUES(101, '2008-02-01', '2008-02-06');
+
+SELECT room_nbr,
+	SUM(end_date - start_date) AS working_days
+  FROM HotelRooms
+ GROUP BY room_nbr
+HAVING SUM(end_date - start_date) >= 10;
