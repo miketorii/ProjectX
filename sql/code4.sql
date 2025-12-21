@@ -62,3 +62,17 @@ SELECT room_nbr,
   FROM HotelRooms
  GROUP BY room_nbr
 HAVING SUM(end_date - start_date) >= 10;
+
+CREATE TABLE Persons
+(name	VARCHAR(8) NOT NULL,
+ age	INTEGER NOT NULL,
+ height	FLOAT NOT NULL,
+ weight	FLOAT NOT NULL,		
+ PRIMARY KEY (name));
+
+INSERT INTO Persons VALUES('Anderson', 30, 188, 90);
+
+SELECT SUBSTRING(name, 1, 1) AS label,
+	COUNT(*)
+  FROM Persons
+ GROUP BY SUBSTRING(name, 1, 1);
