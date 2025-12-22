@@ -76,3 +76,14 @@ SELECT SUBSTRING(name, 1, 1) AS label,
 	COUNT(*)
   FROM Persons
  GROUP BY SUBSTRING(name, 1, 1);
+
+SELECT 	CASE 	WHEN age < 20 THEN 'Child'
+		WHEN age BETWEEN 20 AND 69 THEN 'Adult'
+		WHEN age >= 70 THEN 'Senior'
+	ELSE NULL END AS age_class,
+	COUNT(*)
+  FROM Persons
+ GROUP BY CASE 	WHEN age < 20 THEN 'Child'
+		WHEN age BETWEEN 20 AND 69 THEN 'Adult'
+		WHEN age >= 70 THEN 'Senior'
+	ELSE NULL END;
