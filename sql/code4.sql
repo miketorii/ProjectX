@@ -87,3 +87,18 @@ SELECT 	CASE 	WHEN age < 20 THEN 'Child'
 		WHEN age BETWEEN 20 AND 69 THEN 'Adult'
 		WHEN age >= 70 THEN 'Senior'
 	ELSE NULL END;
+
+SELECT CASE 	WHEN weight / POWER(height/100, 2) < 18.5 THEN 'Thin'
+		WHEN 18.5 <= weight / POWER(height/100, 2)
+			AND weight / POWER(height/100, 2) < 25 THEN 'Standard'
+		WHEN 25 <= weight / POWER(height/100, 2) THEN 'Fat'
+		ELSE NULL END AS bmi,
+		COUNT(*)
+  FROM Persons
+ GROUP BY CASE 	WHEN weight / POWER(height/100, 2) < 18.5 THEN 'Thin'
+		WHEN 18.5 <= weight / POWER(height/100, 2)
+			AND weight / POWER(height/100, 2) < 25 THEN 'Standard'
+		WHEN 25 <= weight / POWER(height/100, 2) THEN 'Fat'
+		ELSE NULL END;
+
+
