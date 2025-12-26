@@ -13,3 +13,14 @@ CREATE TABLE Sales2
  var     CHAR(1),
   CONSTRAINT pk_sales2 PRIMARY KEY (company, year));
 
+CREATE TABLE Foo
+( p_key INTEGER PRIMARY KEY,
+  col_a INTEGER
+);
+
+INSERT INTO Foo VALUES( 1, 100 );
+INSERT INTO Foo VALUES( 2, 200 );
+INSERT INTO Foo VALUES( 3, 300 );
+INSERT INTO Foo VALUES( 4, 400 );
+
+SELECT col_a FROM Foo WHERE p_key = 1
