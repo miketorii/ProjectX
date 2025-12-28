@@ -25,6 +25,56 @@ INSERT INTO Foo VALUES( 4, 400 );
 
 SELECT col_a FROM Foo WHERE p_key = 1
 
+CREATE OR REPLACE PROCEDURE PROC_INSERT_VAR()
+LANGUAGE plpgsql
+AS $$
+DECLARE
+    c_sales CURSOR FOR
+        SELECT company, year, sale
+          FROM Sales
+         ORDER BY company, year;
+
+    rec_sales    RECORD;
+    i_pre_sale   INTEGER := 0;
+    v_pre_company TEXT := '*'; 
+    c_var        VARCHAR(1) := '*';
+
+BEGIN
+    FOR rec_sales IN 
+        SELECT company, year, sale FROM Sales ORDER BY company, year 
+    LOOP
+
+        IF (v_pre_company = rec_sales.company) THEN
+            IF (i_pre_sale < rec_sales.sale) THEN
+                c_var := '+';
+            ELSIF (i_pre_sale > rec_sales.sale) THEN
+                c_var := '-';
+            ELSE
+                c_var := '=';
+            END IF;
+        ELSE
+            c_var := NULL;
+        END IF;
+
+        INSERT INTO Sales2 (company, year, sale, var) 
+        VALUES (rec_sales.company, rec_sales.year, rec_sales.sale, c_var);
+
+        v_pre_company := rec_sales.company;
+        i_pre_sale    := rec_sales.sale;
+
+    END LOOP;
+
+END;
+$$;
+
+
+CALL PROC_INSERT_VAR();
+
+
+
+
+
+
 INSERT INTO Sales2
 SELECT company, year, sale,
 	CASE SIGN(sale - MAX(sale) 
