@@ -70,11 +70,6 @@ $$;
 
 CALL PROC_INSERT_VAR();
 
-
-
-
-
-
 INSERT INTO Sales2
 SELECT company, year, sale,
 	CASE SIGN(sale - MAX(sale) 
@@ -85,3 +80,21 @@ SELECT company, year, sale,
 	WHEN -1 THEN '-'
 	ELSE NULL END AS var
   FROM Sales;
+
+CREATE TABLE PostalCode
+(pcode CHAR(7),
+ district_name VARCHAR(256),
+	CONSTRAINT pk_pcode PRIMARY KEY(pcode));
+
+INSERT INTO PostalCode VALUES('4130001', '静岡県熱海市泉');
+
+SELECT pcode, district_name,
+       CASE WHEN pcode = '4130033' THEN 0
+            WHEN pcode LIKE '413003%' THEN 1
+            WHEN pcode LIKE '41300%'  THEN 2
+            WHEN pcode LIKE '4130%'   THEN 3
+            WHEN pcode LIKE '413%'    THEN 4
+            WHEN pcode LIKE '41%'     THEN 5
+            WHEN pcode LIKE '4%'      THEN 6
+       ELSE NULL END AS rank
+ FROM PostalCode;
