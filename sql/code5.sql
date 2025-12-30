@@ -119,3 +119,5 @@ SELECT pcode,
                                   WHEN pcode LIKE '4%'      THEN 6
                                   ELSE NULL END) 
 		  FROM PostalCode);
+
+SELECT * FROM PostalCode;
