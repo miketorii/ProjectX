@@ -45,13 +45,6 @@ cosmosdb/pyvenv.cfg
 cosmosdb/config.py
 cosmosdb/__pycache__
 
-claude-env/bin
-claude-env/include
-claude-env/lib
-claude-env/lib64
-claude-env/__pycache__
-claude-env/pyvenv.cfg
-
 */bin
 */include
 */lib
@@ -71,6 +64,18 @@ claude-env/pyvenv.cfg
 */.ipynb_checkpoints/*
 */data
 
+*/*.lock
+*/.venv
+*/.python-version
+*/*.toml
+
+*/*/bin
+*/*/lib
+*/*/include
+*/*/lib64
+*/*/__pycache__
+*/*/pyvenv.cfg
+
 langchain/data
 langchain/langchain
 langchain/tmpgitdata
@@ -81,6 +86,8 @@ llm/gpt2/*
 llm/instruction-data.json
 
 Quantum/qc_workbook/*
+
+mcptest/README.md
 
 
 
