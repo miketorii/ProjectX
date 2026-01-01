@@ -153,3 +153,23 @@ SELECT pcode,
             FROM PostalCode) Foo
 WHERE hit_code=min_code;
 
+
+CREATE TABLE PostalHistory2
+(name CHAR(1),
+ pcode CHAR(7),
+ lft REAL NOT NULL,
+ rgt REAL NOT NULL,
+	CONSTRAINT pk_name_pcode2 PRIMARY KEY(name, pcode),
+	CONSTRAINT ug_name_lft UNIQUE(name, lft),
+	CONSTRAINT ug_name_rgt UNIQUE(name, rgt),
+	CHECK(lft<rgt));
+
+INSERT INTO PostalHistory2 VALUES('A', '4130001', 0, 27);
+
+
+SELECT name, pcode
+  FROM PostalHistory2 PH1
+ WHERE name = 'A' AND NOT EXISTS (
+	SELECT * FROM PostalHistory2 PH2
+	 WHERE PH2.name = 'A' AND PH1.lft > PH2.lft
+);
