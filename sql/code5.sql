@@ -154,6 +154,31 @@ SELECT pcode,
 WHERE hit_code=min_code;
 
 
+CREATE TABLE PostalHistory
+(name CHAR(1),
+ pcode CHAR(7),
+ new_pcode CHAR(7),
+   CONSTRAINT pk_name_pcode PRIMARY KEY(name, pcode) );
+
+INSERT INTO PostalHistory VALUES ('A', '4130001', '4130002');
+
+
+WITH RECURSIVE Explosion (name, pcode, new_pcode, depth)
+AS
+(SELECT name, pcode, new_pcode, 1 
+   FROM PostalHistory
+     WHERE name = 'A' AND new_pcode IS NULL
+ UNION
+ SELECT Child.name, Child.pcode, Child.new_pcode, depth+1 
+   FROM Explosion AS Parent, PostalHistory AS Child
+     WHERE Parent.pcode = Child.new_pcode AND Parent.name = Child.name)
+SELECT name, pcode, new_pcode
+  FROM Explosion
+    WHERE depth = (SELECT MAX(depth) FROM Explosion);
+
+
+
+
 CREATE TABLE PostalHistory2
 (name CHAR(1),
  pcode CHAR(7),
