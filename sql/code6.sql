@@ -1,0 +1,19 @@
+CREATE TABLE Employees2
+(emp_id CHAR(8),
+ emp_name VARCHAR(32),
+ dept_id CHAR(2),
+    CONSTRAINT pk_emp PRIMARY KEY(emp_id));
+
+CREATE TABLE Departments
+(dept_id CHAR(2),
+ dept_name VARCHAR(32),
+    CONSTRAINT pk_dep PRIMARY KEY(dept_id));
+
+CREATE INDEX idx_dept_id ON Employees2(dept_id);
+
+INSERT INTO Employees2 VALUES('001',	'石田',	  '10');
+
+INSERT INTO Departments VALUES('10',	'総務');
+
+SELECT * FROM Employees2
+  CROSS JOIN Departments;
