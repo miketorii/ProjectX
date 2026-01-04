@@ -17,3 +17,8 @@ INSERT INTO Departments VALUES('10',	'総務');
 
 SELECT * FROM Employees2
   CROSS JOIN Departments;
+
+SELECT E.emp_id, E.emp_name, e.dept_id, D.dept_name
+  FROM Employees2 E INNER JOIN Departments D
+    ON E.dept_id = D.dept_id;
+
