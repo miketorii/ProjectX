@@ -26,3 +26,6 @@ SELECT E.emp_id, E.emp_name, E.dept_id,
  (SELECT D.dept_name FROM Departments D WHERE E.dept_id = D.dept_id) AS dept_name
  FROM Employees2 E;
  
+SELECT E.emp_id, E.emp_name, E.dept_id, D.dept_name
+  FROM Departments D LEFT OUTER JOIN Employees2 E
+   ON D.dept_id = E.dept_id;
