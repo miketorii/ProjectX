@@ -29,3 +29,11 @@ SELECT E.emp_id, E.emp_name, E.dept_id,
 SELECT E.emp_id, E.emp_name, E.dept_id, D.dept_name
   FROM Departments D LEFT OUTER JOIN Employees2 E
    ON D.dept_id = E.dept_id;
+
+SELECT E.emp_id, E.emp_name, D.dept_id, D.dept_name
+  FROM Employees2 E RIGHT OUTER JOIN Departments D
+    ON E.dept_id = D.dept_id;
+
+SELECT E.emp_id, E.emp_name, D.dept_id, D.dept_name
+  FROM Employees2 E RIGHT OUTER JOIN Departments D
+    ON E.dept_id = D.dept_id;
