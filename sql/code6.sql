@@ -37,3 +37,11 @@ SELECT E.emp_id, E.emp_name, D.dept_id, D.dept_name
 SELECT E.emp_id, E.emp_name, D.dept_id, D.dept_name
   FROM Employees2 E RIGHT OUTER JOIN Departments D
     ON E.dept_id = D.dept_id;
+
+CREATE TABLE Digits
+(digit INTEGER PRIMARY KEY);
+
+INSERT INTO Digits VALUES(0);
+
+SELECT D1.digit + (D2.digit * 10) AS seq
+  FROM Digits D1 CROSS JOIN Digits D2;
