@@ -45,3 +45,19 @@ INSERT INTO Digits VALUES(0);
 
 SELECT D1.digit + (D2.digit * 10) AS seq
   FROM Digits D1 CROSS JOIN Digits D2;
+
+CREATE TABLE Table_A
+ (col_a CHAR(1));
+
+CREATE TABLE Table_B
+ (col_b CHAR(1));
+
+CREATE TABLE Table_C
+ (col_c CHAR(1));
+
+SELECT A.col_a, B.col_b, C.col_c
+  FROM Table_A A
+    INNER JOIN Table_B B
+      ON A.col_a = B.col_b
+        INNER JOIN Table_C C
+          ON A.col_a = C.col_c;
