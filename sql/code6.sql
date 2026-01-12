@@ -69,3 +69,6 @@ SELECT A.col_a, B.col_b, C.col_c
         INNER JOIN Table_C C
           ON A.col_a = C.col_c AND C.col_c = B.col_b;
 
+SELECT dept_id, dept_name
+  FROM Departments D
+ WHERE EXISTS (SELECT * FROM Employees2 E WHERE E.dept_id = D.dept_id);
