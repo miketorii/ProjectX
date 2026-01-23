@@ -23,9 +23,27 @@ mcp = FastMCP("openweather")
 async def fetch_weather_data(city: str) -> Optional[dict[str, Any]]:
     print('---fetch weather data---')
 
-    tmpdata={"id": 1, "name": "Tokyo",
-             "weather": "Sunny",
-             "description": "This is wether report",
+    url = f"{BASE_URL}/weather"
+    params = {
+        "q": city,
+        "appid": API_KEY,
+        "units": "metric",
+        "lang": "ja"
+    }
+
+    print(url)
+    print(params)
+    
+    tmpdata={"id": 1,
+             "name": "Tokyo",
+             "sys": {
+                 "country": "JA"
+             },
+             "weather": [
+                 {
+                     "description": "This is wether report"
+                 }
+             ],
              "main" : {
                  "temp":28,
                  "feels_like":10,
@@ -34,9 +52,10 @@ async def fetch_weather_data(city: str) -> Optional[dict[str, Any]]:
                  "humidity":68,
                  "pressure":200
              },
-             "wind": "windy",
-             "speed":"100",
-             "deg":"50"}
+             "wind":{
+                 "speed":100,
+                 "deg":50 }
+             }
 
     return tmpdata
 
@@ -47,6 +66,18 @@ def format_weather_response(data: dict[str, Any]) -> str:
 
     city_name = data.get("name","none")
 
+    sys = data.get("sys",{})
+    country = sys.get("country","")
+
+    print(sys)
+    print(country)
+    
+    weather = data.get("weather", [{}])[0]
+    description = weather.get("description","不明")
+
+    print(weather)
+    print(description)
+    
     main = data.get("main",{})
     temp = main.get("temp",0)
     feels_like = main.get("feels_like",0)
@@ -54,15 +85,49 @@ def format_weather_response(data: dict[str, Any]) -> str:
     temp_max = main.get("temp_max", 0)    
     humidity = main.get("humidity",0)
     pressure = main.get("pressure",0)
-    
+
+    print(main)
     print(city_name)
     print(temp)
     print(feels_like)
     print(temp_min)
     print(temp_max)
     print(humidity)
+    print(pressure)    
+
+    wind = data.get("wind", {})
+    wind_speed = wind.get("speed",0)
+    wind_deg = wind.get("deg",0)
+
+    print(wind)
+    print(wind_speed)
+    print(wind_deg)
+
+    wind_direction = convert_degrees_to_direction(wind_deg)
+
+    response = f"""
+    {city_name}, {country} の現在の天気
+
+    天候: {description}
+    現在の気温: {temp:.1f} C
+    最低/最高気温{temp_min:.1f} C/ {temp_max:.1f} C
+    湿度: {humidity}%
+    気圧: {pressure} hPa
+    風: {wind_direction} {wind_speed} m/s
+    """
     
-    return "not implemented"
+    return response.strip()
+
+##########################################
+#
+def convert_degrees_to_direction(degrees: float) -> str:
+    directions = [
+        "北","北北東","北東","東北東","東","東南東","南東","南南東",
+        "南","南南西","南西","西南西","西","西北西","北西","北北西"        
+    ]
+    
+    index = round(degrees /22.5) % 16
+    return directions[index]
 
 ##########################################
 #
