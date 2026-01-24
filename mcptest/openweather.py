@@ -23,6 +23,39 @@ mcp = FastMCP("openweather")
 async def fetch_weather_data(city: str) -> Optional[dict[str, Any]]:
     print('---fetch weather data---')
 
+    url = f"{BASE_URL}"
+    params = {
+        "lat": 35.6895,
+        "lon": 139.6917,
+        "appid": API_KEY,
+        "units": "metric"
+    }
+
+    print(url)
+    print(params)
+
+    async with httpx.AsyncClient() as client:
+        try:
+            response = await client.get(url, params=params, timeout=10.0)
+            response.raise_for_status()
+            return response.json()
+        except httpx.HTTPStatusError as e:
+            if e.response.status_code == 404:
+                print(f'City not found: {city}')
+            elif e.response.status_code == 401:
+                print(f'Invalid API key')
+            else:
+                print(f'HTTP error: {e}')
+            return None
+        except Exception as e:
+            print(f"Error fetching weather data: {e}")
+            return None
+
+##########################################
+#
+async def fetch_weather_data_test(city: str) -> Optional[dict[str, Any]]:
+    print('---fetch weather data test---')
+
     url = f"{BASE_URL}/weather"
     params = {
         "q": city,
@@ -33,7 +66,7 @@ async def fetch_weather_data(city: str) -> Optional[dict[str, Any]]:
 
     print(url)
     print(params)
-    
+
     tmpdata={"id": 1,
              "name": "Tokyo",
              "sys": {
