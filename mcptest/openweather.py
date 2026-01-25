@@ -20,13 +20,13 @@ mcp = FastMCP("openweather")
 
 ##########################################
 #
-async def fetch_weather_data(city: str) -> Optional[dict[str, Any]]:
+async def fetch_weather_data(city: str,latval: float, lonval: float) -> Optional[dict[str, Any]]:
     print('---fetch weather data---')
 
     url = f"{BASE_URL}"
     params = {
-        "lat": 35.6895,
-        "lon": 139.6917,
+        "lat": latval,
+        "lon": lonval,
         "appid": API_KEY,
         "units": "metric"
     }
@@ -165,7 +165,7 @@ def convert_degrees_to_direction(degrees: float) -> str:
 ##########################################
 #
 @mcp.tool()
-async def get_weather(city: str) -> str:
+async def get_weather(city: str, lat: float, lon: float) -> str:
     """
     指定された都市の現在の天気を取得します
 
@@ -181,7 +181,7 @@ async def get_weather(city: str) -> str:
     if not city or not city.strip():
         return "エラー: 都市名を入力してください。"
 
-    weather_data = await fetch_weather_data(city.strip())
+    weather_data = await fetch_weather_data(city.strip(), lat, lon)
 
     print(weather_data)
     
@@ -197,8 +197,11 @@ async def funcmain():
     city = 'Tokyo'
 #    print(city.strip())
 #    ret = await fetch_weather_data(city.strip())
-    
-    ret = await get_weather("Tokyo")
+
+    lat = 35.6895
+    lon = 139.6917
+        
+    ret = await get_weather("Tokyo", lat, lon)
     print(ret)    
 
 if __name__ == "__main__":
