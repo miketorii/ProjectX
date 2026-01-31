@@ -23,28 +23,6 @@ cain.txt
 *.zip
 *.tsv
 
-dataanalyze100/pyvenv.cfg
-dataanalyze100/data/*
-dataanalyze100/bin
-dataanalyze100/include
-dataanalyze100/lib
-dataanalyze100/lib64
-dataanalyze100/share
-
-AzureOpenAI1/bin
-AzureOpenAI1/lib
-AzureOpenAI1/lib64
-AzureOpenAI1/include
-AzureOpenAI1/pyvenv.cfg
-
-cosmosdb/bin
-cosmosdb/lib
-cosmosdb/lib64
-cosmosdb/include
-cosmosdb/pyvenv.cfg
-cosmosdb/config.py
-cosmosdb/__pycache__
-
 */bin
 */include
 */lib
@@ -67,7 +45,6 @@ cosmosdb/__pycache__
 */*.lock
 */.venv
 */.python-version
-*/*.toml
 
 */*/bin
 */*/lib
@@ -75,6 +52,12 @@ cosmosdb/__pycache__
 */*/lib64
 */*/__pycache__
 */*/pyvenv.cfg
+
+*/pyvenv.cfg
+
+dataanalyze100/data/*
+
+cosmosdb/config.py
 
 langchain/data
 langchain/langchain
