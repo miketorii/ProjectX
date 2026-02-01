@@ -206,8 +206,8 @@ async def funcmain():
 
 if __name__ == "__main__":
     print('-----main start----')
-    asyncio.run(funcmain())
+#    asyncio.run(funcmain())
     
-    #mcp.run()
+    mcp.run(transport="stdio")
     print('-----main end----')    
     
