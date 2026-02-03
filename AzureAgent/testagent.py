@@ -65,6 +65,12 @@ def func_main():
             print(f"Role: {message.role}, Content: {message.content}")
             for this_content in message.content:
                 print(f"Content Type: {this_content.type}, Conetnt Data: {this_content}")
+                if this_content.text.annotations:
+                    for annotation in this_content.text.annotations:
+                        print(f'Annotation Type: {annotation.type}, Text: {annotation.text}')
+                        print(f'Start Index: {annotation.start_index}')
+                        print(f'End Index: {annotation.end_index}')
+                        print(f'File ID: {annotation.file_path.file_id}')
                 
         
     print('--------End func_main--------')
