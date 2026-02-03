@@ -71,7 +71,10 @@ def func_main():
                         print(f'Start Index: {annotation.start_index}')
                         print(f'End Index: {annotation.end_index}')
                         print(f'File ID: {annotation.file_path.file_id}')
-                
+                        file_id = annotation.file_path.file_id
+                        file_name = f"{file_id}_image_file.png"
+                        project_client.agents.files.save(file_id=file_id, file_name=file_name)
+                        print(f'Saved image file to: {Path.cwd() / file_name}')
         
     print('--------End func_main--------')
     
