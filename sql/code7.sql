@@ -71,3 +71,37 @@ SELECT cust_id,
  WHERE WORK.min_seq=1 OR WORK.max_seq=1
  GROUP BY cust_id;
 
+CREATE TABLE Companies
+(co_cd	CHAR(3) NOT NULL,
+ district CHAR(1) NOT NULL,
+	CONSTRAINT pk_Companies PRIMARY KEY (co_cd));
+
+INSERT INTO Companies VALUES('001', 'A');
+
+CREATE TABLE Shops2
+(co_cd CHAR(3) NOT NULL,
+ shop_id CHAR(3) NOT NULL,
+ emp_nbr INTEGER NOT NULL,
+ main_flg CHAR(1) NOT NULL,
+	PRIMARY KEY (co_cd, shop_id));
+
+INSERT INTO Shops2 VALUES('001', '1', 300, 'Y');
+
+
+SELECT C.co_cd, C.district,
+	SUM(emp_nbr) AS sum_emp
+  FROM Companies C
+	INNER JOIN
+	  Shops2 S
+   ON C.co_cd = S.co_cd
+ WHERE main_flg = 'Y'
+ GROUP BY C.co_cd;
+
+SELECT C.co_cd, C.district, sum_emp
+  FROM Companies C
+	INNER JOIN
+	 (SELECT co_cd, SUM(emp_nbr) AS sum_emp
+              FROM Shops2
+            WHERE main_flg = 'Y'
+            GROUP BY co_cd) CSUM
+   ON C.co_cd = CSUM.co_cd;
