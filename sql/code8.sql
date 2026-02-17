@@ -28,3 +28,7 @@ SELECT class, student_id,
              <= (W1.class, W1.student_id) ) AS seq
  FROM Weights2 W1;
  
+SELECT class, student_id,
+    ROW_NUMBER() OVER (PARTITION BY class ORDER BY student_id) AS seq
+  FROM Weights2;
+  
