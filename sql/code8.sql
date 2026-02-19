@@ -38,3 +38,21 @@ SELECT class, student_id,
      ) AS seq
  FROM Weights2 W1;
  
+CREATE TABLE Weights3
+(class      INTEGER NOT NULL,
+ student_id CHAR(4) NOT NULL,
+ weight     INTEGER NOT NULL,
+ seq        INTEGER NULL,
+    PRIMARY KEY(class, student_id));
+
+INSERT INTO Weights3 VALUES(1, '100', 50, NULL);
+
+UPDATE Weights3
+ SET seq = (SELECT seq
+          FROM ( SELECT class, student_id,
+                     ROW_NUMBER() 
+                      OVER (PARTITION BY class
+                              ORDER BY student_id) AS seq
+                 FROM Weights3) SeqTbl
+         WHERE Weights3.class = SeqTbl.class
+           AND Weights3.student_id = SeqTbl.student_id );
