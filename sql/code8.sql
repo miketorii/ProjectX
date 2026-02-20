@@ -56,3 +56,8 @@ UPDATE Weights3
                  FROM Weights3) SeqTbl
          WHERE Weights3.class = SeqTbl.class
            AND Weights3.student_id = SeqTbl.student_id );
+
+UPDATE Weights3
+  SET seq = (SELECT COUNT(*) FROM Weights3 W2
+               WHERE W2.class = Weights3.class
+                 AND W2.student_id <= Weights3.student_id);
