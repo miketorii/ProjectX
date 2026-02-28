@@ -102,3 +102,41 @@ MERGE INTO ScoreColsNN AS T
           UPDATE SET score_en = SR.score_en,
                      score_nl = SR.score_nl,
                      score_mt = SR.score_mt;
+
+UPDATE ScoreRows
+  SET score = (SELECT CASE ScoreRows.subject
+                      WHEN '英語' THEN score_en
+                      WHEN '国語' THEN score_nl
+                      WHEN '数学' THEN score_mt
+                      ELSE NULL END
+                 FROM ScoreCols
+                WHERE student_id = ScoreRows.student_id);
+
+CREATE TABLE Stocks
+(brand     VARCHAR(8) NOT NULL,
+ sale_date DATE   NOT NULL,
+ price     INTEGER    NOT NULL,
+    CONSTRAINT pk_Stocks PRIMARY KEY (brand, sale_date));
+
+INSERT INTO Stocks VALUS('A鉄鋼', '2008-07-01', 1000);
+
+CREATE TABLE Stocks2
+(brand     VARCHAR(8) NOT NULL,
+ sale_date DATE   NOT NULL,
+ price     INTEGER    NOT NULL,
+ trend     CHAR(3),
+    CONSTRAINT pk_Stocks2 PRIMARY KEY (brand, sale_date));
+
+INSERT INTO Stocks2
+SELECT brand, sale_date, price,
+       CASE SIGN(price-MAX(price) OVER (PARTITION BY brand
+                                            ORDER BY sale_date
+                                        ROWS BETWEEN 1 PRECEDING
+                                                 AND 1 PRECEDING))
+            WHEN -1 THEN '↓'
+            WHEN 0  THEN '→'
+            WHEN 1  THEN '↑'
+            ELSE NULL
+       END
+ FROM Stocks S2;
+ 
