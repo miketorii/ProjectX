@@ -140,3 +140,28 @@ SELECT brand, sale_date, price,
        END
  FROM Stocks S2;
  
+CREATE TABLE Orders
+( order_id INTEGER NOT NULL,
+  order_shop VARCHAR(32) NOT NULL,
+  order_name VARCHAR(32) NOT NULL,
+  order_date DATE,
+  PRIMARY KEY (order_id) );
+
+INSERT INTO Orders VALUES (10000, '東京', 'Goto', '2011/8/22');
+
+CREATE TABLE OrderReceipts
+( order_id INTEGER NOT NULL,
+  order_receipt_id INTEGER NOT NULL,
+  item_group VARCHAR(32) NOT NULL,
+  delivery_date DATE NOT NULL,
+  PRIMARY KEY (order_id, order_receipt_id));
+
+INSERT INTO OrderReceipts VALUES (10000, 1, '食器', '2011/8/24');
+
+SELECT O.order_id, O.order_name,
+       ORC.delivery_date - O.order_date AS diff_days
+  FROM Orders O
+          INNER JOIN OrderReceipts ORC
+             ON O.order_id = ORC.order_id
+  WHERE ORC.delivery_date - O.order_date >= 3;
+
