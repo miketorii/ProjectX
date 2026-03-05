@@ -190,3 +190,10 @@ SELECT O.order_id, O.order_name, O.order_date,
      INNER JOIN OrderReceipts ORC
        ON O.order_id = ORC.order_id;
 
+CREATE TABLE ScoreRowsNN
+(student_id  CHAR(4)     NOT NULL,
+ subject     VARCHAR(8)  NOT NULL,
+ score       INTEGER     NOT NULL,
+   CONSTRAINT pk_ScoreRowsNN PRIMARY KEY(student_id, subject));
+
+INSERT INTO ScoreRowsNN VALUES ('A001', '英語', 0);
