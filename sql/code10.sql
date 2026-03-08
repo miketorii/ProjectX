@@ -15,3 +15,5 @@ SELECT order_id, shop_name FROM Orders2
 
 SELECT COUNT(*) FROM Orders2 WHERE shop_id='S001';
 
+SELECT order_id, shop_name FROM Orders2 
+  WHERE shop_name LIKE '東京%';
