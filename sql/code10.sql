@@ -17,3 +17,14 @@ SELECT COUNT(*) FROM Orders2 WHERE shop_id='S001';
 
 SELECT order_id, shop_name FROM Orders2 
   WHERE shop_name LIKE '東京%';
+
+CREATE TABLE OrderMart
+(order_id CHAR(4) NOT NULL,
+ receive_date DATE NOT NULL);
+
+SELECT order_id, receive_date FROM OrderMart;
+
+CREATE INDEX CoveringIndex ON Orders2 (order_id, receive_date);
+
+\d Orders2
+
