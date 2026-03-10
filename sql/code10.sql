@@ -28,3 +28,5 @@ CREATE INDEX CoveringIndex ON Orders2 (order_id, receive_date);
 
 \d Orders2
 
+CREATE INDEX CoveringIndex_1 ON Orders2 (process_flg, order_id, receive_date);
+
