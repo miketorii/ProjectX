@@ -30,3 +30,7 @@ CREATE INDEX CoveringIndex ON Orders2 (order_id, receive_date);
 
 CREATE INDEX CoveringIndex_1 ON Orders2 (process_flg, order_id, receive_date);
 
+CREATE INDEX CoveringIndex_2 ON Orders2 (shop_name, order_id, receive_date);
+
+\dt
+\d ordermart
