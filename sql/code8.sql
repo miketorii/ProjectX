@@ -69,3 +69,8 @@ SELECT AVG(weight)
        HAVING SUM(CASE WHEN W2.weight >= W1.weight THEN 1 ELSE 0 END) >= COUNT(*)/2
           AND SUM(CASE WHEN W2.weight <= W1.weight THEN 1 ELSE 0 END) >= COUNT(*)/2 ) TMP;
 	  
+SELECT AVG(weight)
+  FROM( SELECT weight, 
+               2*ROW_NUMBER() OVER(ORDER BY weight) - COUNT(*) OVER() AS diff
+        FROM Weights) TMP
+ WHERE diff BETWEEN 0 AND 2;
