@@ -68,7 +68,14 @@ SELECT AVG(weight)
         GROUP BY W1.weight
        HAVING SUM(CASE WHEN W2.weight >= W1.weight THEN 1 ELSE 0 END) >= COUNT(*)/2
           AND SUM(CASE WHEN W2.weight <= W1.weight THEN 1 ELSE 0 END) >= COUNT(*)/2 ) TMP;
-	  
+
+SELECT AVG(weight) AS median
+  FROM ( SELECT weight,
+                ROW_NUMBER() OVER (ORDER BY weight ASC, student_id ASC) AS hi,
+                ROW_NUMBER() OVER (ORDER BY weight DESC, student_id DESC) AS lo
+          FROM Weights) TMP
+ WHERE hi IN (lo, lo+1, lo-1);
+ 
 SELECT AVG(weight)
   FROM( SELECT weight, 
                2*ROW_NUMBER() OVER(ORDER BY weight) - COUNT(*) OVER() AS diff
