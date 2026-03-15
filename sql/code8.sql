@@ -81,3 +81,16 @@ SELECT AVG(weight)
                2*ROW_NUMBER() OVER(ORDER BY weight) - COUNT(*) OVER() AS diff
         FROM Weights) TMP
  WHERE diff BETWEEN 0 AND 2;
+
+CREATE TABLE Numbers
+(num  INTEGER PRIMARY KEY);
+
+INSERT INTO Numbers VALUES(1);
+
+SELECT (N1.num + 1) AS gap_start,
+       '〜',
+       (MIN(N2.num)-1) AS gap_end
+   FROM Numbers N1 INNER JOIN Numbers N2
+     ON N2.num > N1.num
+  GROUP BY N1.num
+ HAVING (N1.num+1) < MIN(N2.num);
