@@ -7,85 +7,79 @@ from langchain.schema import AIMessage, HumanMessage, SystemMessage
 from langchain_core.prompts import SystemMessagePromptTemplate, ChatPromptTemplate
 
 from langchain.output_parsers import PydanticOutputParser
-from pydantic.v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 from typing import List
-
-temperature = 0.0
 
 ##################################
 #
 #
+
+
 class BusinessName(BaseModel):
     name: str = Field(description="事業名")
     rating_score: float = Field(description='''事業の評価スコア。0が最低評価で、10が最高評価。''')
 
 
-
-
-    
-def most_frequent_classification(responses):
-    count_dict = {}
-    for classification in responses:
-        count_dict[classification] = count_dict.get(classification, 0) + 1
-
-    return max(count_dict, key=count_dict.get)
-
+class BusinessNames(BaseModel):
+    names: List[BusinessName] = Field(description='''事業名のリスト''')
 
 ######################################
 #
-#
+#    
 print("----------start----------------")
 
-#client = AzureChatOpenAI(
-#    azure_deployment="MyModel",  # or your deployment
-#    api_version="2024-02-01",  # or your api version
-#    temperature=0,
-#    max_tokens=None,
-#    timeout=None,
-#    max_retries=2,
-#    # other params...
-#)
+temperature = 0.0
 
-client = AzureOpenAI(
-    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"),
-    api_key=os.getenv("AZURE_OPENAI_KEY"),
-    api_version="2024-08-01-preview"
-)
+parser = PydanticOutputParser(pydantic_object=BusinessNames)
 
-base_template = """
-以下の文を読み、「賞賛」「苦情」「中立」のいずれかに分類して下さい。
-1.「太陽が輝いています」　- 中立
-2.「あなたのサポートチームは素晴らしいです」 - 賞賛
-3.「あなたのソフトウェアでひどい経験をしました」- 苦情
-
-以下の原則に従わなければなりません。
-- 単一の分類語のみを返して下さい。応答は、「賞賛」「苦情」「中立」の
-いずれかでなければなりません。
-
-- '''で囲まれたテキストの分類を行って下さい
-
-'''{content}'''
-
-分類：
+principles = """
+原則：
+- 名前は覚えやすいものでなければなりません。
+- [industry]業界と会社の背景情報を使用して、効果的な名前を作成して下さい。
+- 名前は発音しやすいものでなければなりません。
+- 名前のみを返し、他のテキストや文字は含めないでください。
+- 句読点や改行文字の\n、そのほかの記号の使用は避けて下さい。
+- 名前は10文字以下でなければなりません。
 """
 
-responses = []
+client = AzureChatOpenAI(
+    azure_deployment="MyModel",  # or your deployment
+    api_version="2024-02-01",  # or your api version
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,
+    # other params...
+)
 
-for i in range(0,3):
-    response = client.chat.completions.create(
-        model="my-gpt-4o-1",
-        messages=[
-            {"role": "system", "content": base_template.format(content=
-            '''外は雨ですが、私は素晴らしい一日を過ごしています。でも、
-               人々がどうやって生きているのか理解できません。本当に悲しいです''')
-             },
-        ],
-    )
+#client = AzureOpenAI(
+#    azure_endpoint = os.getenv("AZURE_OPENAI_ENDPOINT"),
+#    api_key=os.getenv("AZURE_OPENAI_KEY"),
+#    api_version="2024-08-01-preview"
+#)
 
-    responses.append(response.choices[0].message.content.strip())
+template = """
+テンプレート：
+{industry}業界の新しいスタートアップ企業の事業名を５つ生成して下さい。
+以下の原則に従う必要があります。
+{principles}
+{format_instructions}
+"""
 
+system_message_prompt = SystemMessagePromptTemplate.from_template(template)
+chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt])
 
-print(most_frequent_classification(responses))
+prompt_and_model = chat_prompt | client
+
+result = prompt_and_model.invoke(
+    {
+        "principles": principles,
+        "industry": "宇宙産業",
+        "format_instructions": parser.get_format_instructions(),
+    }
+)
+
+print(parser.parse(result.content))
 
 
 print("-------------------------------")
