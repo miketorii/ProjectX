@@ -51,8 +51,27 @@ client = AzureChatOpenAI(
 
 parser = PydanticOutputParser(pydantic_object=QueryPlan)
 
-template = """"""
+template = """Generate a query plan. This will be used for task execution.
 
+Answer the following query: {query}
+
+Return the following query graph format:
+{format_instructions}
+"""
+
+system_message_prompt = SystemMessagePromptTemplate.from_template(template)
+chat_prompt = ChatPromptTemplate.from_messages([system_message_prompt])
+
+chain = chat_prompt | client | parser
+
+result = chain.invoke(
+    {"query":'''I want to get the results from my database. Then I want to find out what the average age of my top 10 customers is. Once I have the average age, I want to send an email to John. Also I just generally want to send a welcome introduction email to Sara regardless of the other tasks.
+    ''',
+     "format_instructions": parser.get_format_instructions()
+    }
+)
+
+print(result.query_graph)
 
 
 print("-------------------------------")
