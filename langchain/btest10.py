@@ -90,6 +90,13 @@ result = chain.invoke(
 
 print(result)
 
+with open('few_shot_prompt.pickle', 'wb') as f:
+    pickle.dump(few_shot_prompt, f)
+
+with open('few_shot_prompt.pickle', 'rb') as f:
+    few_shot_prompt = pickle.load(f)
+    print(few_shot_prompt)
+    
 print("-------------------------------")
 print("----------end------------------")
 
