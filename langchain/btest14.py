@@ -51,50 +51,35 @@ text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
 texts = text_splitter.split_text(text)
 print(f"len={len(texts)}")
 
-
-
-
-
-
-
-all_documents = []
-
-loader = PyPDFLoader("data/test.pdf")
-pages = loader.load_and_split()
-
-print(pages[0])
-
-csv_files = glob.glob("data/*.csv")
-
-csv_files = [f for f in csv_files if "test" in f]
-
-for csv_file in csv_files:
-    loader = CSVLoader(file_path=csv_file)
-    data = loader.load()
-    all_documents.extend(data)
-
-print(all_documents)
-
 text_splitter = CharacterTextSplitter.from_tiktoken_encoder(
-    chunk_size=200, chunk_overlap=0
+    chunk_size=500, chunk_overlap=400
 )
+texts = text_splitter.split_text(text)
+print(f"len={len(texts)}")
 
-urls = [
-    "https://storage.googleapis.com/oreilly-content/NutriFusion%20Foods%20Marketing%20Plan%202022.docx",
-    "https://storage.googleapis.com/oreilly-content/NutriFusion%20Foods%20Marketing%20Plan%202023.docx",
-]
+text_splitter = TokenTextSplitter(
+    chunk_size=500, chunk_overlap=50
+)
+loader = PyPDFLoader("data/test.pdf")
+pages = loader.load_and_split(text_splitter=text_splitter)
+print(len(pages))
 
-docs = []
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=700, chunk_overlap=200
+)
+texts = text_splitter.split_text(text)
 
-for url in urls:
-    loader = Docx2txtLoader(url)
-    pages = loader.load()
-    chunks = text_splitter.split_documents(pages)
+metadatas = {"title":"Biology", "author":"John Doe"}
+docs = text_splitter.create_documents(texts, metadatas=[metadatas] * len(texts))
+print(texts[0])
+print(docs[0])
+print(docs[0].json())
 
-    for chunk in chunks:
-        chunk.metadata["source"] = "NutriFusion Foods Marketing Plan - 2022/2023"
-    docs.extend(chunks)
+text_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=300
+)
+splitted_docs = text_splitter.split_documents(docs)
+print(len(splitted_docs))
 
-all_documents.extend(docs)
 
-print(all_documents)
+
