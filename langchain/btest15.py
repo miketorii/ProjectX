@@ -16,6 +16,21 @@ class Article(BaseModel):
     
 print("-------start----------")
 
+_EXTRACTION_TEMPLATE = """
+Extract and save the relevant entities mentiond
+in the following passage together with their properies.
+
+if a property is not present and is not required in the function parameters,
+do not include it in the outpu.
+"""
+
+prompt = ChatPromptTemplate.from_messages(
+    {
+        ("system",_EXTRACTION_TEMPLATE),
+        ("user","{input}")
+    }
+)
+
 
 
 print("-------end----------")
