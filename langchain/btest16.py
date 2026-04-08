@@ -12,6 +12,15 @@ from os import getenv
 
 print("-------start----------")
 
+def schedule_meeting(date, time, attendees):
+    # Connect to calendar service:
+    return { "event_id": "1234", "status": "Meeting scheduled successfully!",
+            "date": date, "time": time, "attendees": attendees }
+
+OPENAI_FUNCTIONS = {
+    "schedule_meeting": schedule_meeting
+}
+
 messages = [
     {
         "role": "user",
@@ -66,6 +75,35 @@ response = model.chat.completions.create(
 response = response.choices[0].message
 
 print(response)
+
+if response.tool_calls:
+    for tool_call in response.tool_calls:
+        function_name = tool_call.function.name
+        function_args = json.loads(tool_call.function.arguments)
+        print(function_name)
+        print(function_args)
+
+        function = OPENAI_FUNCTIONS.get(function_name)
+
+        if not function:
+            raise Exception(f"Function {function_name} not found.")
+
+        function_response = function(**function_args)
+
+        messages.append(
+            {
+                "role": "function",
+                "name": function_name,
+                "content": json.dumps(function_response),
+            }
+        )
+
+    second_response = model.chat.completions.create(
+        model = "my-gpt-4o-1",
+        messages=messages
+    )
+
+    print(second_response.choices[0].message.content)
 
 print("-------end----------")
 
