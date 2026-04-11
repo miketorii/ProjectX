@@ -34,9 +34,14 @@ agent = create_csv_agent(
     allow_dangerous_code=True
 )
 
-response = agent.run("How many rows of data are in the file?")
+#response = agent.invoke("How many rows of data are in the file?")
+#print(response)
 
+response = agent.invoke("What are the columns within the dataset?")
 print(response)
+
+#response = agent.invoke("データセットの中のカラムは何ですか？")
+#print(response)
 
 print("-------------------------------")
 print("----------end------------------")
