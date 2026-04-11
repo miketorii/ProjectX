@@ -41,6 +41,7 @@ cain.txt
 */etc
 */.ipynb_checkpoints/*
 */data
+*/testdoc
 
 */*.lock
 */.venv
