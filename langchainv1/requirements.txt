@@ -1,0 +1,5 @@
+# 関連を一度削除
+pip uninstall -y langchain langchain-core langchain-community langchain-openai langchain-cohere
+
+# 推奨される組み合わせで再インストール
+pip install langchain langchain-openai langchain-community "langchain-core<0.4.0"
