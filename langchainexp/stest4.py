@@ -43,6 +43,10 @@ result = agent_executor.invoke("Identify all of the tables")
 print(result)
 
 print("-------------------------------")
+
+user_sql = agent_executor.invoke("Add 5 new users to the database. Their names are: John, Mary, Peter, Paul and Jane. Run the following SQL query against the database and add the users.")
+print(user_sql)
+
 print("----------end------------------")
 
 
