@@ -44,8 +44,38 @@ print(result)
 
 print("-------------------------------")
 
-user_sql = agent_executor.invoke("Add 5 new users to the database. Their names are: John, Mary, Peter, Paul and Jane. Run the following SQL query against the database and add the users.")
+user_sql = agent_executor.invoke("Add 5 new users to the database. Their names are: Jeff, Mike, Tom, James and Devon. Run the following SQL query against the database and add the users.")
 print(user_sql)
+
+print("-------------------------------")
+
+SQL_PREFIX = """You are an agent designed to interact with a SQL database.
+Given an input question, create a syntactically correct {dialect} query to run, then look at the results of the query and return the answer.
+Unless the user specifies a specific number of examples they wish to obtain, always limit your query to at most {top_k} results.
+You can order the results by a relevant column to return the most interesting examples in the database.
+Never query for all the columns from a specific table, only ask for the relevant columns given the question.
+You have access to tools for interacting with the database.
+Only use the below tools. Only use the information returned by the below tools to construct your final answer.
+You MUST double check your query before executing it. If you get an error while executing a query, rewrite the query and try again.
+If the question does not seem related to the database, just return "I don't know" as the answer.
+"""
+agent_executor2 = create_sql_agent(
+    llm=model,
+    toolkit=toolkit,
+    verbose=True,
+    # AgentType.OPENAI_TOOLS の代わりに文字列で指定
+    agent_type="openai-tools",
+    prefix=SQL_PREFIX.format(dialect="SQLite", top_k=100)
+)
+
+ret = agent_executor2.invoke(user_sql)
+print(ret)
+
+ret = agent_executor2.invoke("Do we have a Peter in the database")
+print(ret)
+
+ret = agent_executor2.invoke("Do we have a Bob in the database")
+print(ret)
 
 print("----------end------------------")
 
