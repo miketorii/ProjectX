@@ -9,6 +9,24 @@ from langchain_openai import AzureChatOpenAI
 ######################################
 #
 #    
+def extract_last_action_and_input(text):
+    action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
+    action_input_pattern = re.compile(r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE)
+
+    actions = action_pattern.findall(text)
+    action_inputs = action_input_pattern.findall(text)    
+
+    last_action = actions[-1] if actions else None
+    last_action_input = action_inputs[-1] if action_inputs else None
+
+    print("Last Action: ", last_action)
+    print("Last Action Input: ", last_action_input)
+
+    return {"action": last_action, "action_input": last_action_input}
+
+######################################
+#
+#    
 print("----------start----------------")
 
 text = """
@@ -21,6 +39,9 @@ action_input: How old is Rita Wilson in 2023
 action: search_on_google
 action input: some other query
 """
+
+ret = extract_last_action_and_input(text)
+print(ret)
 
 action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
 action_input_pattern = re.compile(r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE)
