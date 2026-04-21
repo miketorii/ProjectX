@@ -26,6 +26,24 @@ def extract_last_action_and_input(text):
 
 ######################################
 #
+#
+def extract_final_answer(text):
+    final_answer_pattern = re.compile(r"(?i)I've found the answer:\s*([^\n]+)", re.MULTILINE)
+    final_answers = final_answer_pattern.findall(final_answer_text)
+    print("Final Answers:", final_answers)
+    if final_answers:
+        return final_answers[0]
+    else:
+        return None
+
+######################################
+#
+#
+def search_on_google(query: str):
+    return f"Jason Derulo doesn't have a wife or parter."
+
+######################################
+#
 #    
 print("----------start----------------")
 
@@ -43,20 +61,30 @@ action input: some other query
 ret = extract_last_action_and_input(text)
 print(ret)
 
-action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
-action_input_pattern = re.compile(r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE)
+final_answer_text = "I've found the answer: final_answer"
+ret = extract_final_answer(final_answer_text)
+print(ret)
 
-actions = action_pattern.findall(text)
-action_inputs = action_input_pattern.findall(text)
+#final_answer_pattern = re.compile(r"(?i)I've found the answer:\s*([^\n]+)", re.MULTILINE)
+#final_answers = final_answer_pattern.findall(final_answer_text)
+#print("Final Answers:", final_answers)
 
-print(actions)
-print(action_inputs)
+print("--------------------------")
 
-last_action = actions[-1] if actions else None
-last_action_input = action_inputs[-1] if action_inputs else None
+#action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
+#action_input_pattern = re.compile(r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE)
 
-print("Last Action: ", last_action)
-print("Last Action Input: ", last_action_input)
+#actions = action_pattern.findall(text)
+#action_inputs = action_input_pattern.findall(text)
+
+#print(actions)
+#print(action_inputs)
+
+#last_action = actions[-1] if actions else None
+#last_action_input = action_inputs[-1] if action_inputs else None
+
+#print("Last Action: ", last_action)
+#print("Last Action Input: ", last_action_input)
 
 
 model = AzureChatOpenAI(
@@ -75,12 +103,41 @@ model = AzureChatOpenAI(
 #    api_version="2024-08-01-preview"
 #)
 
+tools = {}
+
+tools["search_on_google"] = {
+    "function": search_on_google,
+    "description": "Searches on google for a query"
+}
+
+base_prompt = """
+You will attempt to solve the problem of finding the answer to a question.
+Use chain of thought reasoning to solve through the problem, using the following pattern:
+
+1. Observe the original question:
+original_question: original_problem_text
+2. Create an observation with the following pattern:
+observation: observation_text
+3. Create a thought based on the observation with the following pattern:
+thought: thought_text
+4. Use tools to act on the thought with the following pattern:
+action: tool_name
+action_input: tool_input
+
+Do not guess or assume the tool results. Instead, provide a structured output that includes the action and action_input.
+
+You have access to the following tools: {tools}.
+
+original_problem: {question}
+"""
+
+model_output = model.invoke(
+    SystemMessagePromptTemplate.from_template(template=base_prompt).format_messages(
+        tools=tools, question="Is Jason Derulo with a partner?"
+    )
+)
+print(model_output)
 
 print("-------------------------------")
 print("-------------------------------")
 print("----------end------------------")
-
-
-
-
-
