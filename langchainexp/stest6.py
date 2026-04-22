@@ -138,6 +138,22 @@ model_output = model.invoke(
 )
 print(model_output)
 
+tool_name = extract_last_action_and_input(model_output.content)["action"]
+tool_input = extract_last_action_and_input(model_output.content)["action_input"]
+#tool_result = tools[tool_name]["function"](tool_input)
+tool_result = ""
+
+print(
+f"""
+----------
+Below is
+name: {tool_name}
+input: {tool_input}
+result: {tool_result}
+----------
+"""
+)
+
 print("-------------------------------")
 print("-------------------------------")
 print("----------end------------------")
