@@ -10,15 +10,21 @@ from langchain_openai import AzureChatOpenAI
 #
 #    
 def extract_last_action_and_input(text):
-    action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
-    action_input_pattern = re.compile(r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE)
+#    action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
+#    action_input_pattern = re.compile(r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE)
 
+    action_pattern = re.compile(r"(?i)action\s*:\s*([^\n]+)", re.MULTILINE)
+    action_input_pattern = re.compile(
+        r"(?i)action\s*_*input\s*:\s*([^\n]+)", re.MULTILINE
+    )
+    
     actions = action_pattern.findall(text)
     action_inputs = action_input_pattern.findall(text)    
 
     last_action = actions[-1] if actions else None
     last_action_input = action_inputs[-1] if action_inputs else None
 
+    print(last_action+"345")
     print("Last Action: ", last_action)
     print("Last Action Input: ", last_action_input)
 
@@ -105,9 +111,14 @@ model = AzureChatOpenAI(
 
 tools = {}
 
+#tools["search_on_google"] = {
+#    "function": search_on_google,
+#    "description": "Searches on google for a query"
+#}
+
 tools["search_on_google"] = {
     "function": search_on_google,
-    "description": "Searches on google for a query"
+    "description": "Searches on google for a query",
 }
 
 base_prompt = """
@@ -140,8 +151,14 @@ print(model_output)
 
 tool_name = extract_last_action_and_input(model_output.content)["action"]
 tool_input = extract_last_action_and_input(model_output.content)["action_input"]
+print(tool_name+"123")
+print(tool_input)
+tool_result = tools["search_on_google"]["function"](tool_input)
+print(tool_result)
+
 #tool_result = tools[tool_name]["function"](tool_input)
-tool_result = ""
+#tool_result = ""
+tool_result = tools[tool_name]["function"](tool_input)
 
 print(
 f"""
