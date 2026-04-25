@@ -174,6 +174,30 @@ result: {tool_result}
 """
 )
 
+current_prompt = """
+Based on the provided tool result:
+tool_result: {tool_result}
+
+Either provide the next observation, action, action_input, or the final answer if available.
+If you are providing the final answer, you must return the following pattern:
+"I've found the answer: final_answer" """
+
+print("The second prompt shows", current_prompt)
+
+model_output = model.invoke(
+    SystemMessagePromptTemplate.from_template(template=current_prompt).format_messages(
+        tool_result=tool_result
+    )
+)
+
+print("-----------\n\nThe model output is:", model_output.content)
+final_answer = extract_final_answer(model_output.content)
+
+if final_answer:
+    print(f"answer: {final_answer}")
+else:
+    print("No final answer found.")
+
 print("-------------------------------")
 print("-------------------------------")
 print("----------end------------------")
