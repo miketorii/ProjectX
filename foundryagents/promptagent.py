@@ -2,8 +2,6 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-#from azure.identity import AzureCliCredential
-
 from azure.identity import DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
 from azure.ai.projects.models import PromptAgentDefinition
