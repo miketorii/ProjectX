@@ -8,6 +8,7 @@ from azure.ai.projects.models import PromptAgentDefinition
 
 load_dotenv()
 
+
 FONDRY_MODE=os.getenv('FONDRY_NAME')
 FONDRY_PROJECT_ENDPOINT=os.getenv("FONDRY_PROJECT_ENDPOINT")
 AGENT_NAME=os.getenv("AGENT_NAME")
