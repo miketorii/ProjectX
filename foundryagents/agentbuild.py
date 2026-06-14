@@ -2,9 +2,9 @@ import asyncio
 import os
 from dotenv import load_dotenv
 
-from azure.identity import DefaultAzureCredential, AzureCliCredential
+from azure.identity import AzureCliCredential, DefaultAzureCredential
 from azure.ai.projects import AIProjectClient
-from azure.ai.projects.models import PromptAgentDefinition
+from azure.ai.projects.models import PromptAgentDefinition, WebSearchTool
 
 load_dotenv()
 
