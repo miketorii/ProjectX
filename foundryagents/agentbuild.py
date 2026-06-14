@@ -10,6 +10,7 @@ load_dotenv()
 
 FONDRY_MODE=os.getenv('FONDRY_NAME')
 FONDRY_PROJECT_ENDPOINT=os.getenv("FONDRY_PROJECT_ENDPOINT")
+AGENT_NAME2 = os.getenv("AGENT_NAME2")
 
 async def main() -> None:
     print('---IN main--')
@@ -21,10 +22,11 @@ async def main() -> None:
     )
     
     agent = project.agents.create_version(
-        agent_name="mike-agent-20260613",
+        agent_name=AGENT_NAME2, # "mike-agent-20260613",
         definition=PromptAgentDefinition(
             model="gpt-4o",
-            instructions="you are a helpful assistant.",
+            instructions="you are a helpful assistant that can search the web.",
+            tools=[WebSearchTool()],
         )
     )
 
