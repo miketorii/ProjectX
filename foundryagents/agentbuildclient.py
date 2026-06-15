@@ -22,19 +22,19 @@ async def main() -> None:
     )
     openai = project.get_openai_client()
 
-    conversation = openai.conversations.create()
+#    conversation = openai.conversations.create()
 
     response = openai.responses.create(
-        conversation=conversation.id,
+ #       conversation=conversation.id,
         extra_body={"agent_reference": {"name": AGENT_NAME, "type": "agent_reference"} },
         input="What is the largest city in France?"
     )
     print(response.output_text)
 
     response = openai.responses.create(
-        conversation=conversation.id,
+#        conversation=conversation.id,
         extra_body={"agent_reference": {"name": AGENT_NAME, "type": "agent_reference"} },
-        input="What is th epopulation of that city?"
+        input="What is the population of that city?"
     )
     print(response.output_text)
     
