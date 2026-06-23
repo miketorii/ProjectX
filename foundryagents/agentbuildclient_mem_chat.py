@@ -64,7 +64,6 @@ async def main() -> None:
     ]
 
     response = openai.responses.create(
-#       extra_body={"agent_reference": {"name": AGENT_NAME, "type": "agent_reference"} },
         model=CHAT_MODEL_NAME,
         input="What is the largest city in France?",
         tools=tools,
