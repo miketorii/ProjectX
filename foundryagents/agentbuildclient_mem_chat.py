@@ -29,6 +29,9 @@ async def main() -> None:
     )
     openai = project.get_openai_client()
 
+    ################################
+    # Create memory store
+    #
     options = MemoryStoreDefaultOptions(
         chat_summary_enabled=True,
         user_profile_enabled=True
@@ -38,6 +41,7 @@ async def main() -> None:
         embedding_model=EMBEDDING_MODEL_NAME,
         options=options
     )
+
     memory_store = project.beta.memory_stores.create(
         name=MEMORY_STORE_NAME,        
         definition=definition,
@@ -45,13 +49,31 @@ async def main() -> None:
     )
     print(f"Memory store: {memory_store.name}")
 
+ 
+    ###################################
+    # Conversation
+    #
+    scope = "user_123"
+    
+    tools = [
+        {
+            "type": "memory_search_preview",
+            "memory_store_name": MEMORY_STORE_NAME,
+            "scope": scope,
+        }
+    ]
+
     response = openai.responses.create(
-        extra_body={"agent_reference": {"name": AGENT_NAME, "type": "agent_reference"} },
+#       extra_body={"agent_reference": {"name": AGENT_NAME, "type": "agent_reference"} },
+        model=CHAT_MODEL_NAME,
         input="What is the largest city in France?",
-#        store=False,
+        tools=tools,
     )
     print(response.output_text)
 
+    ###################################
+    # Delete memory store
+    #
     project.beta.memory_stores.delete(
         name=MEMORY_STORE_NAME        
     )
