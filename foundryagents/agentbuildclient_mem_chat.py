@@ -42,6 +42,10 @@ async def main() -> None:
         options=options
     )
 
+    project.beta.memory_stores.delete(
+        name=MEMORY_STORE_NAME        
+    )
+    
     memory_store = project.beta.memory_stores.create(
         name=MEMORY_STORE_NAME,        
         definition=definition,
@@ -70,6 +74,12 @@ async def main() -> None:
     )
     print(response.output_text)
 
+    for item in response.output:
+        if getattr(item, "type", None) == "memory_command_call":
+            print(item.type)
+            print(item.arguments)
+            print(item.status)
+            
     ###################################
     # Delete memory store
     #
