@@ -42,9 +42,9 @@ async def main() -> None:
         options=options
     )
 
-    project.beta.memory_stores.delete(
-        name=MEMORY_STORE_NAME        
-    )
+#    project.beta.memory_stores.delete(
+#        name=MEMORY_STORE_NAME        
+#    )
     
     memory_store = project.beta.memory_stores.create(
         name=MEMORY_STORE_NAME,        
@@ -69,7 +69,7 @@ async def main() -> None:
 
     response = openai.responses.create(
         model=CHAT_MODEL_NAME,
-        input="What is the largest city in France?",
+        input="Remember that my preferred seat is aisle",
         tools=tools,
     )
     print(response.output_text)
@@ -79,6 +79,21 @@ async def main() -> None:
             print(item.type)
             print(item.arguments)
             print(item.status)
+
+    forget_response = openai.responses.create(
+        model=CHAT_MODEL_NAME,
+        input="Forget my preferred seat.",
+        tools=tools,
+    )
+    print(forget_response.output_text)
+
+    for item in forget_response.output:
+        if getattr(item, "type", None) == "memory_command_call":
+            print(item.type)
+            print(item.arguments)
+            print(item.status)            
+
+    
             
     ###################################
     # Delete memory store
