@@ -8,6 +8,7 @@ from azure.ai.projects.models import PromptAgentDefinition
 
 from azure.ai.projects.models import MemoryStoreDefaultDefinition, MemoryStoreDefaultOptions
 
+from azure.ai.projects.models import MemorySearchOptions
 
 load_dotenv()
 
@@ -130,6 +131,22 @@ async def main() -> None:
     for operation in new_update_result.memory_operations:
         print(f" - Operation: {operation.kind}, Memory ID: {operation.memory_item.memory_id}, Content: {operation.memory_item.content}")
     
+
+    ###################################
+    # 
+    #
+    query_message = {"role":"user", "content": "What are my coffee preferences?"}
+
+    search_response = project.beta.memory_stores.search_memories(
+        name=MEMORY_STORE_NAME,
+        scope=scope,
+        items=[query_message],
+        options=MemorySearchOptions(max_memories=5)
+    )
+    print(f"Found {len(search_response.memories)} memories")
+
+    for memory in search_response.memories:
+        print(f"  - Memory ID: {memory.memory_item.memory_id}, Content: {memory.memory_item.content}")
     
     ###################################
     # Delete memory store
