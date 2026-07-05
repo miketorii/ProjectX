@@ -43,9 +43,9 @@ async def main() -> None:
         options=options
     )
 
-    project.beta.memory_stores.delete(
-        name=MEMORY_STORE_NAME        
-    )
+#    project.beta.memory_stores.delete(
+#        name=MEMORY_STORE_NAME        
+#    )
     
     memory_store = project.beta.memory_stores.create(
         name=MEMORY_STORE_NAME,        
@@ -53,7 +53,6 @@ async def main() -> None:
         description="Memory store for my agent"
     )
     print(f"Memory store: {memory_store.name}")
-
  
     ###################################
     # Conversation
@@ -94,6 +93,11 @@ async def main() -> None:
             print(item.arguments)
             print(item.status)            
 
+
+    ###################################
+    # 
+    #
+
     scope = "user_123"
 
     user_message = {
@@ -114,6 +118,13 @@ async def main() -> None:
     for operation in update_result.memory_operations:
         print(f" - Operation: {operation.kind}, Memory ID: {operation.memory_item.memory_id}, Content: {operation.memory_item.content}")
 
+    ###################################
+    # Delete memory store
+    #
+    project.beta.memory_stores.delete(
+        name=MEMORY_STORE_NAME        
+    )
+'''    
     new_message = {
         "role": "user",
         "content": "I also like cappuccinos in the afternoon",
@@ -130,30 +141,9 @@ async def main() -> None:
     new_update_result = new_update_poller.result()
     for operation in new_update_result.memory_operations:
         print(f" - Operation: {operation.kind}, Memory ID: {operation.memory_item.memory_id}, Content: {operation.memory_item.content}")
-    
+'''    
 
-    ###################################
-    # 
-    #
-    query_message = {"role":"user", "content": "What are my coffee preferences?"}
 
-    search_response = project.beta.memory_stores.search_memories(
-        name=MEMORY_STORE_NAME,
-        scope=scope,
-        items=[query_message],
-        options=MemorySearchOptions(max_memories=5)
-    )
-    print(f"Found {len(search_response.memories)} memories")
-
-    for memory in search_response.memories:
-        print(f"  - Memory ID: {memory.memory_item.memory_id}, Content: {memory.memory_item.content}")
-    
-    ###################################
-    # Delete memory store
-    #
-    project.beta.memory_stores.delete(
-        name=MEMORY_STORE_NAME        
-    )
     
 if __name__ == "__main__":
     print('---------start------------')
