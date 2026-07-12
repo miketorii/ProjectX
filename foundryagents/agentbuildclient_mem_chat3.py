@@ -9,6 +9,7 @@ from azure.ai.projects.models import PromptAgentDefinition
 from azure.ai.projects.models import MemoryStoreDefaultDefinition, MemoryStoreDefaultOptions
 
 from azure.ai.projects.models import MemorySearchOptions
+from azure.core.credentials import AzureKeyCredential
 
 load_dotenv()
 
@@ -19,14 +20,19 @@ AGENT_NAME=os.getenv("AGENT_NAME2")
 CHAT_MODEL_NAME=os.getenv("CHAT_MODEL_NAME")
 EMBEDDING_MODEL_NAME=os.getenv("EMBEDDING_MODEL_NAME")
 
+FONDRY_PROJECT_KEY = os.environ["FONDRY_PROJECT_KEY"]
+
 MEMORY_STORE_NAME="my_memory_store"
         
 async def main() -> None:
     print('---IN main--')
 
+#    print(FONDRY_PROJECT_KEY)
+    
     project = AIProjectClient(
-        endpoint=os.environ["FONDRY_PROJECT_ENDPOINT"],        
-        credential=DefaultAzureCredential(),                
+        endpoint=os.environ["FONDRY_PROJECT_ENDPOINT"],
+#        credential=AzureKeyCredential(FONDRY_PROJECT_KEY),
+        credential=DefaultAzureCredential(),
     )
     openai = project.get_openai_client()
 
@@ -59,6 +65,12 @@ async def main() -> None:
     #
     scope = "user_123"
 
+#    project = AIProjectClient(
+#        endpoint=os.environ["FONDRY_PROJECT_ENDPOINT"],
+#        credential=AzureKeyCredential(FONDRY_PROJECT_KEY),
+#        credential=DefaultAzureCredential(),
+#    )
+    
     query_message = {"role":"user", "content": "What are my coffee preferences?", "type":"message"}
 
     print("----------------search_memories-------------------")
