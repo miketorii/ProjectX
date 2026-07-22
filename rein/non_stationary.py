@@ -36,18 +36,41 @@ if __name__ == "__main__":
     steps = 1000
     epsilon = 0.1
     alpha = 0.8
-    agent_types = ['simple average','alpha const update']
+    agent_types = ['sample average','alpha const update']
     results = {}
-    
-    nonstat = NonStatBadit()
-    ret = nonstat.play(1)
-    print(ret)
 
-    agent = AlphaAgent(epsilon, alpha)
-    actionnum = agent.get_action()
-    print(actionnum)
-    reward = 5
-    agent.update(actionnum, reward)
-    
+    for agent_type in agent_types:
+        all_rates = np.zeros((runs, steps))
+
+        for run in range(runs):
+            if agent_type == "sample average":
+                agent = Agent(epsilon)
+            else:
+                agent = AlphaAgent(epsilon, alpha)
+
+            bandit = NonStatBadit()
+            total_reward = 0
+            rates = []
+
+            for step in range(steps):
+                action = agent.get_action()
+                reward = bandit.play(action)
+                agent.update(action, reward)
+                total_reward += reward
+                rates.append(total_reward / (step + 1))
+
+            all_rates[run] = rates
+
+        avg_rates = np.average(all_rates, axis=0)
+        results[agent_type] = avg_rates
+                
+
+    plt.figure()
+    plt.ylabel('Average Rates')
+    plt.xlabel('Steps')
+    for key, avg_rates in results.items():
+        plt.plot(avg_rates, label=key)
+    plt.legend()
+    plt.savefig('non_stat.png')
     print("--------end----------")    
     
