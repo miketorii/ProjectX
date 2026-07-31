@@ -55,10 +55,16 @@ class GridWorld:
             next_state = state
             
         return next_state
-                
-                
+                                
     def reward(self, state, action, next_state):
         return self.reward_map[next_state]
+
+    def reset(self):
+        self.agent_state = self.start_state
+        return self.agent_state
+        
+    
+
     
 if __name__ == "__main__":
     grid = GridWorld()
@@ -75,5 +81,5 @@ if __name__ == "__main__":
         nextstate = grid.next_state(state ,1)
         print(f'next={nextstate}')
     
-    
-    
+    print("------------------------")    
+    print(grid.reset())
