@@ -8,6 +8,10 @@
 
 ![mcp server](https://github.com/user-attachments/assets/f2e56f8f-9d9c-4596-afac-d1faf05595a3)
 
+* AlphaFold3
+<img width="1323" height="876" alt="LYSC_CHICK" src="https://github.com/user-attachments/assets/f629eac4-f4ed-44c9-b0f8-496e22613861" />
+
+
 * AzureFuncs
 
 * RNN
