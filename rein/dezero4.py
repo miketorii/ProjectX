@@ -43,4 +43,6 @@ t = np.arange(0,10,1)[:,np.newaxis]
 y_pred = model(t)
 print(y_pred)
 
+print('-----------end-------------')
+
 
