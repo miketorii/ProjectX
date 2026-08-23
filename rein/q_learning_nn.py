@@ -73,33 +73,41 @@ class QLearningAgent:
 if __name__ == "__main__":
     print('-----------start-------------')
 
-    np.random.seed(0)
-    x = np.random.rand(100,1)
-    y = np.sin(2 * np.pi * x) + np.random.rand(100,1)
+    env = GridWorld()
+    agent = QLearningAgent()
 
-    lr = 0.2
-    iters = 10000
+    episodes = 1000
+    loss_history = []
+
+    for episode in range(episodes):
+        state = env.reset()
+        state = one_hot(state)
+        total_loss, cnt = 0, 0
+        done = False
+
+        while not done:
+            action = agent.get_action(state)
+            next_state, reward, done = env.step(action)
+            next_stae = one_hot(next_state)
+
+            loss = agent.update(state, action, reward, next_state, done)
+            total_loss += loss
+            cnt += 1
+            state = next_state
+
+        average_loss = total_loss / cnt
+        loss_history.append(average_loss)
+        
 
 
-    model = TwoLayerNet(10,1)
-    optimizer = optimizers.SGD(lr)
-    optimizer.setup(model)
+    Q = {}
+    for state in env.states():
+        for action in env.action_space:
+            q = agent.qnet(one_hot(state))[:, action]
+            Q[state, action] = float(q.data)
 
-    for i in range(iters):
-        y_pred = model(x)
-        loss = F.mean_squared_error(y, y_pred)
-
-        model.cleargrads()
-        loss.backward()
-
-        optimizer.update()
-        if i % 1000 == 0:
-            print(loss.data)
-            
-    t = np.arange(0,10,1)[:,np.newaxis]
-    y_pred = model(t)
-    print(y_pred)
-
+    print(Q)
+    
     print('-----------end-------------')
 
 
