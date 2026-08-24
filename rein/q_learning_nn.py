@@ -9,8 +9,8 @@ from gridworld import GridWorld
 #
 #
 def one_hot(state):
-    HIGHT, WEDTH = 3, 4
-    vec = np.zeros(HEIGHT * WIDTH, dtype=np.float32)
+    HIGHT, WIDTH = 3, 4
+    vec = np.zeros(HIGHT * WIDTH, dtype=np.float32)
     y, x = state
     idx = WIDTH * y + x
     vec[idx] = 1.0
@@ -48,7 +48,7 @@ class QLearningAgent:
         if np.random.rand() < self.epsilon:
             return np.random.choice(self.action_size)
         else:
-            qs = self.qnet(state_vec)
+            qs = self.qnet(start_vec)
             return qs.data.argmax()
 
     def update(self, state, action, reward, next_state, done):
@@ -88,7 +88,7 @@ if __name__ == "__main__":
         while not done:
             action = agent.get_action(state)
             next_state, reward, done = env.step(action)
-            next_stae = one_hot(next_state)
+            next_state = one_hot(next_state)
 
             loss = agent.update(state, action, reward, next_state, done)
             total_loss += loss
