@@ -1,8 +1,16 @@
+import copy
 from collections import deque
 import random
 import numpy as np
 import gymnasium as gym
+from dezero import Model
+from dezero import optimizers
+import dezero.functions as F
+import dezero.layers as L
 
+###################################################################
+#
+#
 class ReplayBuffer:
     def __init__(self, buffer_size, batch_size):
         self.buffer = deque(maxlen=buffer_size)
@@ -25,7 +33,27 @@ class ReplayBuffer:
         done = np.array([x[4] for x in data]).astype(np.int32)
 
         return state, action, reward, next_state, done
-        
+
+###################################################################
+#
+#
+class QNet(Model):
+    def __init__(self, action_size):
+        super().__init__()
+        self.l1 = L.Linear(128)
+        self.l2 = L.Linear(128)
+        self.l3 = L.Linear(action_size)
+
+    def forward(self, x):
+        x = F.relu(self.l1(x))
+        x = F.relu(self.l2(x))
+        x = self.l3(x)
+        return x
+
+###################################################################
+#
+#
+
 
 if __name__ == "__main__":
     print("-------------start---------------")
@@ -33,7 +61,7 @@ if __name__ == "__main__":
     env = gym.make('CartPole-v1', render_mode='human')
     replay_buffer = ReplayBuffer(buffer_size=10000, batch_size=32)
 
-    for episode in range(1000):
+    for episode in range(10):
         state, info = env.reset()
         done = False
         truncated = False
