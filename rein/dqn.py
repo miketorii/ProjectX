@@ -72,7 +72,8 @@ class DQNAgent:
         if np.random.rand() < self.epsilon:
             return np.random.choice(self.action_size)
         else:
-            state = state[np.newaxis,:]
+#            print(state)
+            state = state[np.newaxis, :]
             qs = self.qnet(state)
             return qs.data.argmax()
 
@@ -105,7 +106,7 @@ class DQNAgent:
 if __name__ == "__main__":
     print("-------------start---------------")
 
-    episodes = 300
+    episodes = 100
     sync_interval = 20   
     env = gym.make('CartPole-v1', render_mode='human')
     agent = DQNAgent()
@@ -131,10 +132,11 @@ if __name__ == "__main__":
         reward_history.append(total_reward)
         if episode % 10 == 0:
             print("episode:{}, total reward: {}".format(episode, total_reward))
-
-
+   
+    print("-------------done episode---------------")
+    
     agent.epsilon = 0
-    state = env.reset()
+    state, info = env.reset()
     done = False
     total_reward = 0
     truncated = False
@@ -146,12 +148,6 @@ if __name__ == "__main__":
         total_reward += reward
 
     print('Total Reward:', total_reward)
-    
-    print(state.shape)
-    print(action.shape)
-    print(reward.shape)
-    print(next_state.shape)
-    print(done.shape)
     
     print("-------------end---------------")    
 
