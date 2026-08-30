@@ -27,7 +27,10 @@ class Agent:
         self.optimizer = optimizers.Adam(self.lr)
         self.optimizer.setup(self.pi)
 
-
+    def add(self, reward, prob):
+        data = (reward, prob)
+        self.memory.append(data)
+        
 
 if __name__ == '__main__':
     print("---------------start---------------")
