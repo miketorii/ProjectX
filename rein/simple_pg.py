@@ -8,6 +8,7 @@ import dezero.layers as L
 ####################################################
 # Policy class
 #
+####################################################
 class Policy(Model):
     def __init__(self, action_size):
         super().__init__()
@@ -22,6 +23,7 @@ class Policy(Model):
 ####################################################
 # Agenda class
 #
+####################################################
 class Agent:
     def __init__(self):
         self.gamma = 0.98
