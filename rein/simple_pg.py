@@ -5,6 +5,9 @@ from dezero import optimizers
 import dezero.functions as F
 import dezero.layers as L
 
+####################################################
+#
+#
 class Policy(Model):
     def __init__(self, action_size):
         super().__init__()
@@ -16,6 +19,9 @@ class Policy(Model):
         x = F.softmax(self.l2(x))
         return x
 
+####################################################
+#
+#
 class Agent:
     def __init__(self):
         self.gamma = 0.98
@@ -31,7 +37,9 @@ class Agent:
         data = (reward, prob)
         self.memory.append(data)
         
-
+####################################################
+#
+#
 if __name__ == '__main__':
     print("---------------start---------------")
 
