@@ -33,9 +33,30 @@ class Agent:
         self.optimizer = optimizers.Adam(self.lr)
         self.optimizer.setup(self.pi)
 
+    def get_action(self, state):
+        state = state[np.newaxis, :]
+        probs = self.pi(state)
+        probs = probs[0]
+        action = np.random.choice(len(probs), p=probs.data)
+        return action, probs[action]
+    
     def add(self, reward, prob):
         data = (reward, prob)
         self.memory.append(data)
+
+    def update(self):
+        self.pi.cleargrads()
+
+        G, loss = 0, 0
+        for reward, prob in reversed(self.memory):
+            G = reward + self.gamma * G
+
+        for reward, prob in self.memory:
+            loss += -F.log(prob)*G
+
+        loss.backward()
+        self.optimizer.update()
+        self.memory = []
         
 ####################################################
 #
@@ -43,7 +64,7 @@ class Agent:
 if __name__ == '__main__':
     print("---------------start---------------")
 
-    episodes = 3 #3000
+    episodes = 100 #3000
     env = gym.make('CartPole-v1', render_mode='human')
     agent = Agent()
     reward_history = []
@@ -54,8 +75,20 @@ if __name__ == '__main__':
         done = False
         truncated = False
 
+        total_reward = 0
+
         while not (done or truncated):
-            action = np.random.choice([0,1])
-            next_sate, reward, done, truncated, info = env.step(action)
+            action, prob = agent.get_action(state) #np.random.choice([0,1])
+            next_state, reward, done, truncated, info = env.step(action)
+
+            agent.add(reward, prob)
+            state = next_state
+            total_reward += reward
+
+        agent.update()
+
+        reward_history.append(total_reward)
+        if episode % 100 == 0:
+            print("episode:{}, total reward: {:.1f}".format(episode, total_reward))
 
         #env.close()
