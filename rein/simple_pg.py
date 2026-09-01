@@ -6,7 +6,7 @@ import dezero.functions as F
 import dezero.layers as L
 
 ####################################################
-#
+# Policy class
 #
 class Policy(Model):
     def __init__(self, action_size):
