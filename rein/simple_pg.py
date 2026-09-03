@@ -66,7 +66,8 @@ class Agent:
 if __name__ == '__main__':
     print("---------------start---------------")
 
-    episodes = 100 #3000
+    #episodes = 100 #3000
+    episodes = 3000    
     env = gym.make('CartPole-v1', render_mode='human')
     agent = Agent()
     reward_history = []
