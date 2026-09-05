@@ -9,32 +9,17 @@ import dezero.layers as L
 # Policy class
 #
 ####################################################
-class PolicyNet(Model):
-    def __init__(self, action_size=2):
+class Policy(Model):
+    def __init__(self, action_size):
         super().__init__()
         self.l1 = L.Linear(128)
         self.l2 = L.Linear(action_size)
 
     def forward(self, x):
         x = F.relu(self.l1(x))
-        x = self.l2(x)
-        x = F.softmax(x)
+        x = F.softmax(self.l2(x))
         return x
 
-####################################################
-#
-#
-class ValueNet(Model):
-    def __init__(self):
-        super().__init__()
-        self.l1 = L.Linear(128)
-        self.l2 = L.Linear(1)
-
-    def forward(self, x):
-        x = F.relu(self.l1(x))
-        x = self.l2(x)
-        return x
-    
 ####################################################
 # Agenda class
 #
@@ -42,15 +27,13 @@ class ValueNet(Model):
 class Agent:
     def __init__(self):
         self.gamma = 0.98
-        self.lr_pi = 0.0002
-        self.lr_v = 0.0005        
+        self.lr = 0.0002
         self.action_size = 2
 
-        self.pi = PolicyNet()
-        self.v = ValueNet()
-        self.optimizer_pi = optimizers.Adam(self.lr_pi).setup(self.pi)
-        self.optimizer_v = optimizers.Adam(self.lr_v).setup(self.v)
-
+        self.memory = []
+        self.pi = Policy(self.action_size)
+        self.optimizer = optimizers.Adam(self.lr)
+        self.optimizer.setup(self.pi)
 
     def get_action(self, state):
         state = state[np.newaxis, :]
@@ -59,34 +42,32 @@ class Agent:
         action = np.random.choice(len(probs), p=probs.data)
         return action, probs[action]
     
-    def update(self, state, action_prob, reward, next_state, done):
-        state = state[np.newaxis, :]
-        next_state = next_state[np.newaxis, :]
+    def add(self, reward, prob):
+        data = (reward, prob)
+        self.memory.append(data)
 
-        target = reward + self.gamma + self.v(next_state) * (1 - done)
-        target.unchain()
-        v = self.v(state)
-        loss_v = F.mean_squared_error(v, target)
+    def update(self):
+        self.pi.cleargrads()
 
-        delta = target - v
-        delta.unchain()
-        loss_pi = -F.log(action_prob) * delta
+        G, loss = 0, 0
+        for reward, prob in reversed(self.memory):
+            G = reward + self.gamma * G
 
-        self.v.cleargrads()
-        self.pi.cleargrads()        
-        loss_v.backward()
-        loss_pi.backward()
-        self.optimizer_v.update()
-        self.optimizer_pi.update()
+        for reward, prob in self.memory:
+            loss += -F.log(prob)*G
+
+        loss.backward()
+        self.optimizer.update()
+        self.memory = []
         
 ####################################################
 # main
 #
 if __name__ == '__main__':
-    print("---------------start---------------")
+    print("---------------start reinforce---------------")
 
-    #episodes = 100
-    episodes = 3000    
+    episodes = 100 #3000
+    #episodes = 3000    
     env = gym.make('CartPole-v1', render_mode='human')
     agent = Agent()
     reward_history = []
@@ -103,10 +84,11 @@ if __name__ == '__main__':
             action, prob = agent.get_action(state) #np.random.choice([0,1])
             next_state, reward, done, truncated, info = env.step(action)
 
-            agent.update(state, prob, reward, next_state, done)
-            
+            agent.add(reward, prob)
             state = next_state
             total_reward += reward
+
+        agent.update()
 
         reward_history.append(total_reward)
         if episode % 100 == 0:
