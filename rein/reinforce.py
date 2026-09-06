@@ -94,4 +94,5 @@ if __name__ == '__main__':
         if episode % 100 == 0:
             print("episode:{}, total reward: {:.1f}".format(episode, total_reward))
 
+    print("---------------end reinforce---------------")            
         #env.close()
