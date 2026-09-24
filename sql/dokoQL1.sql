@@ -18,6 +18,9 @@ select 費目 as ITEM, 入金額 as RECEIVE, 出金額 as PAY
  from 家計簿 as MONEYBOOK
 where 費目= '給料';
 
+select * from 家計簿 where 出金額>0;
+select * from 家計簿 where 入金額 is NOT NULL;
+
 
 
 
