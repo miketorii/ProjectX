@@ -21,8 +21,5 @@ where 費目= '給料';
 select * from 家計簿 where 出金額>0;
 select * from 家計簿 where 入金額 is NOT NULL;
 select * from 家計簿 where メモ like '%1月%';
-
-
-
-
+select * from 家計簿 where 出金額 between 100 and 3000;
 
