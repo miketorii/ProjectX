@@ -23,3 +23,8 @@ select * from 家計簿 where 入金額 is NOT NULL;
 select * from 家計簿 where メモ like '%1月%';
 select * from 家計簿 where 出金額 between 100 and 3000;
 select * from 家計簿 where 費目 in ('食費','交際費');
+select * from 家計簿 where 費目 not in ('食費','交際費');
+
+select * from 家計簿 where 出金額 < any(array[2800,4000,5000]);
+select * from 家計簿 where 出金額 < any(values (2800),(4000),(5000));
+select * from 家計簿 where 出金額 < all(values (2800),(4000),(5000));
