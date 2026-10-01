@@ -35,3 +35,4 @@ select * from 家計簿 where 出金額 < all(values (2800),(4000),(5000));
 
 insert into 家計簿 values ('2024-03-11','交際費','テスト用',2000,3000);
 update 家計簿 set 出金額=5000 where 費目='交際費' and 入金額=2000;
+select * from 家計簿 where 入金額>0 or 出金額>=5000;
