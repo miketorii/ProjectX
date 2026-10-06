@@ -2,12 +2,10 @@ sudo -u postgres -i
 
 $psql
 
-
-
-
 postgres=# select version();
 
-
-
-
 \q
+
+
+====================
+exit
