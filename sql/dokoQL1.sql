@@ -28,6 +28,7 @@ select * from 家計簿 where 費目 not in ('食費','交際費');
 select * from 家計簿 where 出金額 < any(array[2800,4000,5000]);
 select * from 家計簿 where 出金額 < any(values (2800),(4000),(5000));
 select * from 家計簿 where 出金額 < all(values (2800),(4000),(5000));
+select * from 家計簿 where 入金額 <> 出金額;
 
 /*************************************************/
 /*                  chaper 3                     */
