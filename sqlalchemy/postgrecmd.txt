@@ -1,0 +1,18 @@
+psql -U <username> -h localhost -d postgres
+
+\du   user一覧
+\dt   table一覧
+\l    database一覧
+
+ユーザ作成
+CREATE USER ユーザー名 WITH PASSWORD 'パスワード';
+
+ユーザに権限を与える
+GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO ユーザー名;
+
+権限の確認
+SELECT 
+    has_table_privilege('mike', 'shops', 'SELECT') AS can_select,
+    has_table_privilege('mike', 'shops', 'INSERT') AS can_insert,
+    has_table_privilege('mike', 'shops', 'UPDATE') AS can_update,
+    has_table_privilege('mike', 'shops', 'DELETE') AS can_delete;
