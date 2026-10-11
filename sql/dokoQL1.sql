@@ -44,3 +44,5 @@ select * from 家計簿 where 日付 between '2024-02-10' and '2024-02-14';
 /*************************************************/
 
 select distinct 入金額 from 家計簿;
+select * from 家計簿 order by 出金額;
+select * from 家計簿 order by 出金額 desc;
