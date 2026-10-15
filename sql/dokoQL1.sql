@@ -48,3 +48,4 @@ select * from 家計簿 order by 出金額;
 select * from 家計簿 order by 出金額 desc;
 select * from 家計簿 order by 出金額 asc;
 select * from 家計簿 order by 入金額 desc, 出金額 desc;
+select * from 家計簿 order by 出金額 desc offset 0 rows fetch next 3 rows only;
