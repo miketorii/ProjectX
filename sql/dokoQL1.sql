@@ -49,3 +49,11 @@ select * from 家計簿 order by 出金額 desc;
 select * from 家計簿 order by 出金額 asc;
 select * from 家計簿 order by 入金額 desc, 出金額 desc;
 select * from 家計簿 order by 出金額 desc offset 0 rows fetch next 3 rows only;
+
+select 費目, 入金額, 出金額 from 家計簿
+  union
+select 費目, 入金額, 出金額 from 家計簿アーカイブ
+  order by 2, 3, 1;
+
+
+  
