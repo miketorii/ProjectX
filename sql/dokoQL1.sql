@@ -55,5 +55,8 @@ select 費目, 入金額, 出金額 from 家計簿
 select 費目, 入金額, 出金額 from 家計簿アーカイブ
   order by 2, 3, 1;
 
+select 費目 from 家計簿
+ except
+select 費目 from 家計簿アーカイブ;
 
   
