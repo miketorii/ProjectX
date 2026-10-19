@@ -59,4 +59,7 @@ select 費目 from 家計簿
  except
 select 費目 from 家計簿アーカイブ;
 
-  
+select 費目 from 家計簿
+ intersect
+select 費目 from 家計簿アーカイブ;
+
