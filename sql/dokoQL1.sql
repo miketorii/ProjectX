@@ -63,3 +63,4 @@ select 費目 from 家計簿
  intersect
 select 費目 from 家計簿アーカイブ;
 
+select distinct 費目 from 家計簿アーカイブ;
