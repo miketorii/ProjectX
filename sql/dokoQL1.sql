@@ -71,3 +71,4 @@ select distinct 費目 from 家計簿アーカイブ;
 
 select 出金額, 出金額+10000, 'Test' from 家計簿;
 select 出金額, 出金額+10000 as プラス from 家計簿;
+insert into 家計簿 values ('2024-03-11','交際費','テスト用',2000,3000+1000);
