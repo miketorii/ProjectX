@@ -80,3 +80,4 @@ select 費目, 出金額,
     end as 費目の分類
  from 家計簿 where 出金額 > 0;
  
+select メモ, length(メモ) as メモの長さ from 家計簿;
