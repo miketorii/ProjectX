@@ -81,3 +81,4 @@ select 費目, 出金額,
  from 家計簿 where 出金額 > 0;
  
 select メモ, length(メモ) as メモの長さ from 家計簿;
+select メモ, TRIM(メモ) AS 空白除去したメモ from 家計簿;
