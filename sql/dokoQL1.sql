@@ -82,3 +82,4 @@ select 費目, 出金額,
  
 select メモ, length(メモ) as メモの長さ from 家計簿;
 select メモ, TRIM(メモ) AS 空白除去したメモ from 家計簿;
+update 家計簿 set メモ = replace(メモ,'購入','買った');
